@@ -10,3 +10,5 @@ Assuming this works as intended accross the spectrum of Linux distributions, thi
 The initial Flatpak version was sourced from Amulet 0.10.34.
 
 ![Screenshot from 2024-08-11 22-26-11](https://github.com/user-attachments/assets/a45f074f-85ee-40f4-b624-987d9506258b)
+
+![Screenshot from 2024-08-11 22-33-44](https://github.com/user-attachments/assets/d9526f27-d74d-4c1a-8be0-37d14387feb9)
