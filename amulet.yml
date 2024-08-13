@@ -47,7 +47,6 @@ modules:
     cleanup:
       - /include
       - /lib/*.a
-    # Insert fixes from regenerating with flatpak-pip-generator below
 modules:
   - name: python3-versioneer
     buildsystem: simple
