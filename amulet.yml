@@ -31,7 +31,6 @@ buildsystem: simple
 modules:
   - shared-modules/glu/glu-9.json
   - shared-modules/glew/glew.json
-  - shared-modules/pygame/pygame-1.9.6.json
   - name: freeglut
     buildsystem: cmake
     #no-autogen: true
@@ -99,6 +98,15 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/75/e4/2c27590dfc9992f73aabbeb9241ae20220bd9452df27483b6e56d3975cc5/PyYAML-6.0.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
         sha256: 3ad2a3decf9aaba3d29c8f537ac4b243e36bef957511b4766cb0057d32b0be85
+  - name: python3-pygame
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "pygame" --report=pip_report.json --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/72/49/bd2fcbadb6a55bb24284bad4f530189401c99ffc234d51ba54756a776eb2/pygame-2.6.0.tar.gz
+        sha256: 722d33ae676aa8533c1f955eded966411298831346b8d51a77dad22e46ba3e35
   - name: python3-pre-commit
     buildsystem: simple
     build-commands:

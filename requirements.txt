@@ -6,7 +6,7 @@ setuptools>=45
 setuptools_scm[toml]>=6.2
 pip>=24
 pyyaml~=6.0
-
+pygame
 pre-commit>=1.11.1
 wheel>=0.43.0
 numpy>=1.17
