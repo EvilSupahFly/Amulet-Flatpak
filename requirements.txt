@@ -1,14 +1,10 @@
 versioneer~=0.29
 meson-python~=0.16.0
 meson~=1.4.1
-cython>=3.0.0a9
 setuptools>=45
 setuptools_scm[toml]>=6.2
 pip>=24
 pyyaml~=6.0
-pygame
-pre-commit>=1.11.1
-wheel>=0.43.0
 numpy>=1.17
 packaging>=21.3
 pkgconfig~=1.5
@@ -21,4 +17,3 @@ amulet-map-editor
 Amulet-LevelDB
 pymctranslate>=1.2
 minecraft-resource-pack>=1.3
-
