@@ -40,3 +40,6 @@ flatpak install amulet.flatpak
 
 flatpak run com.github.amulet_map_editor
 
+#Uninstall if it doesn't work or you just don't need it
+#flatpak uninstall com.github.amulet_map_editor
+

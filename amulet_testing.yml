@@ -16,11 +16,33 @@ finish-args:
   - --filesystem=xdg-documents:create
   - --filesystem=home:create
   - --filesystem=xdg-config:create
+  - --env=PYTHONPATH=/app/lib/python3.11/site-packages
+  - --env=GDK_BACKEND=x11
+  - --env=GDK_BACKEND=x11
+
 
 # Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
 build-commands: []
 buildsystem: simple
 modules:
+  - name: python
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/python/cpython.git
+        tag: v3.11.9
+  - name: opengl
+    buildsystem: cmake
+    sources:
+      - type: git
+        url: https://github.com/KhronosGroup/OpenGL-Registry.git
+        tag: master
+  - name: xapp-gtk3-module
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/linuxmint/xapp.git
+        tag: master
   - name: python3-meson-python
     buildsystem: simple
     build-commands:
