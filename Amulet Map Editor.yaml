@@ -1,23 +1,4 @@
-id: com.github.amulet_map_editor
-runtime: org.freedesktop.Platform
-runtime-version: '23.08'
-sdk: org.freedesktop.Sdk
-sdk-version: '22.08'
-command: amulet_map_editor
-sdk-extensions:
-  - org.freedesktop.Sdk.Debug
-name: Amulet Map Editor
-finish-args:
-  - --socket=x11
-  - --socket=wayland
-  - --device=dri
-  - --share=ipc
-  - --share=network
-  - --filesystem=xdg-documents:create
-  - --filesystem=home:create
-  - --filesystem=xdg-config:create
-
-# Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
+# Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=Amulet Map Editor
 build-commands: []
 buildsystem: simple
 modules:
@@ -50,6 +31,15 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/b0/79/f0f1ca286b78f6f33c521a36b5cbd5bd697c0d66217d8856f443aeb9dd77/versioneer-0.29-py3-none-any.whl
         sha256: 0f1a137bb5d6811e96a79bb0486798aeae9b9c6efc24b389659cebb0ee396cb9
+  - name: python3-xapp
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "xapp" --report=pip_report.json --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/1d/cf/b4fc57d170c11a615806b4754e867ffadf40a066456e846a0d415b5cc556/xapp-0.0.1.tar.gz
+        sha256: cf72c1b3e4d342b457cb8c2ea9ccb6727e7c139e4da5d997cbd75c48c2f1a253
   - name: python3-mutf8
     buildsystem: simple
     build-commands:
@@ -157,6 +147,15 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
         sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
+  - name: python3-pyopengl-accelerate
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "pyopengl-accelerate" --report=pip_report.json --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/93/09/d08b3d07dbd88258276496a47273778f330f5ccf8390cb21b16b29d660de/PyOpenGL-accelerate-3.1.7.tar.gz
+        sha256: 2b123621273a939f7fd2ec227541e399f9b5d4e815d69ae0bdb1b6c70a293680
   - name: python3-wxPython
     buildsystem: simple
     build-commands:
@@ -244,4 +243,4 @@ modules:
       - *id004
       - *id005
       - *id009
-name: amulet_map_editor
+name: Amulet Map Editor
