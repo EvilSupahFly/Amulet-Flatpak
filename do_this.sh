@@ -32,7 +32,7 @@ EOL
 
 cat "amulet_map_editor.yaml" >> "amulet.yml"
 
-flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=amulet_flatpak_repo amulet_build_dir amulet.yml --force-clean
+flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=amulet_flatpak_repo amulet_build_dir amulet.yml --system --keep-build-dirs --force-clean
 
 flatpak build-bundle amulet_flatpak_repo amulet.flatpak com.github.amulet_map_editor
 

@@ -19,6 +19,16 @@ finish-args:
   - --env=PYTHONPATH=/app/lib/python3.11/site-packages
   - --env=GDK_BACKEND=x11
   - --env=GDK_BACKEND=wayland
+  - --env=LD_LIBRARY_PATH=${LD_LIBRARY_PATH}/lib64
+finish:
+  modules:
+    - mesa
+    - xapp-gtk3-module
+    - wayland
+    - x11
+    - opengl
+    - opengl-extensions
+    - --env=PYTHONUNBUFFERED=1
 
 # Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
 build-commands: []
@@ -30,36 +40,66 @@ modules:
       - type: git
         url: https://github.com/python/cpython.git
         tag: v3.11.0
+
   - name: opengl
     buildsystem: cmake
     sources:
       - type: git
-        url: https://github.com/KhronosGroup/OpenGL-Registry.git
-        tag: master
-  - name: opengl-extensions
-    buildsystem: cmake
-    sources:
-      - type: git
-        url: https://github.com/KhronosGroup/OpenGL-Extension-Registry.git
-        tag: master
-  - name: xapp-gtk3-module
+        url: https://gitlab.freedesktop.org/mesa/mesa.git
+        commit: 4f845dc97972c72cad684cc22c7bf96e6d5319a6
+    config-opts:
+      - -DGLX_USE_TLS=ON
+      - -DOPENGL_ENABLE_EXTENSIONS=ON
+
+  - name: mesa
     buildsystem: meson
+    build-commands:
+      - meson setup build -Dprefix=${FLATPAK_DEST}
+      - meson compile -C
+      - ninja -C build/ install
     sources:
       - type: git
-        url: https://github.com/linuxmint/xapp.git
-        tag: master
-  - name: wayland
+        url: https://gitlab.freedesktop.org/mesa/mesa.git
+        commit: 8aa52ac6666c835169f490703e557f892648e89a
+
+  - name: opengl
     buildsystem: cmake
+    sources:
+      - type: git
+        url: https://github.com/opengl/opengl.git
+        commit: 4f845dc97972c72cad684cc22c7bf96e6d5319a6
+
+  - name: xapp-gtk3-module
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/flathub/xapp-gtk3-module.git
+
+  - name: flatpak-opengl-extensions
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/flathub/shared-modules.git
+
+  - name: additional-modules
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/flathub/extra-modules.git
+  - name: wayland
+    buildsystem: simple
     sources:
       - type: git
         url: https://gitlab.freedesktop.org/wayland/wayland.git
-        tag: master
+        branch: master
+
   - name: x11
-    buildsystem: meson
+    buildsystem: simple
     sources:
       - type: git
         url: https://gitlab.freedesktop.org/xorg/lib/libx11.git
-        tag: 1.7.0
+        branch: master
+
 # Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
   - name: python3-meson-python
     buildsystem: simple
@@ -81,6 +121,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/97/75/10a9ebee3fd790d20926a90a2547f0bf78f371b2f13aa822c759680ca7b9/tomli-2.0.1-py3-none-any.whl
         sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc
+
   - name: python3-versioneer
     buildsystem: simple
     build-commands:
@@ -90,6 +131,7 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/b0/79/f0f1ca286b78f6f33c521a36b5cbd5bd697c0d66217d8856f443aeb9dd77/versioneer-0.29-py3-none-any.whl
         sha256: 0f1a137bb5d6811e96a79bb0486798aeae9b9c6efc24b389659cebb0ee396cb9
+
   - name: python3-xapp
     buildsystem: simple
     build-commands:
@@ -99,6 +141,7 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/1d/cf/b4fc57d170c11a615806b4754e867ffadf40a066456e846a0d415b5cc556/xapp-0.0.1.tar.gz
         sha256: cf72c1b3e4d342b457cb8c2ea9ccb6727e7c139e4da5d997cbd75c48c2f1a253
+
   - name: python3-mutf8
     buildsystem: simple
     build-commands:
@@ -109,6 +152,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/ca/31/3c57313757b3a47dcf32d2a9bad55d913b797efc8814db31bed8a7142396/mutf8-1.0.6.tar.gz
         sha256: 1bbbefb67c2e5a57104750bb04b0912200b57b2fa9841be245279e83859cb346
+
   - name: python3-numpy
     buildsystem: simple
     build-commands:
@@ -119,6 +163,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/65/6e/09db70a523a96d25e115e71cc56a6f9031e7b8cd166c1ac8438307c14058/numpy-1.26.4.tar.gz
         sha256: 2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010
+
   - name: python3-setuptools_scm
     buildsystem: simple
     build-commands:
@@ -133,6 +178,7 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl
         sha256: 04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d
+
   - name: python3-lz4
     buildsystem: simple
     build-commands:
@@ -143,6 +189,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/a4/31/ec1259ca8ad11568abaf090a7da719616ca96b60d097ccc5799cd0ff599c/lz4-4.3.3.tar.gz
         sha256: 01fe674ef2889dbb9899d8a67361e0c4a2c833af5aeb37dd505727cf5d2a131e
+
   - name: python3-packaging
     buildsystem: simple
     build-commands:
@@ -150,6 +197,7 @@ modules:
         "packaging==24.1" --report=pip_report.json --no-build-isolation
     sources:
       - *id001
+
   - name: python3-pillow
     buildsystem: simple
     build-commands:
@@ -160,6 +208,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/cd/74/ad3d526f3bf7b6d3f408b73fde271ec69dfac8b81341a318ce825f2b3812/pillow-10.4.0.tar.gz
         sha256: 166c1cd4d24309b30d61f79f4a9114b7b2313d7450912277855ff5dfd7cd4a06
+
   - name: python3-platformdirs
     buildsystem: simple
     build-commands:
@@ -170,6 +219,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/56/29/3ec311dc18804409ecf0d2b09caa976f3ae6215559306b5b530004e11156/platformdirs-3.11.0-py3-none-any.whl
         sha256: e9d171d00af68be50e9202731309c4e658fd8bc76f55c11c7dd760d023bda68e
+
   - name: python3-portalocker
     buildsystem: simple
     build-commands:
@@ -180,6 +230,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/9b/fb/a70a4214956182e0d7a9099ab17d50bfcba1056188e9b14f35b9e2b62a0d/portalocker-2.10.1-py3-none-any.whl
         sha256: 53a5984ebc86a025552264b459b46a2086e269b21823cb572f8f28ee759e45bf
+
   - name: python3-PyMCTranslate
     buildsystem: simple
     build-commands:
@@ -196,6 +247,7 @@ modules:
         sha256: a9de4fe068329c7a921f09dd4cec37c25c01ac2abeb4e10000e82e526e36d0fc
       - *id003
       - *id004
+
   - name: python3-PyOpenGL
     buildsystem: simple
     build-commands:
@@ -206,6 +258,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
         sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
+
   - name: python3-pyopengl-accelerate
     buildsystem: simple
     build-commands:
@@ -215,6 +268,7 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/93/09/d08b3d07dbd88258276496a47273778f330f5ccf8390cb21b16b29d660de/PyOpenGL-accelerate-3.1.7.tar.gz
         sha256: 2b123621273a939f7fd2ec227541e399f9b5d4e815d69ae0bdb1b6c70a293680
+
   - name: python3-wxPython
     buildsystem: simple
     build-commands:
@@ -227,6 +281,7 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/aa/64/d749e767a8ce7bdc3d533334e03bb1106fc4e4803d16f931fada9007ee13/wxPython-4.2.1.tar.gz
         sha256: e48de211a6606bf072ec3fa778771d6b746c00b7f4b970eb58728ddf56d13d5c
+
   - name: python3-amulet-core
     buildsystem: simple
     build-commands:
@@ -248,6 +303,7 @@ modules:
       - *id004
       - *id009
       - *id010
+
   - name: python3-amulet-leveldb
     buildsystem: simple
     build-commands:
@@ -255,6 +311,7 @@ modules:
         "amulet-leveldb" --report=pip_report.json --no-build-isolation
     sources:
       - *id011
+
   - name: python3-amulet-map-editor
     buildsystem: simple
     build-commands:
@@ -281,6 +338,7 @@ modules:
       - *id009
       - *id010
       - *id014
+
   - name: python3-amulet-nbt
     buildsystem: simple
     build-commands:
@@ -290,6 +348,7 @@ modules:
       - *id007
       - *id003
       - *id004
+
   - name: python3-minecraft-resource-pack
     buildsystem: simple
     build-commands:
