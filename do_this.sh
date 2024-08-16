@@ -22,7 +22,6 @@ finish-args:
   - --socket=x11
   - --socket=wayland
   - --device=dri
-  - --device=all
   - --share=ipc
   - --share=network
   - --filesystem=xdg-documents:create
