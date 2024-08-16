@@ -18,8 +18,7 @@ finish-args:
   - --filesystem=xdg-config:create
   - --env=PYTHONPATH=/app/lib/python3.11/site-packages
   - --env=GDK_BACKEND=x11
-  - --env=GDK_BACKEND=x11
-
+  - --env=GDK_BACKEND=wayland
 
 # Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
 build-commands: []
@@ -30,12 +29,18 @@ modules:
     sources:
       - type: git
         url: https://github.com/python/cpython.git
-        tag: v3.11.9
+        tag: v3.11.0
   - name: opengl
     buildsystem: cmake
     sources:
       - type: git
         url: https://github.com/KhronosGroup/OpenGL-Registry.git
+        tag: master
+  - name: opengl-extensions
+    buildsystem: cmake
+    sources:
+      - type: git
+        url: https://github.com/KhronosGroup/OpenGL-Extension-Registry.git
         tag: master
   - name: xapp-gtk3-module
     buildsystem: meson
@@ -43,6 +48,19 @@ modules:
       - type: git
         url: https://github.com/linuxmint/xapp.git
         tag: master
+  - name: wayland
+    buildsystem: cmake
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/wayland/wayland.git
+        tag: master
+  - name: x11
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/xorg/lib/libx11.git
+        tag: 1.7.0
+# Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
   - name: python3-meson-python
     buildsystem: simple
     build-commands:
