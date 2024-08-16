@@ -11,9 +11,9 @@
 cat << EOL > "amulet.yml"
 id: com.github.amulet_map_editor
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
-sdk-version: '23.08'
+sdk-version: '22.08'
 command: amulet_map_editor
 sdk-extensions:
   - org.freedesktop.Sdk.Debug
