@@ -200,7 +200,7 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "PyOpenGL==3.1.7" --report=pip_report.json --no-build-isolation
+        "PyOpenGL" --report=pip_report.json --no-build-isolation
     sources:
       - &id012
         type: file
@@ -302,16 +302,3 @@ modules:
       - *id004
       - *id005
       - *id009
-  - name: glew
-    buildsystem: cmake
-    sources:
-      - type: git
-        url: https://github.com/nigels-com/glew.git
-        tag: v2.1.0
-  - name: glfw
-    buildsystem: cmake
-    sources:
-      - type: git
-        url: https://github.com/glfw/glfw.git
-        tag: 3.3.4
-
