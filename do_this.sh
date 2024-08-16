@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Check if the script is running in a Python 3 virtual environment
-if [[ -z "$VIRTUAL_ENV" ]]; then
-    echo "Error: This script must be run inside a Python 3 virtual environment."
-    exit 1
-fi
+#if [[ -z "$VIRTUAL_ENV" ]]; then
+#    echo "Error: This script must be run inside a Python 3 virtual environment."
+#    exit 1
+#fi
 
 ./flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor --checker-data
 
