@@ -1,6 +1,6 @@
 meson-python~=0.16.0
 versioneer
-python-xapp
+xapp
 mutf8==1.0.6
 numpy==1.26.4
 setuptools==58.1.0
