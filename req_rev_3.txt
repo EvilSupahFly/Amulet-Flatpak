@@ -1,3 +1,4 @@
+cython
 meson-python~=0.16.0
 versioneer
 xapp
