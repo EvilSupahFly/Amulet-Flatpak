@@ -1,4 +1,4 @@
 .flatpak-builder
 amulet.flatpak
 tmp*.*
-*.tmp
+tmp.*
