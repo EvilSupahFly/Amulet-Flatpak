@@ -1,9 +1,15 @@
 ﻿id: com.github.amulet_map_editor
 runtime: org.freedesktop.Platform
-runtime-version: '22.08'
+runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
-sdk-version: '22.08'
+sdk-version: '23.08'
 command: python -m amulet_map_editor
+metadata:
+  name: Amulet Minecraft Editor
+  description: A powerful Minecraft world editor.
+  icon: com.github.amulet_map_editor/icon.png
+  homepage: https://amuletmc.com
+  license: MIT
 finish-args:
   - '--share=network'
   - '--socket=x11'
@@ -11,69 +17,67 @@ finish-args:
   - '--device=all'
   - '--filesystem=home'
 modules:
-  - name: mesa
-    buildsystem: meson
-    sources:
-      - type: git
-        url: 'https://gitlab.freedesktop.org/mesa/mesa.git'
-        tag: main
-  - name: pyopengl
+  - name: python3-PyOpenGL
     buildsystem: simple
+    build-commands:
+      - >-
+        pip3 install --verbose --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} "PyOpenGL" --report=pip_report.json
+        --no-build-isolation
     sources:
-      - type: pypi
-        name: PyOpenGL
-        version: 3.1.5
-  - name: xapp-gtk3-module
+      - &ref_11
+        type: file
+        url: >-
+          https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
+        sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
+  - name: python3-pyopengl-accelerate
     buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "pyopengl-accelerate" --report=pip_report.json --no-build-isolation
     sources:
-      - type: git
-        url: 'https://github.com/linuxmint/xapp.git'
-        tag: master
-  - name: wayland
-    buildsystem: simple
-    sources:
-      - type: git
-        url: 'https://gitlab.freedesktop.org/wayland/wayland.git'
-        commit: 5b692b50b9e3d379005633d4ac20068d2069849d
-  - name: x11
-    buildsystem: simple
-    sources:
-      - type: git
-        url: 'https://gitlab.freedesktop.org/xorg/xserver.git'
-        #commit: e2e5842444c20ab57cfc74cf0c0cdeb021afbc8a
-        tag: master
-  - name: python
+      - type: file
+        url: https://files.pythonhosted.org/packages/93/09/d08b3d07dbd88258276496a47273778f330f5ccf8390cb21b16b29d660de/PyOpenGL-accelerate-3.1.7.tar.gz
+        sha256: 2b123621273a939f7fd2ec227541e399f9b5d4e815d69ae0bdb1b6c70a293680
+#  - name: xapp-gtk3-module
+#    buildsystem: meson
+#    sources:
+#      - type: git
+#        url: 'https://github.com/linuxmint/xapp.git'
+#        commit: 17955c925c4b90f12af538a67bc417c62eb1c6d3
+#  - name: macros
+#    buildsystem: simple
+#    build-commands:
+#      - autogen.sh
+#    sources:
+#      - type: git
+#        url: 'https://gitlab.freedesktop.org/xorg/util/macros.git'
+#        commit: 7ed2b3798c030bd1729b699b446b43aba2ec606e
+#  - name: xfont2
+#    buildsystem: simple
+#    build-commands:
+#      - make
+#    sources:
+#      - &ref_15
+#        type: git
+#        url: https://gitlab.freedesktop.org/xorg/lib/libxfont.git
+#        commit: 2c2e44c94ef17ecd5003a173237b57b315e28d93
+#  - name: x11
+#    buildsystem: meson
+#    build-commands:
+#      - meson setup --prefix=${FLATPAK_DEST}
+#    sources:
+#      - *ref_15
+#      - type: git
+#        url: 'https://gitlab.freedesktop.org/xorg/xserver.git'
+#        #commit: e2e5842444c20ab57cfc74cf0c0cdeb021afbc8a
+#        tag: master
+  - name: python3-python311
     buildsystem: simple
     sources:
       - type: file
         url: 'https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz'
         sha256: e7de3240a8bc2b1e1ba5c81bf943f06861ff494b69fda990ce2722a504c6153d
-  - name: python3-meson-python
-    buildsystem: simple
-    build-commands:
-      - >-
-        pip3 install --verbose --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "meson-python~=0.16.0" --report=pip_report.json
-        --no-build-isolation
-    sources:
-      - type: file
-        url: >-
-          https://files.pythonhosted.org/packages/91/c0/104cb6244c83fe6bc3886f144cc433db0c0c78efac5dc00e409a5a08c87d/meson_python-0.16.0-py3-none-any.whl
-        sha256: 842dc9f5dc29e55fc769ff1b6fe328412fe6c870220fc321060a1d2d395e69e8
-      - &ref_0
-        type: file
-        url: >-
-          https://files.pythonhosted.org/packages/08/aa/cc0199a5f0ad350994d660967a8efb233fe0416e4639146c089643407ce6/packaging-24.1-py3-none-any.whl
-        sha256: 5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124
-      - type: file
-        url: >-
-          https://files.pythonhosted.org/packages/aa/5f/bb5970d3d04173b46c9037109f7f05fc8904ff5be073ee49bb6ff00301bc/pyproject_metadata-0.8.0-py3-none-any.whl
-        sha256: ad858d448e1d3a1fb408ac5bac9ea7743e7a8bbb472f2693aaa334d2db42f526
-      - &ref_1
-        type: file
-        url: >-
-          https://files.pythonhosted.org/packages/97/75/10a9ebee3fd790d20926a90a2547f0bf78f371b2f13aa822c759680ca7b9/tomli-2.0.1-py3-none-any.whl
-        sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc
   - name: python3-versioneer
     buildsystem: simple
     build-commands:
@@ -87,17 +91,12 @@ modules:
           https://files.pythonhosted.org/packages/b0/79/f0f1ca286b78f6f33c521a36b5cbd5bd697c0d66217d8856f443aeb9dd77/versioneer-0.29-py3-none-any.whl
         sha256: 0f1a137bb5d6811e96a79bb0486798aeae9b9c6efc24b389659cebb0ee396cb9
   - name: python3-xapp
-    buildsystem: simple
-    build-commands:
-      - >-
-        pip3 install --verbose --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "xapp" --report=pip_report.json
-        --no-build-isolation
+    buildsystem: meson
     sources:
-      - type: file
+      - type: git
         url: >-
-          https://files.pythonhosted.org/packages/1d/cf/b4fc57d170c11a615806b4754e867ffadf40a066456e846a0d415b5cc556/xapp-0.0.1.tar.gz
-        sha256: cf72c1b3e4d342b457cb8c2ea9ccb6727e7c139e4da5d997cbd75c48c2f1a253
+          https://github.com/linuxmint/python3-xapp.git
+        commit: e97e119d483b849bd833d7900f76c4ee20af2838
   - name: python3-mutf8
     buildsystem: simple
     build-commands:
@@ -127,20 +126,21 @@ modules:
   - name: python3-setuptools_scm
     buildsystem: simple
     build-commands:
-      - >-
-        pip3 install --verbose --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "setuptools_scm[toml]>=6.2"
-        --report=pip_report.json --no-build-isolation
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "setuptools_scm[toml]>=6.2" --report=pip_report.json --no-build-isolation
     sources:
-      - *ref_0
+      - &ref_1
+        type: file
+        url: https://files.pythonhosted.org/packages/08/aa/cc0199a5f0ad350994d660967a8efb233fe0416e4639146c089643407ce6/packaging-24.1-py3-none-any.whl
+        sha256: 5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124
       - type: file
-        url: >-
-          https://files.pythonhosted.org/packages/a0/b9/1906bfeb30f2fc13bb39bf7ddb8749784c05faadbd18a21cf141ba37bff2/setuptools_scm-8.1.0-py3-none-any.whl
+        url: https://files.pythonhosted.org/packages/a0/b9/1906bfeb30f2fc13bb39bf7ddb8749784c05faadbd18a21cf141ba37bff2/setuptools_scm-8.1.0-py3-none-any.whl
         sha256: 897a3226a6fd4a6eb2f068745e49733261a21f70b1bb28fce0339feb978d9af3
-      - *ref_1
       - type: file
-        url: >-
-          https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl
+        url: https://files.pythonhosted.org/packages/97/75/10a9ebee3fd790d20926a90a2547f0bf78f371b2f13aa822c759680ca7b9/tomli-2.0.1-py3-none-any.whl
+        sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc
+      - type: file
+        url: https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl
         sha256: 04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d
   - name: python3-lz4
     buildsystem: simple
@@ -163,7 +163,7 @@ modules:
         --prefix=${FLATPAK_DEST} "packaging==24.1" --report=pip_report.json
         --no-build-isolation
     sources:
-      - *ref_0
+      - #*ref_0
   - name: python3-pillow
     buildsystem: simple
     build-commands:
@@ -223,31 +223,6 @@ modules:
         url: >-
           https://files.pythonhosted.org/packages/9b/fb/a70a4214956182e0d7a9099ab17d50bfcba1056188e9b14f35b9e2b62a0d/portalocker-2.10.1-py3-none-any.whl
         sha256: 53a5984ebc86a025552264b459b46a2086e269b21823cb572f8f28ee759e45bf
-  - name: python3-PyOpenGL
-    buildsystem: simple
-    build-commands:
-      - >-
-        pip3 install --verbose --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "PyOpenGL" --report=pip_report.json
-        --no-build-isolation
-    sources:
-      - &ref_11
-        type: file
-        url: >-
-          https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
-        sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
-  - name: python3-pyopengl-accelerate
-    buildsystem: simple
-    build-commands:
-      - >-
-        pip3 install --verbose --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "pyopengl-accelerate" --report=pip_report.json
-        --no-build-isolation
-    sources:
-      - type: file
-        url: >-
-          https://files.pythonhosted.org/packages/93/09/d08b3d07dbd88258276496a47273778f330f5ccf8390cb21b16b29d660de/PyOpenGL-accelerate-3.1.7.tar.gz
-        sha256: 2b123621273a939f7fd2ec227541e399f9b5d4e815d69ae0bdb1b6c70a293680
   - name: python3-wxPython
     buildsystem: simple
     build-commands:
@@ -322,7 +297,7 @@ modules:
         sha256: 672ff157bdb9ccfcbc445393d2e4603cf0d32e320bbc8e7bb5082e855ff3155f
       - *ref_2
       - *ref_3
-      - *ref_0
+      - #*ref_0
       - *ref_4
       - *ref_8
       - *ref_9
@@ -375,7 +350,7 @@ modules:
         sha256: 672ff157bdb9ccfcbc445393d2e4603cf0d32e320bbc8e7bb5082e855ff3155f
       - *ref_2
       - *ref_3
-      - *ref_0
+      - #*ref_0
       - *ref_4
       - *ref_8
       - *ref_9
@@ -384,25 +359,23 @@ modules:
     buildsystem: simple
     sources:
       - type: file
-        path: amulet.ico
+        path: data/icons/amulet.png
 name: Amulet Map Editor
 finish:
   modules:
     - xapp-gtk3-module
-    - mesa
-    - wayland
-    - x11
+    - python3-python311
+#    - x11
   add-extensions:
     - org.freedesktop.Platform.GL
     - org.xapp.xapp-gtk3-module
 environment:
   LD_LIBRARY_PATH: /app/lib
-  PYTHONPATH: /usr/lib/python3.9/site-packages
+  PYTHONPATH: /app/lib/python3.9/site-packages
   PYTHON_VERSION: 3.11.9
   GTK_MODULES: xapp-gtk3-module
   LIBGL_ALWAYS_SOFTWARE: 1
   GDK_BACKEND: wayland
-  MESA_GL_VERSION_OVERRIDE: 4.5
 
 icon: 'data/icons/amulet.png'
 

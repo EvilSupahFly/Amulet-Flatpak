@@ -1,5 +1,5 @@
 cython
-meson-python~=0.16.0
+meson
 versioneer
 xapp
 mutf8==1.0.6
@@ -7,7 +7,7 @@ numpy==1.26.4
 setuptools==58.1.0
 setuptools_scm[toml]>=6.2
 lz4==4.3.3
-packaging==24.1
+packaging
 pillow==10.4.0
 pip
 platformdirs==3.11.0
