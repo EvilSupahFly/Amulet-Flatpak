@@ -1,8 +1,8 @@
 ﻿id: com.github.amulet_map_editor
 runtime: org.freedesktop.Platform
-runtime-version: '21.08'
+runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
-sdk-version: '21.08'
+sdk-version: '22.08'
 command: python -m amulet_map_editor
 finish-args:
   - '--share=network'
@@ -11,8 +11,8 @@ finish-args:
   - '--device=all'
   - '--filesystem=home'
 modules:
-  - name: opengl
-    buildsystem: simple
+  - name: mesa
+    buildsystem: meson
     sources:
       - type: git
         url: 'https://gitlab.freedesktop.org/mesa/mesa.git'
@@ -40,12 +40,14 @@ modules:
     sources:
       - type: git
         url: 'https://gitlab.freedesktop.org/xorg/xserver.git'
-        tag: main
+        #commit: e2e5842444c20ab57cfc74cf0c0cdeb021afbc8a
+        tag: master
   - name: python
     buildsystem: simple
     sources:
       - type: file
-        url: 'https://www.python.org/ftp/python/3.9.19/Python-3.9.19.tgz'
+        url: 'https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz'
+        sha256: e7de3240a8bc2b1e1ba5c81bf943f06861ff494b69fda990ce2722a504c6153d
   - name: python3-meson-python
     buildsystem: simple
     build-commands:
@@ -359,7 +361,7 @@ modules:
         --no-build-isolation
     sources:
       - type: git
-        url: 'https://github.com/Amulet-Team/Amulet-Minecraft-Editor.git'
+        url: 'https://github.com/Amulet-Team/Amulet-Map-Editor.git'
         tag: master
       - *ref_5
       - *ref_11
@@ -396,7 +398,19 @@ finish:
 environment:
   LD_LIBRARY_PATH: /app/lib
   PYTHONPATH: /usr/lib/python3.9/site-packages
-  PYTHON_VERSION: 3.9.19
+  PYTHON_VERSION: 3.11.9
   GTK_MODULES: xapp-gtk3-module
   LIBGL_ALWAYS_SOFTWARE: 1
-icon: amulet-icon
+  GDK_BACKEND: wayland
+  MESA_GL_VERSION_OVERRIDE: 4.5
+
+icon: 'data/icons/amulet.png'
+
+desktop:
+  name: Amulet Minecraft Editor
+  comment: A powerful Minecraft editor
+  exec: python -m amulet_map_editor
+  icon: amulet
+  terminal: true
+  type: Application
+  categories: [Game, Graphics]
