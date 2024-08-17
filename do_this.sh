@@ -6,33 +6,36 @@
 #    exit 1
 #fi
 
-./flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor --checker-data
+./flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
 
+#Dump the header into our "proper" manifest
 cat << EOL > "amulet.yml"
-id: com.github.amulet_map_editor
 runtime: org.freedesktop.Platform
-runtime-version: '22.08'
+runtime-version: '21.08'
 sdk: org.freedesktop.Sdk
-sdk-version: '22.08'
-command: amulet_map_editor
-sdk-extensions:
-  - org.freedesktop.Sdk.Debug
-name: Amulet Map Editor
+sdk-version: '21.08'
+
 finish-args:
+  - --share=network
   - --socket=x11
   - --socket=wayland
-  - --device=dri
-  - --share=ipc
-  - --share=network
-  - --filesystem=xdg-documents:create
-  - --filesystem=home:create
-  - --filesystem=xdg-config:create
+  - --device=all
+  - --filesystem=home
+  - --env=PYTHONPATH=/app/lib/python3.9/site-packages
+  
+finish:
+  # OpenGL support
+  add-extensions:
+    - org.freedesktop.Platform.GL
+  # xapp-gtk3-module support
+  add-extensions:
+    - org.xapp.xapp-gtk3-module
 
 EOL
 
 cat "amulet_map_editor.yaml" >> "amulet.yml"
 
-flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=amulet_flatpak_repo amulet_build_dir amulet.yml --system --keep-build-dirs --force-clean
+flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=amulet_flatpak_repo amulet_build_dir amulet_testing.yml --system --keep-build-dirs --force-clean
 
 flatpak build-bundle amulet_flatpak_repo amulet.flatpak com.github.amulet_map_editor
 

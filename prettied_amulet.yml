@@ -3,14 +3,24 @@ runtime: org.freedesktop.Platform
 runtime-version: '21.08'
 sdk: org.freedesktop.Sdk
 sdk-version: '21.08'
-command: python -m amulet_map_editor
 finish-args:
   - '--share=network'
   - '--socket=x11'
   - '--socket=wayland'
   - '--device=all'
   - '--filesystem=home'
+  - '--env=PYTHONPATH=/app/lib/python3.9/site-packages'
+finish:
+  add-extensions:
+    - org.freedesktop.Platform.GL
+    - org.xapp.xapp-gtk3-module
 modules:
+  - name: python39
+    buildsystem: simple
+    sources:
+      - type: python
+        url: 'pypi:python'
+        version: 3.9.19
   - name: opengl
     buildsystem: simple
     sources:
@@ -34,7 +44,7 @@ modules:
     sources:
       - type: git
         url: 'https://gitlab.freedesktop.org/wayland/wayland.git'
-        commit: 5b692b50b9e3d379005633d4ac20068d2069849d
+        tag: main
   - name: x11
     buildsystem: simple
     sources:
@@ -44,8 +54,9 @@ modules:
   - name: python
     buildsystem: simple
     sources:
-      - type: file
-        url: 'https://www.python.org/ftp/python/3.9.19/Python-3.9.19.tgz'
+      - type: git
+        url: 'https://github.com/python/cpython.git'
+        tag: v3.9.19
   - name: python3-meson-python
     buildsystem: simple
     build-commands:
@@ -378,25 +389,4 @@ modules:
       - *ref_8
       - *ref_9
       - *ref_13
-  - name: amulet-icon
-    buildsystem: simple
-    sources:
-      - type: file
-        path: amulet.ico
 name: Amulet Map Editor
-finish:
-  modules:
-    - xapp-gtk3-module
-    - mesa
-    - wayland
-    - x11
-  add-extensions:
-    - org.freedesktop.Platform.GL
-    - org.xapp.xapp-gtk3-module
-environment:
-  LD_LIBRARY_PATH: /app/lib
-  PYTHONPATH: /usr/lib/python3.9/site-packages
-  PYTHON_VERSION: 3.9.19
-  GTK_MODULES: xapp-gtk3-module
-  LIBGL_ALWAYS_SOFTWARE: 1
-icon: amulet-icon

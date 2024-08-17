@@ -1,7 +1,99 @@
-# Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=Amulet Map Editor
-build-commands: []
-buildsystem: simple
+id: com.github.amulet_map_editor
+#runtime: org.freedesktop.Platform
+#runtime-version: '22.08'
+#sdk: org.freedesktop.Sdk
+#sdk-version: '22.08'
+#command: amulet_map_editor
+#sdk-extensions:
+#  - org.freedesktop.Sdk.Debug
+#name: Amulet Map Editor
+#finish-args:
+#  - --socket=x11
+#  - --socket=wayland
+#  - --device=dri
+#  - --share=ipc
+#  - --share=network
+#  - --filesystem=xdg-documents:create
+#  - --filesystem=home:create
+#  - --filesystem=xdg-config:create
+#  - --env=PYTHONPATH=/app/lib/python3.11/site-packages
+#  - --env=GDK_BACKEND=x11
+#  - --env=GDK_BACKEND=wayland
+#  - --env=LD_LIBRARY_PATH=${LD_LIBRARY_PATH}/lib64
+#finish:
+#  modules:
+#    - mesa
+#    - xapp-gtk3-module
+#    - wayland
+#    - x11
+#    - opengl
+#    - opengl-extensions
+#    - --env=PYTHONUNBUFFERED=1
+
+#  - name: some-name
+#    buildsystem: simple
+#    sources:
+#      - type: git
+#        url: https://github.com/some-git/amazing-project.git
+#        tag: v0.10.35 --> Tag can be any used to get a specific version of
+runtime: org.freedesktop.Platform
+runtime-version: '21.08'
+sdk: org.freedesktop.Sdk
+sdk-version: '21.08'
+command: python -m amulet_map_editor
+
+finish-args:
+  - --share=network
+  - --socket=x11
+  - --socket=wayland
+  - --device=all
+  - --filesystem=home
+  - --env=PYTHONPATH=/app/lib/python3.9/site-packages
+  
 modules:
+  - name: opengl
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/mesa/mesa.git
+        tag: main
+
+  - name: pyopengl
+    buildsystem: simple
+    sources:
+      - type: pypi
+        name: PyOpenGL
+        version: '3.1.5'
+
+  - name: xapp-gtk3-module
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/linuxmint/xapp.git
+        tag: master
+
+  - name: wayland
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/wayland/wayland.git
+        tag: main
+
+  - name: x11
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/xorg/xserver.git
+        tag: main
+
+# Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
+#modules:
+  - name: python
+    buildsystem: simple
+    sources:
+      - type: python
+        url: https://www.python.org/ftp/python/3.9.19/Python-3.9.19.tgz
+
   - name: python3-meson-python
     buildsystem: simple
     build-commands:
@@ -101,6 +193,22 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/cd/74/ad3d526f3bf7b6d3f408b73fde271ec69dfac8b81341a318ce825f2b3812/pillow-10.4.0.tar.gz
         sha256: 166c1cd4d24309b30d61f79f4a9114b7b2313d7450912277855ff5dfd7cd4a06
+  - name: python3-PyMCTranslate
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "PyMCTranslate" --report=pip_report.json --no-build-isolation
+    sources:
+      - &id006
+        type: file
+        url: https://files.pythonhosted.org/packages/25/e2/b645189fbdbc4f9cad1db97dfc5b1de230baad9d83dba0f731748bb0fbbd/PyMCTranslate-1.2.27-py3-none-any.whl
+        sha256: 724e1fa82dcbcf9289b01fb2cb2ad8ee2f0a987ddda01a766a42ec6aca98769a
+      - &id007
+        type: file
+        url: https://files.pythonhosted.org/packages/00/b9/48aa1754bc30143d7623253ff507986123829e9ae78a266ec34e08c0c544/amulet-nbt-2.1.3.tar.gz
+        sha256: a9de4fe068329c7a921f09dd4cec37c25c01ac2abeb4e10000e82e526e36d0fc
+      - *id003
+      - *id004
   - name: python3-platformdirs
     buildsystem: simple
     build-commands:
@@ -121,22 +229,6 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/9b/fb/a70a4214956182e0d7a9099ab17d50bfcba1056188e9b14f35b9e2b62a0d/portalocker-2.10.1-py3-none-any.whl
         sha256: 53a5984ebc86a025552264b459b46a2086e269b21823cb572f8f28ee759e45bf
-  - name: python3-PyMCTranslate
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "PyMCTranslate" --report=pip_report.json --no-build-isolation
-    sources:
-      - &id006
-        type: file
-        url: https://files.pythonhosted.org/packages/25/e2/b645189fbdbc4f9cad1db97dfc5b1de230baad9d83dba0f731748bb0fbbd/PyMCTranslate-1.2.27-py3-none-any.whl
-        sha256: 724e1fa82dcbcf9289b01fb2cb2ad8ee2f0a987ddda01a766a42ec6aca98769a
-      - &id007
-        type: file
-        url: https://files.pythonhosted.org/packages/00/b9/48aa1754bc30143d7623253ff507986123829e9ae78a266ec34e08c0c544/amulet-nbt-2.1.3.tar.gz
-        sha256: a9de4fe068329c7a921f09dd4cec37c25c01ac2abeb4e10000e82e526e36d0fc
-      - *id003
-      - *id004
   - name: python3-PyOpenGL
     buildsystem: simple
     build-commands:
@@ -243,4 +335,52 @@ modules:
       - *id004
       - *id005
       - *id009
+  - name: python3-amulet-map-editor
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "amulet-map-editor" --report=pip_report.json --no-build-isolation
+    sources:
+      - type: git
+        url: https://github.com/Amulet-Team/Amulet-Minecraft-Editor.git
+        tag: master # Always build against the newest version
+      - *id006
+      - *id012
+      - *id007
+      - *id013
+      - *id011
+      - *id008
+      - &id015
+        type: file
+        url: https://files.pythonhosted.org/packages/1e/07/bf65fcbb5f66c0e961ff4233023b6ffc65e69f6996251f5a0f1e94e6e65d/minecraft_resource_pack-1.4.3-py3-none-any.whl
+        sha256: 672ff157bdb9ccfcbc445393d2e4603cf0d32e320bbc8e7bb5082e855ff3155f
+      - *id003
+      - *id004
+      - *id001
+      - *id005
+      - *id009
+      - *id010
+      - *id014
+  - name: amulet-icon
+    buildsystem: simple
+    sources:
+      - type: file
+        path: amulet.ico
+
 name: Amulet Map Editor
+
+finish:
+  modules:
+    - xapp-gtk3-module
+    - mesa
+    - wayland
+    - x11
+  add-extensions:
+    - org.freedesktop.Platform.GL   # OpenGL support
+    - org.xapp.xapp-gtk3-module   # xapp-gtk3-module support
+
+environment:
+  PYTHONPATH: /app/lib/python3.9/site-packages
+  LD_LIBRARY_PATH: /app/lib
+
+icon: amulet-icon
