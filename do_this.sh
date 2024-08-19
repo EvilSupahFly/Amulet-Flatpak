@@ -92,7 +92,7 @@ echo "To install the Amulet Flatpak, type:"
 echo "flatpak install amulet.flatpak"
 
 # Run bundle
-echo "To install your install, type:"
+echo "To run your install, type:"
 echo "flatpak run com.github.amulet_map_editor"
 
 #Uninstall bundle if it doesn't work or you just don't need it
