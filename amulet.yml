@@ -310,4 +310,5 @@ finish:
     - ipc
     - network
     - x11
+    - dri
 
