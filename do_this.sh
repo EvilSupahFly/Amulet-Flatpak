@@ -11,7 +11,7 @@
 #fi
 
 # Generate everything we need to build Amulet in the Flatpak sandbox
-./flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
+./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=amulet_map_editor
 
 # Create the initial header for our "proper" manifest
 cat << EOL > "amulet.yml"
