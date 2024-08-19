@@ -48,7 +48,6 @@ modules:
   - shared-modules/pygame/pygame-1.9.6.json
 
 # Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
-modules:
   - name: python3-versioneer
     buildsystem: simple
     build-commands:
