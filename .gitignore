@@ -2,3 +2,10 @@
 amulet.flatpak
 tmp*.*
 tmp.*
+*.bak
+amulet.yml.base
+Amulet Map Editor.yaml
+amulet_map_editor.yaml
+libappindicator.yml
+req_rev_3.txt
+amulet_testing.yml

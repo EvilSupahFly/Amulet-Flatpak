@@ -11,6 +11,12 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/b0/79/f0f1ca286b78f6f33c521a36b5cbd5bd697c0d66217d8856f443aeb9dd77/versioneer-0.29-py3-none-any.whl
         sha256: 0f1a137bb5d6811e96a79bb0486798aeae9b9c6efc24b389659cebb0ee396cb9
+  - name: python3-pyyaml
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "pyyaml" --report=pip_report.json --no-build-isolation
+    sources: []
   - name: python3-xapp
     buildsystem: simple
     build-commands:
@@ -24,7 +30,7 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "mutf8==1.0.6" --report=pip_report.json --no-build-isolation
+        "mutf8" --report=pip_report.json --no-build-isolation
     sources:
       - &id002
         type: file
@@ -34,7 +40,7 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "numpy==1.26.4" --report=pip_report.json --no-build-isolation
+        "numpy" --report=pip_report.json --no-build-isolation
     sources:
       - &id003
         type: file
@@ -53,17 +59,24 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/a0/b9/1906bfeb30f2fc13bb39bf7ddb8749784c05faadbd18a21cf141ba37bff2/setuptools_scm-8.1.0-py3-none-any.whl
         sha256: 897a3226a6fd4a6eb2f068745e49733261a21f70b1bb28fce0339feb978d9af3
+  - name: python3-requirements-parser
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "requirements-parser" --report=pip_report.json --no-build-isolation
+    sources:
+      - *id001
       - type: file
-        url: https://files.pythonhosted.org/packages/97/75/10a9ebee3fd790d20926a90a2547f0bf78f371b2f13aa822c759680ca7b9/tomli-2.0.1-py3-none-any.whl
-        sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc
+        url: https://files.pythonhosted.org/packages/88/33/190393a7d36872e237cbc99e6c44d9a078a1ba7b406462fe6eafd5a28e04/requirements_parser-0.11.0-py3-none-any.whl
+        sha256: 50379eb50311834386c2568263ae5225d7b9d0867fb55cf4ecc93959de2c2684
       - type: file
-        url: https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl
-        sha256: 04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d
+        url: https://files.pythonhosted.org/packages/5f/8b/96a7ad4a355aab5688f58517d946a37975e3baa8b71d4cd3b5f87ff77b23/types_setuptools-71.1.0.20240818-py3-none-any.whl
+        sha256: c4f95302f88369ac0ac46c67ddbfc70c6c4dbbb184d9fed356244217a2934025
   - name: python3-lz4
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "lz4==4.3.3" --report=pip_report.json --no-build-isolation
+        "lz4" --report=pip_report.json --no-build-isolation
     sources:
       - &id007
         type: file
@@ -73,14 +86,14 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "packaging==24.1" --report=pip_report.json --no-build-isolation
+        "packaging" --report=pip_report.json --no-build-isolation
     sources:
       - *id001
   - name: python3-pillow
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "pillow==10.4.0" --report=pip_report.json --no-build-isolation
+        "pillow" --report=pip_report.json --no-build-isolation
     sources:
       - &id004
         type: file
@@ -90,7 +103,7 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "platformdirs==3.11.0" --report=pip_report.json --no-build-isolation
+        "platformdirs" --report=pip_report.json --no-build-isolation
     sources:
       - &id008
         type: file
@@ -100,7 +113,7 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "portalocker==2.10.1" --report=pip_report.json --no-build-isolation
+        "portalocker" --report=pip_report.json --no-build-isolation
     sources:
       - &id009
         type: file
@@ -145,7 +158,7 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "wxPython==4.2.1" --report=pip_report.json --no-build-isolation
+        "wxPython" --report=pip_report.json --no-build-isolation
     sources:
       - *id003
       - *id004
