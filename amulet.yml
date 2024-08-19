@@ -1,11 +1,19 @@
-id: com.github.amulet_map_editor
+id: com.github.evilsupahfly.amulet_map_editor
 name: Amulet Map Editor
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 sdk-version: '23.08'
-add-build-extensions:
-  - org.freedesktop.Platform.GL.default
+inherit-extensions:
+  - org.freedesktop.Platform.GL
+  - org.gtk.Gtk3theme
+  - org.freedesktop.Platform.GL.Debug.default
+  - org.freedesktop.Platform.VAAPI.Intel
+id-platform: com.github.evilsupahfly.amulet_map_editor.Platform
+inherit-sdk-extensions:
+  - org.freedesktop.Sdk.Debug
+  - org.freedesktop.Sdk.Extension
+  
 command: amulet_map_editor
 
 finish-args:
@@ -26,6 +34,8 @@ finish-args:
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
+  - --sdk=com.github.evilsupahfly.amulet_map_editor.Sdk//23.08
+  - --sdk=--runtime=com.github.evilsupahfly.amulet_map_editor.Platform//23.08
 
 modules:
   - shared-modules/SDL/SDL-1.2.15.json
@@ -288,7 +298,7 @@ modules:
       - *id008
 
 icon:
-  name: com.github.amulet_map_editor
+  name: com.github.evilsupahfly.amulet_map_editor
   src: data/icons/amulet.png
 
 desktop-file:
