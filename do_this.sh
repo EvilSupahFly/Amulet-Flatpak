@@ -10,10 +10,11 @@
 #    exit 1
 #fi
 
-# Generate everything we need to build Amulet in the Flatpak sandbox
-./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=amulet_map_editor
+function doFlatpakPIP {
+    # Generate everything we need to build Amulet in the Flatpak sandbox
+    ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=amulet_map_editor
 
-# Create the initial header for our "proper" manifest
+    # Create the initial header for our "proper" manifest
 cat << EOL > "amulet.yml"
 #### do_this >>> pass 1
 id: com.github.amulet_map_editor
@@ -22,8 +23,15 @@ runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 sdk-version: '23.08'
-add-build-extensions:
-  - org.freedesktop.Platform.GL.default
+inherit-extensions:
+  - org.freedesktop.Platform.GL
+  - org.gtk.Gtk3theme
+  - org.freedesktop.Platform.GL.Debug
+  - org.freedesktop.Platform.VAAPI.Intel
+inherit-sdk-extensions:
+  - org.freedesktop.Sdk.Debug
+  - org.freedesktop.Sdk.Extension
+  
 command: amulet_map_editor
 
 finish-args:
@@ -44,17 +52,29 @@ finish-args:
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
+  - --sdk=com.github.amulet_map_editor.Sdk//23.08
+  - --runtime=com.github.amulet_map_editor.Platform//23.08
+
+modules:
+  - shared-modules/glew/glew.json
+  - shared-modules/glu/glu-9.json
+  - shared-modules/libappindicator/libappindicator-gtk3-introspection-12.10.json
+  - shared-modules/gtk2/gtk2.json
+  - shared-modules/dbus-glib/dbus-glib.json
+  - shared-modules/pygame/pygame-1.9.6.json
 
 #### <<< do_this pass 1
 EOL
 
-# Add the output from flatpak-pip-generator after removing the trailing "name:" designator
-sed -i "s/name: amulet_map_editor//g" "amulet_map_editor.yaml"
-cat "amulet_map_editor.yaml" >> "amulet.yml"
+    # Add the output from flatpak-pip-generator after cleaning up the temp file
+    sed -i "s/modules://g" "amulet_map_editor.yaml"
+    sed -i "s/name: amulet_map_editor//g" "amulet_map_editor.yaml"
+    cat "amulet_map_editor.yaml" >> "amulet.yml"
 
-# Throw in some finnishing touches including a .desktop launcher and the Amulet project icon
-cat << EOL >> "amulet.yml"
+    # Throw in some finnishing touches including a .desktop launcher and the Amulet project icon
+    cat << EOL >> "amulet.yml"
 #### >>> do_this pass 2
+
 icon:
   name: com.github.amulet_map_editor
   src: data/icons/amulet.png
@@ -78,8 +98,20 @@ finish:
     - ipc
     - network
     - x11
+    - dri
 #### <<< do_this pass 2
 EOL
+
+}
+
+if [[ "$1" == "skip" || "$1" == "-skip" || "$1" == "--skip" || "$1" == "-s" ]]; then
+    echo "Skipping the 'flatpak-pip-generator' stage as requested."
+    sleep 3
+else
+    echo "Proceeding with the operation."
+    sleep 3
+    doFlatpakPIP
+fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=amulet_flatpak_repo amulet_build_dir amulet.yml --force-clean

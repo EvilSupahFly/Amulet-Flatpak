@@ -37,8 +37,8 @@ finish-args:
   - --runtime=com.github.amulet_map_editor.Platform//23.08
 
 modules:
-  - shared-modules/SDL/SDL-1.2.15.json
-  - shared-modules/SDL2/SDL2-with-libdecor.json
+#  - shared-modules/SDL/SDL-1.2.15.json
+#  - shared-modules/SDL2/SDL2-with-libdecor.json
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - shared-modules/libappindicator/libappindicator-gtk3-introspection-12.10.json
