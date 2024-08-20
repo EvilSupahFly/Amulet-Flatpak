@@ -9,3 +9,5 @@ amulet_map_editor.yaml
 libappindicator.yml
 req_rev_3.txt
 amulet_testing.yml
+amulet-testing.yml
+amulet_flatpak_repo/.lock

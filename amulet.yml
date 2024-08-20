@@ -7,13 +7,13 @@ sdk-version: '23.08'
 inherit-extensions:
   - org.freedesktop.Platform.GL
   - org.gtk.Gtk3theme
-  - org.freedesktop.Platform.GL.Debug
+  - org.freedesktop.Platform.GL.Debug.default
   - org.freedesktop.Platform.VAAPI.Intel
+id-platform: com.github.amulet_map_editor.Platform
 inherit-sdk-extensions:
   - org.freedesktop.Sdk.Debug
   - org.freedesktop.Sdk.Extension
-  
-command: amulet_map_editor
+ command: amulet_map_editor
 
 finish-args:
   - --share=network
@@ -22,6 +22,7 @@ finish-args:
   - --socket=wayland
   - --device=all
   - --filesystem=home:create
+  - --filesystem=$XDG_DATA_HOME/flatpak/extension:create
   - --talk-name=org.freedesktop.Notifications
   - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
@@ -33,12 +34,12 @@ finish-args:
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
-  - --sdk=com.github.amulet_map_editor.Sdk//23.08
-  - --runtime=com.github.amulet_map_editor.Platform//23.08
+  - --sdk=com.github.amulet_map_editor.Sdk//0.10.35
+  - --runtime=com.github.amulet_map_editor.Platform//0.10.35
 
 modules:
-#  - shared-modules/SDL/SDL-1.2.15.json
-#  - shared-modules/SDL2/SDL2-with-libdecor.json
+  - shared-modules/SDL/SDL-1.2.15.json
+  - shared-modules/SDL2/SDL2-with-libdecor.json
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - shared-modules/libappindicator/libappindicator-gtk3-introspection-12.10.json

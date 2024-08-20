@@ -10,6 +10,15 @@
 #    exit 1
 #fi
 
+BOLD="\033[1m"
+RESET="\e[0m" #Normal
+BGND="\e[40m"
+YELLOW="${BOLD}${BGND}\e[1;33m"
+RED="${BOLD}${BGND}\e[1;91m"
+GREEN="${BOLD}${BGND}\e[1;92m"
+WHITE="${BOLD}${BGND}\e[1;97m"
+
+
 function doFlatpakPIP {
     # Generate everything we need to build Amulet in the Flatpak sandbox
     ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=amulet_map_editor
@@ -105,10 +114,10 @@ EOL
 }
 
 if [[ "$1" == "skip" || "$1" == "-skip" || "$1" == "--skip" || "$1" == "-s" ]]; then
-    echo "Skipping the 'flatpak-pip-generator' stage as requested."
+    echo -e "${YELLOW}    Skipping the 'flatpak-pip-generator' stage as requested.${RESET}"
     sleep 3
 else
-    echo "Proceeding with the operation."
+    echo -e "${GREEN}    Proceeding with the operation.${RESET}"
     sleep 3
     doFlatpakPIP
 fi
@@ -120,13 +129,17 @@ flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://
 flatpak build-bundle amulet_flatpak_repo amulet.flatpak com.github.amulet_map_editor
 
 # Install bundle
-echo "To install the Amulet Flatpak, type:"
-echo "flatpak install amulet.flatpak"
+echo
+echo -e "${YELLOW}    To install the Amulet Flatpak, type:"
+echo -e "${WHITE}        flatpak install amulet.flatpak"
 
 # Run bundle
-echo "To run your install, type:"
-echo "flatpak run com.github.amulet_map_editor"
+echo
+echo -e "${YELLOW}    To run your install, type:"
+echo -e "${WHITE}        flatpak run com.github.amulet_map_editor"
 
 #Uninstall bundle if it doesn't work or you just don't need it
-echo "To uninstall this, type:"
-echo "flatpak uninstall com.github.amulet_map_editor"
+echo
+echo -e "${YELLOW}    To uninstall this, type:"
+echo -e "${RED}        flatpak uninstall com.github.amulet_map_editor${RESET}"
+echo
