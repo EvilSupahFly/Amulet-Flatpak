@@ -7,22 +7,22 @@ sdk-version: '23.08'
 inherit-extensions:
   - org.freedesktop.Platform.GL
   - org.gtk.Gtk3theme
-  - org.freedesktop.Platform.GL.Debug.default
+  - org.freedesktop.Platform.GL.Debug
   - org.freedesktop.Platform.VAAPI.Intel
 id-platform: com.github.amulet_map_editor.Platform
 inherit-sdk-extensions:
   - org.freedesktop.Sdk.Debug
   - org.freedesktop.Sdk.Extension
- command: amulet_map_editor
+command: amulet_map_editor
 
 finish-args:
   - --share=network
   - --share=ipc
-  - --socket=x11
   - --socket=wayland
+  - --socket=fallback-x11
   - --device=all
   - --filesystem=home:create
-  - --filesystem=$XDG_DATA_HOME/flatpak/extension:create
+#  - --filesystem=$XDG_DATA_HOME:create
   - --talk-name=org.freedesktop.Notifications
   - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
