@@ -1,4 +1,4 @@
-id: com.github.evilsupahfly.amulet_map_editor
+id: com.github.amulet_map_editor
 name: Amulet Map Editor
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
@@ -9,7 +9,6 @@ inherit-extensions:
   - org.gtk.Gtk3theme
   - org.freedesktop.Platform.GL.Debug
   - org.freedesktop.Platform.VAAPI.Intel
-id-platform: com.github.evilsupahfly.amulet_map_editor.Platform
 inherit-sdk-extensions:
   - org.freedesktop.Sdk.Debug
   - org.freedesktop.Sdk.Extension
@@ -34,8 +33,8 @@ finish-args:
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
-  - --sdk=com.github.evilsupahfly.amulet_map_editor.Sdk//23.08
-  - --runtime=com.github.evilsupahfly.amulet_map_editor.Platform//23.08
+  - --sdk=com.github.amulet_map_editor.Sdk//23.08
+  - --runtime=com.github.amulet_map_editor.Platform//23.08
 
 modules:
   - shared-modules/SDL/SDL-1.2.15.json
@@ -297,13 +296,13 @@ modules:
       - *id008
 
 icon:
-  name: com.github.evilsupahfly.amulet_map_editor
+  name: com.github.amulet_map_editor
   src: data/icons/amulet.png
 
 desktop-file:
   name: Amulet Minecraft Editor
   comment: A powerful Minecraft editor
-  exec: flatpak run com.github.evilsupahfly.amulet_map_editor
+  exec: flatpak run com.github.amulet_map_editor
   icon: amulet
   terminal: true
   type: Application
