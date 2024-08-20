@@ -35,7 +35,7 @@ finish-args:
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
   - --sdk=com.github.evilsupahfly.amulet_map_editor.Sdk//23.08
-    --runtime=com.github.evilsupahfly.amulet_map_editor.Platform//23.08
+  - --runtime=com.github.evilsupahfly.amulet_map_editor.Platform//23.08
 
 modules:
   - shared-modules/SDL/SDL-1.2.15.json
