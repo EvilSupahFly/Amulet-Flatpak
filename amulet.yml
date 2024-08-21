@@ -9,7 +9,7 @@ inherit-extensions:
   - org.gtk.Gtk3theme
   - org.freedesktop.Platform.GL.Debug
   - org.freedesktop.Platform.VAAPI.Intel
-id-platform: com.github.amulet_map_editor//0.10.35
+#id-platform: com.github.amulet_map_editor//0.10.35
 inherit-sdk-extensions:
   - org.freedesktop.Sdk.Debug
   - org.freedesktop.Sdk.Extension
@@ -22,15 +22,16 @@ finish-args:
   - --socket=fallback-x11
   - --device=dri
   - --filesystem=home:create
-  - --filesystem=host-os
-  - --filesystem=/app/lib:create
+#  - --filesystem=host-os
+#  - --filesystem=/app/lib:create
   - --talk-name=org.freedesktop.Notifications
   - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
-  - --env=LD_LIBRARY_PATH=/app/lib
+#  - --env=LD_LIBRARY_PATH=/app/lib
+#  - --env=MESA_DEBUG
   - --env=MESA_LOADER_DRIVER_OVERRIDE="host"
   - --env=OPENGL_VERSION=3.3
-  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+#  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
   - --env=PYTHON_VERSION=3.11.9
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
@@ -298,7 +299,7 @@ modules:
       - *id008
 
 icon:
-  name: com.github.amulet_map_editor
+  name: amulet_map_editor
   src: data/icons/amulet.png
 
 desktop-file:
@@ -316,11 +317,11 @@ finish:
   add-exports:
     - /app/usr/lib/x86_64-linux-gnu/mesa
   # Allow access to the host's OpenGL drivers
-  allow:
-    - ipc
-    - network
-    - wayland
-    - x11
-    - dri
-    - all
+#  allow:
+#    - ipc
+#    - network
+#    - wayland
+#    - x11
+#    - dri
+#    - all
 
