@@ -20,7 +20,7 @@ finish-args:
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
-  - --device=all
+  - --device=dri
   - --filesystem=home:create
   - --filesystem=host-os
   - --filesystem=/app/lib:create
@@ -314,11 +314,13 @@ desktop-file:
 finish:
   # Enable host's drivers for OpenGL
   add-exports:
-    - /usr/lib/x86_64-linux-gnu/mesa
+    - /app/usr/lib/x86_64-linux-gnu/mesa
   # Allow access to the host's OpenGL drivers
   allow:
     - ipc
     - network
+    - wayland
     - x11
     - dri
+    - all
 
