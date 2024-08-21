@@ -9,7 +9,7 @@ inherit-extensions:
   - org.gtk.Gtk3theme
   - org.freedesktop.Platform.GL.Debug
   - org.freedesktop.Platform.VAAPI.Intel
-id-platform: com.github.amulet_map_editor.Platform
+id-platform: com.github.amulet_map_editor//0.10.35
 inherit-sdk-extensions:
   - org.freedesktop.Sdk.Debug
   - org.freedesktop.Sdk.Extension
@@ -22,7 +22,8 @@ finish-args:
   - --socket=fallback-x11
   - --device=all
   - --filesystem=home:create
-#  - --filesystem=$XDG_DATA_HOME:create
+  - --filesystem=host-os
+  - --filesystem=/app/lib:create
   - --talk-name=org.freedesktop.Notifications
   - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
@@ -34,8 +35,8 @@ finish-args:
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
-  - --sdk=com.github.amulet_map_editor.Sdk//0.10.35
-  - --runtime=com.github.amulet_map_editor.Platform//0.10.35
+#  - --sdk=com.github.amulet_map_editor.Sdk//0.10.35
+#  - --runtime=com.github.amulet_map_editor.Platform//0.10.35
 
 modules:
   - shared-modules/SDL/SDL-1.2.15.json

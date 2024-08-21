@@ -131,7 +131,7 @@ flatpak build-bundle amulet_flatpak_repo amulet.flatpak com.github.amulet_map_ed
 # Install bundle
 echo
 echo -e "${YELLOW}    To install the Amulet Flatpak, type:"
-echo -e "${WHITE}        flatpak install amulet.flatpak"
+echo -e "${WHITE}        flatpak install -u amulet.flatpak"
 
 # Run bundle
 echo
