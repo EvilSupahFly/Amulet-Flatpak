@@ -79,38 +79,6 @@ EOL
     sed -i "s/modules://g" "amulet_map_editor.yaml"
     sed -i "s/name: amulet_map_editor//g" "amulet_map_editor.yaml"
     cat "amulet_map_editor.yaml" >> "amulet.yml"
-
-    # Throw in some finnishing touches including a .desktop launcher and the Amulet project icon
-    cat << EOL >> "amulet.yml"
-#### >>> do_this pass 2
-
-icon:
-  name: com.github.amulet_map_editor
-  src: data/icons/amulet.png
-
-desktop-file:
-  name: Amulet Minecraft Editor
-  comment: A powerful Minecraft editor
-  exec: flatpak run com.github.amulet_map_editor
-  icon: amulet
-  terminal: true
-  type: Application
-  categories: [Game, Graphics]
-  startup-wm-class: AmuletMapEditor
-  
-finish:
-  # Enable host's drivers for OpenGL
-  add-exports:
-    - /usr/lib/x86_64-linux-gnu/mesa
-  # Allow access to the host's OpenGL drivers
-  allow:
-    - ipc
-    - network
-    - x11
-    - dri
-#### <<< do_this pass 2
-EOL
-
 }
 
 if [[ "$1" == "skip" || "$1" == "-skip" || "$1" == "--skip" || "$1" == "-s" ]]; then
