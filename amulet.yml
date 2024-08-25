@@ -1,20 +1,34 @@
 id: com.github.amulet_map_editor
+version: 0.10.35
 name: Amulet Map Editor
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 sdk-version: '23.08'
-inherit-extensions:
+build-extension: true
+inherit-build-extensions:
   - org.freedesktop.Platform.GL
   - org.gtk.Gtk3theme
   - org.freedesktop.Platform.GL.Debug
   - org.freedesktop.Platform.VAAPI.Intel
-#id-platform: com.github.amulet_map_editor//0.10.35
-inherit-sdk-extensions:
-  - org.freedesktop.Sdk.Debug
-  - org.freedesktop.Sdk.Extension
+id-platform: com.github.amulet_map_editor//0.10.35
+
 command: amulet_map_editor
 
+Extension org.freedesktop.Platform.GL:
+  # 1.4 is for Nvidia drivers
+  versions: "%{branch};%{branch-extra};1.4"
+  version: "1.4"
+  directory: "%{lib}/GL"
+  subdirectories: "true"
+  no-autodownload: "true"
+  autodelete: "false"
+  add-ld-path: "lib"
+  merge-dirs: "%{gl_merge_dirs}"
+  download-if: "active-gl-driver"
+  enable-if: "active-gl-driver"
+  autoprune-unless: active-gl-driver
+  
 finish-args:
   - --share=network
   - --share=ipc
@@ -22,22 +36,20 @@ finish-args:
   - --socket=fallback-x11
   - --device=dri
   - --filesystem=home:create
-#  - --filesystem=host-os
-#  - --filesystem=/app/lib:create
+  - --filesystem=host-os
+  - --filesystem=/app/usr/lib/x86_64-linux-gnu/mesa
   - --talk-name=org.freedesktop.Notifications
   - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
-#  - --env=LD_LIBRARY_PATH=/app/lib
+  - --env=LD_LIBRARY_PATH=/app/lib
 #  - --env=MESA_DEBUG
   - --env=MESA_LOADER_DRIVER_OVERRIDE="host"
   - --env=OPENGL_VERSION=3.3
-#  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
   - --env=PYTHON_VERSION=3.11.9
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
-#  - --sdk=com.github.amulet_map_editor.Sdk//0.10.35
-#  - --runtime=com.github.amulet_map_editor.Platform//0.10.35
 
 modules:
   - shared-modules/SDL/SDL-1.2.15.json
@@ -313,15 +325,13 @@ desktop-file:
   startup-wm-class: AmuletMapEditor
   
 finish:
-  # Enable host's drivers for OpenGL
   add-exports:
     - /app/usr/lib/x86_64-linux-gnu/mesa
-  # Allow access to the host's OpenGL drivers
-#  allow:
-#    - ipc
-#    - network
-#    - wayland
-#    - x11
-#    - dri
-#    - all
-
+  allow:
+    - ipc
+    - network
+    - wayland
+    - x11
+    - dri
+    - all
+    - host
