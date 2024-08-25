@@ -1,34 +1,19 @@
 id: com.github.amulet_map_editor
-version: 0.10.35
 name: Amulet Map Editor
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
-sdk: org.freedesktop.Sdk
-sdk-version: '23.08'
-build-extension: true
-inherit-build-extensions:
-  - org.freedesktop.Platform.GL
-  - org.gtk.Gtk3theme
-  - org.freedesktop.Platform.GL.Debug
-  - org.freedesktop.Platform.VAAPI.Intel
-id-platform: com.github.amulet_map_editor//0.10.35
-
+sdk: org.freedesktop.Sdk//23.08
+#sdk-version: '23.08'
+#inherit-extensions:
+#  - org.freedesktop.Platform.GL
+#  - org.gtk.Gtk3theme
+#  - org.freedesktop.Platform.GL.Debug
+#  - org.freedesktop.Platform.VAAPI.Intel
+#inherit-sdk-extensions:
+#  - org.freedesktop.Sdk.Debug
+#  - org.freedesktop.Sdk.Extension
 command: amulet_map_editor
 
-Extension org.freedesktop.Platform.GL:
-  # 1.4 is for Nvidia drivers
-  versions: "%{branch};%{branch-extra};1.4"
-  version: "1.4"
-  directory: "%{lib}/GL"
-  subdirectories: "true"
-  no-autodownload: "true"
-  autodelete: "false"
-  add-ld-path: "lib"
-  merge-dirs: "%{gl_merge_dirs}"
-  download-if: "active-gl-driver"
-  enable-if: "active-gl-driver"
-  autoprune-unless: active-gl-driver
-  
 finish-args:
   - --share=network
   - --share=ipc
@@ -36,14 +21,9 @@ finish-args:
   - --socket=fallback-x11
   - --device=dri
   - --filesystem=home:create
-  - --filesystem=host-os
-  - --filesystem=/app/usr/lib/x86_64-linux-gnu/mesa
   - --talk-name=org.freedesktop.Notifications
   - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
-  - --env=LD_LIBRARY_PATH=/app/lib
-#  - --env=MESA_DEBUG
-  - --env=MESA_LOADER_DRIVER_OVERRIDE="host"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
   - --env=PYTHON_VERSION=3.11.9
@@ -310,28 +290,22 @@ modules:
       - *id004
       - *id008
 
-icon:
-  name: amulet_map_editor
-  src: data/icons/amulet.png
+#icon:
+#  name: com.github.amulet_map_editor
+#  src: data/icons/amulet.png
+#
+#desktop-file:
+#  name: Amulet Minecraft Editor
+#  comment: A powerful Minecraft editor
+#  exec: flatpak run com.github.amulet_map_editor
+#  icon: amulet
+#  terminal: true
+#  type: Application
+#  categories: [Game, Graphics]
+#  startup-wm-class: AmuletMapEditor
 
-desktop-file:
-  name: Amulet Minecraft Editor
-  comment: A powerful Minecraft editor
-  exec: flatpak run com.github.amulet_map_editor
-  icon: amulet
-  terminal: true
-  type: Application
-  categories: [Game, Graphics]
-  startup-wm-class: AmuletMapEditor
-  
-finish:
-  add-exports:
-    - /app/usr/lib/x86_64-linux-gnu/mesa
-  allow:
-    - ipc
-    - network
-    - wayland
-    - x11
-    - dri
-    - all
-    - host
+#finish:
+  # Enable host's drivers for OpenGL
+#  add-exports:
+#    - /usr/lib/x86_64-linux-gnu/mesa
+
