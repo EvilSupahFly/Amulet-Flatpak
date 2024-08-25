@@ -3,7 +3,7 @@ My hope, with this project, is to make Amulet easier to install and use for peop
 
 Since the guide at https://www.linux.com/training-tutorials/how-install-and-use-flatpak-linux/ is so well done, there's no need for me to go over the installation and setup of Flatpak.
 
-The `amulet.flatpak` file, available from [Releases](https://github.com/EvilSupahFly/Amulet-Flatpak/releases), is the actual flatpak application and can be downloaded and run locally if you have the Flatpak framework installed by simply running `flatpak install amulet.flatpak` from the terminal in the same folder you've saved it to, then run with `flatpak run com.github.amulet_map_editor`. Uninstall is equally simplistic, achieved by running `flatpak uninstall com.github.amulet_map_editor` or save and run the `amulet.sh` script available in this repo.
+The `amulet.flatpak` file, available from [Releases](https://github.com/EvilSupahFly/Amulet-Flatpak/releases), is the actual flatpak application and can be downloaded and run locally if you have the Flatpak framework installed by simply running `flatpak install amulet.flatpak` from the terminal in the same folder you've saved it to, then run with `flatpak run com.github.amulet_map_editor`. Uninstall is equally simplistic, achieved by running `flatpak uninstall com.github.amulet_map_editor` or save and run the `amulet.sh` script available in this repo, in Releases.
 
 Assuming this works as intended accross the spectrum of Linux distributions, this project will be handed over to the Amulet team to manage officially.
 
