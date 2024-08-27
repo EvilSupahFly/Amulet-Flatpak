@@ -8,7 +8,7 @@ jobs:
     name: "Flatpak"
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-44
+      image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options: --privileged
     steps:
     - uses: actions/checkout@v4
@@ -16,6 +16,6 @@ jobs:
       with:
         bundle: amulet.flatpak
         build-bundle: true
-        repository-name: amulet_flatpak_repo
-        manifest-path: amulet.yml
+        repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/amulet_flatpak_repo
+        manifest-path: ./amulet.yml
         cache-key: flatpak-builder-${{ github.sha }}
