@@ -9,13 +9,11 @@ command: amulet_map_editor
 finish-args:
   - --share=network
   - --share=ipc
+  - --socket=fallback-x11
   - --socket=wayland
-#  - --socket=fallback-x11
-  - --socket=x11
   - --device=dri
   - --filesystem=home:create
   - --talk-name=org.freedesktop.Notifications
-#  - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so

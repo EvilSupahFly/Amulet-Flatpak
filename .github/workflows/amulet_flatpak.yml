@@ -1,0 +1,21 @@
+on:
+  push:
+    branches: [main]
+  pull_request:
+name: CI
+jobs:
+  flatpak:
+    name: "Flatpak"
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:gnome-44
+      options: --privileged
+    steps:
+    - uses: actions/checkout@v4
+    - uses: image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
+      with:
+        bundle: amulet.flatpak
+        build-bundle: true
+        repository-name: com.github.amulet_map_editor
+        manifest-path: amulet.yml
+        cache-key: flatpak-builder-${{ github.sha }}
