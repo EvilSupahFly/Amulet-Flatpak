@@ -1,5 +1,4 @@
 .flatpak-builder
-.github
 amulet.flatpak
 tmp*.*
 tmp.*
