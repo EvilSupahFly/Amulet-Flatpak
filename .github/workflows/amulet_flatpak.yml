@@ -12,7 +12,7 @@ jobs:
       options: --privileged
     steps:
     - uses: actions/checkout@v4
-    - uses: image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
+    - image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       with:
         bundle: amulet.flatpak
         build-bundle: true
