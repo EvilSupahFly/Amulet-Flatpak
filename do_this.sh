@@ -21,46 +21,34 @@ function doFlatpakPIP {
 
     # Create the initial header for our "proper" manifest
 cat << EOL > "amulet.yml"
-#### do_this >>> pass 1
+#### do_this.sh >>>
 id: com.github.amulet_map_editor
 name: Amulet Map Editor
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
-sdk: org.freedesktop.Sdk
-sdk-version: '23.08'
-inherit-extensions:
-  - org.freedesktop.Platform.GL
-  - org.gtk.Gtk3theme
-  - org.freedesktop.Platform.GL.Debug
-  - org.freedesktop.Platform.VAAPI.Intel
-inherit-sdk-extensions:
-  - org.freedesktop.Sdk.Debug
-  - org.freedesktop.Sdk.Extension
-  
+sdk: org.freedesktop.Sdk//23.08
+
 command: amulet_map_editor
 
 finish-args:
   - --share=network
   - --share=ipc
-  - --socket=x11
+  - --socket=fallback-x11
   - --socket=wayland
-  - --device=all
+  - --device=dri
   - --filesystem=home:create
   - --talk-name=org.freedesktop.Notifications
-  - --env=DRI_PRIME=1
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
-  - --env=LD_LIBRARY_PATH=/app/lib
-  - --env=MESA_LOADER_DRIVER_OVERRIDE="host"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
   - --env=PYTHON_VERSION=3.11.9
   - --env=WX_PYTHON=/app/lib/python3.11/site-packages/wx
   - --env=WX_PYTHON_VERSION=4.1.1
   - --env=XAPP_GTK3=true
-  - --sdk=com.github.amulet_map_editor.Sdk//23.08
-  - --runtime=com.github.amulet_map_editor.Platform//23.08
 
 modules:
+  - shared-modules/SDL/SDL-1.2.15.json
+  - shared-modules/SDL2/SDL2-with-libdecor.json
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - shared-modules/libappindicator/libappindicator-gtk3-introspection-12.10.json
@@ -68,7 +56,7 @@ modules:
   - shared-modules/dbus-glib/dbus-glib.json
   - shared-modules/pygame/pygame-1.9.6.json
 
-#### <<< do_this pass 1
+#### <<< do_this.sh
 EOL
 
     # Add the output from flatpak-pip-generator after cleaning up the temp file
@@ -78,7 +66,7 @@ EOL
 }
 
 if [[ "$1" == "do-pip" || "$1" == "-do-pip" || "$1" == "--do-pip" || "$1" == "-d" ]]; then
-    echo -e "${GREEN}    Proceeding with flatpak-pip-generator.${RESET}"
+    echo -e "\n${GREEN}    Proceeding with flatpak-pip-generator.${RESET}"
     sleep 3
     doFlatpakPIP
 elif [[ "$1" == "help" || "$1" == "--help" ]]; then
@@ -89,12 +77,12 @@ elif [[ "$1" == "help" || "$1" == "--help" ]]; then
     echo -e "${GREEN}Or ike this:"
     echo -e "${YELLOW}    ./$0 --do-pip"
     echo -e "${GREEN}\nRunning without ${WHITE}--do-pip${GREEN} will skip running"
-    echo -e "${WHITE}flatpak-pip-generator${GREEN} to generate a new \"amulet.yml\" and use an existing one."
+    echo -e "${WHITE}flatpak-pip-generator${GREEN} to generate a new \"amulet.yml\"."
     echo -e "\nHowever, there's no error checking, so if ${WHITE}amulet.yml${GREEN} doesn't"
     echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, no?${RESET}"
     exit 0
 else
-    echo -e "${YELLOW}    Skipping flatpak-pip-generator.${RESET}"
+    echo -e "\n${YELLOW}    Skipping flatpak-pip-generator.${RESET}\n"
     sleep 3
 fi
 
@@ -105,17 +93,13 @@ flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://
 flatpak build-bundle amulet_flatpak_repo amulet.flatpak com.github.amulet_map_editor
 
 # Install bundle
-echo
-echo -e "${YELLOW}    To install the Amulet Flatpak, type:"
-echo -e "${WHITE}        flatpak install -u amulet.flatpak"
+echo -e "\n${YELLOW}    To install the Amulet Flatpak, type:"
+echo -e "${WHITE}        flatpak install -u amulet.flatpak\n"
 
 # Run bundle
-echo
-echo -e "${YELLOW}    To run your install, type:"
-echo -e "${WHITE}        flatpak run com.github.amulet_map_editor"
+echo -e "\n${YELLOW}    To run your install, type:"
+echo -e "${WHITE}        flatpak run com.github.amulet_map_editor\n"
 
 #Uninstall bundle if it doesn't work or you just don't need it
-echo
-echo -e "${YELLOW}    To uninstall this, type:"
-echo -e "${RED}        flatpak uninstall com.github.amulet_map_editor${RESET}"
-echo
+echo -e "\n${YELLOW}    To uninstall this, type:"
+echo -e "${RED}        flatpak uninstall com.github.amulet_map_editor${RESET}\n"
