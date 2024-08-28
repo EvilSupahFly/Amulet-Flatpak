@@ -1,8 +1,7 @@
 on:
   push:
-    tags:
-      - '*'
     branches: [main]
+    tags: '*'
   pull_request:
 name: CI
 jobs:
@@ -43,5 +42,5 @@ jobs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       asset_path: ./bin/amulet-x86_64.flatpak
       asset_name: amulet-x86_64.flatpak
-      asset_content_type: application/gzip
+      asset_content_type: application/vnd.flatpak
 

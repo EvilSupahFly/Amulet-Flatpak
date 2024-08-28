@@ -1,22 +1,18 @@
 #!/bin/bash
 
-#
-# This was more of a checklist for myself, but it's handy for limited automation too
-#
-
 # Check if the script is running in a Python 3 virtual environment
 #if [[ -z "$VIRTUAL_ENV" ]]; then
 #    echo "Error: This script must be run inside a Python 3 virtual environment."
 #    exit 1
 #fi
 
-BOLD="\033[1m"
+BOLD="\033[1m" #Bold or Hi-Intensty - depends on your terminal app
 RESET="\e[0m" #Normal
-BGND="\e[40m"
-YELLOW="${BOLD}${BGND}\e[1;33m"
-RED="${BOLD}${BGND}\e[1;91m"
-GREEN="${BOLD}${BGND}\e[1;92m"
-WHITE="${BOLD}${BGND}\e[1;97m"
+BGND="\e[40m" #Background
+YELLOW="${BOLD}${BGND}\e[1;33m" #Bold/Hi-int Yellow
+RED="${BOLD}${BGND}\e[1;91m" #Bold/Hi-int Red
+GREEN="${BOLD}${BGND}\e[1;92m" #Bold/Hi-int Green
+WHITE="${BOLD}${BGND}\e[1;97m" #Bold/Hi-int White
 
 
 function doFlatpakPIP {
@@ -81,13 +77,25 @@ EOL
     cat "amulet_map_editor.yaml" >> "amulet.yml"
 }
 
-if [[ "$1" == "skip" || "$1" == "-skip" || "$1" == "--skip" || "$1" == "-s" ]]; then
-    echo -e "${YELLOW}    Skipping the 'flatpak-pip-generator' stage as requested.${RESET}"
-    sleep 3
-else
-    echo -e "${GREEN}    Proceeding with the operation.${RESET}"
+if [[ "$1" == "do-pip" || "$1" == "-do-pip" || "$1" == "--do-pip" || "$1" == "-d" ]]; then
+    echo -e "${GREEN}    Proceeding with flatpak-pip-generator.${RESET}"
     sleep 3
     doFlatpakPIP
+elif [[ "$1" == "help" || "$1" == "--help" ]]; then
+    echo -e "${GREEN}\nThis little script will build a local repository for the amulet-flatpak."
+    echo "After that completes, it assembles \"amulet.flatpak\" from the repo."
+    echo "You can either run it like this:"
+    echo -e"${YELLOW}    ./$0"
+    echo -e "${GREEN}Or ike this:"
+    echo -e "${YELLOW}    ./$0 --do-pip"
+    echo -e "${GREEN}\nRunning without ${WHITE}--do-pip${GREEN} will skip running"
+    echo -e "${WHITE}flatpak-pip-generator${GREEN} to generate a new \"amulet.yml\" and use an existing one."
+    echo -e "\nHowever, there's no error checking, so if ${WHITE}amulet.yml${GREEN} doesn't"
+    echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, no?${RESET}"
+    exit 0
+else
+    echo -e "${YELLOW}    Skipping flatpak-pip-generator.${RESET}"
+    sleep 3
 fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
