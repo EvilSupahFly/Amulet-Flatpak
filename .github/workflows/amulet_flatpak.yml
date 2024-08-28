@@ -4,6 +4,7 @@ on:
     branches:
       - main
     tags: "*"
+    permissions: write-all
   pull_request: null
 name: CI
 jobs:
@@ -30,7 +31,6 @@ jobs:
           prerelease: false
           release_name: ${{ steps.version.outputs.version }}
           tag_name: ${{ github.ref }}
-          permissions: write-all
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: build artifacts
