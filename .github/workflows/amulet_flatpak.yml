@@ -5,7 +5,7 @@ on:
 name: CI
 jobs:
   flatpak:
-    name: "Flatpak"
+    name: "Amulet Flatpak"
     runs-on: ubuntu-latest
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
