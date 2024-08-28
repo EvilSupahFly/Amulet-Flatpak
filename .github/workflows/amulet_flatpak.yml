@@ -19,8 +19,8 @@ jobs:
         with:
           bundle: amulet.flatpak
           build-bundle: true
-          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/amulet_flatpak_repo
-          manifest-path: ./amulet.yml
+          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
+          manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
           cache-key: flatpak-builder-${{ github.sha }}
       - name: release
         uses: actions/create-release@latest

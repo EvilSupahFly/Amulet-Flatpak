@@ -20,9 +20,9 @@ function doFlatpakPIP {
     ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=amulet_map_editor
 
     # Create the initial header for our "proper" manifest
-cat << EOL > "amulet.yml"
+cat << EOL > "io.github.evilsupahfly.amulet-flatpak.yml"
 #### do_this.sh >>>
-id: com.github.amulet_map_editor
+id: io.github.evilsupahfly.amulet-flatpak
 name: Amulet Map Editor
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
@@ -62,7 +62,7 @@ EOL
     # Add the output from flatpak-pip-generator after cleaning up the temp file
     sed -i "s/modules://g" "amulet_map_editor.yaml"
     sed -i "s/name: amulet_map_editor//g" "amulet_map_editor.yaml"
-    cat "amulet_map_editor.yaml" >> "amulet.yml"
+    cat "amulet_map_editor.yaml" >> "io.github.evilsupahfly.amulet-flatpak.yml"
 }
 
 if [[ "$1" == "do-pip" || "$1" == "-do-pip" || "$1" == "--do-pip" || "$1" == "-d" ]]; then
@@ -87,10 +87,10 @@ else
 fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=amulet_flatpak_repo amulet_build_dir amulet.yml --force-clean
+flatpak-builder -v --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak amulet_build_dir amulet.yml --force-clean
 
 # Bundle the contents of the local repository into "amulet.flatpak"
-flatpak build-bundle amulet_flatpak_repo amulet.flatpak com.github.amulet_map_editor
+flatpak build-bundle io.github.evilsupahfly.amulet-flatpak io.github.evilsupahfly.amulet-flatpak.flatpak io.github.evilsupahfly.amulet-flatpak
 
 # Install bundle
 echo -e "\n${YELLOW}    To install the Amulet Flatpak, type:"
