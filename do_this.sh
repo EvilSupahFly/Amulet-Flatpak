@@ -71,15 +71,15 @@ if [[ "$1" == "do-pip" || "$1" == "-do-pip" || "$1" == "--do-pip" || "$1" == "-d
     doFlatpakPIP
 elif [[ "$1" == "help" || "$1" == "--help" ]]; then
     echo -e "${GREEN}\nThis little script will build a local repository for the amulet-flatpak."
-    echo "After that completes, it assembles \"amulet.flatpak\" from the repo."
-    echo "You can either run it like this:"
-    echo -e"${YELLOW}    ./$0"
-    echo -e "${GREEN}Or ike this:"
-    echo -e "${YELLOW}    ./$0 --do-pip"
-    echo -e "${GREEN}\nRunning without ${WHITE}--do-pip${GREEN} will skip running"
+    echo -e "Upon completion, it assembles \"${WHITE}amulet.flatpak${GREEN}\" from the local repo."
+    echo -e "\nYou can either run it like this:"
+    echo -e "${YELLOW}    $0"
+    echo -e "\n${GREEN}Or like this:"
+    echo -e "${YELLOW}    $0 --do-pip"
+    echo -e "\n${GREEN}\nRunning without ${WHITE}--do-pip${GREEN} will skip running"
     echo -e "${WHITE}flatpak-pip-generator${GREEN} to generate a new \"amulet.yml\"."
     echo -e "\nHowever, there's no error checking, so if ${WHITE}amulet.yml${GREEN} doesn't"
-    echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, no?${RESET}"
+    echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, right?${RESET}\n"
     exit 0
 else
     echo -e "\n${YELLOW}    Skipping flatpak-pip-generator.${RESET}\n"
@@ -98,8 +98,8 @@ echo -e "${WHITE}        flatpak install -u amulet.flatpak\n"
 
 # Run bundle
 echo -e "\n${YELLOW}    To run your install, type:"
-echo -e "${WHITE}        flatpak run com.github.amulet_map_editor\n"
+echo -e "${WHITE}        flatpak run io.github.evilsupahfly.amulet-flatpak\n"
 
 #Uninstall bundle if it doesn't work or you just don't need it
 echo -e "\n${YELLOW}    To uninstall this, type:"
-echo -e "${RED}        flatpak uninstall com.github.amulet_map_editor${RESET}\n"
+echo -e "${RED}        flatpak uninstall io.github.evilsupahfly.amulet-flatpak${RESET}\n"

@@ -1,4 +1,4 @@
-id: com.github.amulet_map_editor
+id: io.github.evilsupahfly.amulet-flatpak
 name: Amulet Map Editor
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'

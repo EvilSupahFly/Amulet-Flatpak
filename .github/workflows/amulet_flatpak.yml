@@ -23,26 +23,24 @@ jobs:
           manifest-path: ./amulet.yml
           cache-key: flatpak-builder-${{ github.sha }}
       - name: release
-        uses: elgohr/Github-Release-Action@v5
+        uses: actions/create-release
         id: create_release
         with:
           draft: false
-          prerelease: false
+          prerelease: true
           release_name: ${{ steps.version.outputs.version }}
-          tag: ${{ github.ref }}
-          #body_path: CHANGELOG.md
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: build artifacts
         run: make build-linux
       - name: upload linux artifact
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@latest
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          title: Amulet Flatpak Release
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./bin/amulet-x86_64.flatpak
           asset_name: amulet-x86_64.flatpak
           asset_content_type: application/vnd.flatpak
-
