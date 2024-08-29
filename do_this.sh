@@ -14,7 +14,6 @@ RED="${BOLD}${BGND}\e[1;91m" #Bold/Hi-int Red
 GREEN="${BOLD}${BGND}\e[1;92m" #Bold/Hi-int Green
 WHITE="${BOLD}${BGND}\e[1;97m" #Bold/Hi-int White
 
-
 function doFlatpakPIP {
     # Generate everything we need to build Amulet in the Flatpak sandbox
     ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=flatpak-pip-modules
