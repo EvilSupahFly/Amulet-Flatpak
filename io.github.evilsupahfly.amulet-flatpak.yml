@@ -23,14 +23,8 @@ finish-args:
   - --env=XAPP_GTK3=true
 
 modules:
-  - shared-modules/SDL/SDL-1.2.15.json
-  - shared-modules/SDL2/SDL2-with-libdecor.json
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
-  - shared-modules/libappindicator/libappindicator-gtk3-introspection-12.10.json
-  - shared-modules/gtk2/gtk2.json
-  - shared-modules/dbus-glib/dbus-glib.json
-  - shared-modules/pygame/pygame-1.9.6.json
 
 # Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=amulet_map_editor
   - name: python3-versioneer
