@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - main
+      - testing
     tags: "*"
   pull_request: null
 name: CI
@@ -18,9 +18,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: amulet.flatpak
+          bundle: amulet-x86_64.flatpak
           build-bundle: true
-          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
+          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
           manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
           cache-key: flatpak-builder-${{ github.sha }}
       - name: release
@@ -28,13 +28,13 @@ jobs:
         id: create_release
         with:
           draft: false
-          prerelease: false
-          release_name: v0.10.35
+          prerelease: true
+          release_name: Amulet Flatpak
           tag_name: v0.10.35
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      - name: build artifacts
-        run: make build-linux
+#      - name: build artifacts
+#        run: make build-linux
       - name: upload linux artifact
         uses: actions/upload-release-asset@latest
         env:
