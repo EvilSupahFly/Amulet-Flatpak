@@ -29,7 +29,7 @@ jobs:
           draft: false
           prerelease: true
           release_name: Amulet Flatpak
-          tag_name: v0.10.35
+          tag_name: v0.10.35-beta
         env:
           GITHUB_TOKEN: ${{ github.token }}
 #      - name: build artifacts
