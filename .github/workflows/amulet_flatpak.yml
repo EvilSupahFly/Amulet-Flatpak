@@ -1,21 +1,45 @@
+---
 on:
   push:
-    branches: [main]
-  pull_request:
+    branches:
+      - main
+    tags: "*"
+  pull_request: null
 name: CI
 jobs:
   flatpak:
-    name: "Amulet Flatpak"
+    name: Amulet Flatpak
     runs-on: ubuntu-latest
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options: --privileged
     steps:
-    - uses: actions/checkout@v4
-    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-      with:
-        bundle: amulet.flatpak
-        build-bundle: true
-        repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/amulet_flatpak_repo
-        manifest-path: ./amulet.yml
-        cache-key: flatpak-builder-${{ github.sha }}
+      - uses: actions/checkout@v4
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: amulet.flatpak
+          build-bundle: true
+          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
+          manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+      - name: release
+        uses: actions/create-release@latest
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: build artifacts
+        run: make build-linux
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@latest
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/amulet-x86_64.flatpak
+          asset_name: amulet-x86_64.flatpak
+          asset_content_type: application/vnd.flatpak
