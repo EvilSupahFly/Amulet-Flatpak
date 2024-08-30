@@ -29,8 +29,8 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: ${{ steps.version.outputs.version }}
-          tag_name: ${{ github.ref }}
+          release_name: v0.10.35
+          tag_name: v0.10.35
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: build artifacts
