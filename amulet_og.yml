@@ -1,0 +1,8 @@
+modules:
+  - name: amulet_og
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/Amulet-Team/Amulet-Map-Editor.git
+        tag: 0.10.35
+        commit: e9f3ba8a7d683870759cdb85b2104b079d1a5281

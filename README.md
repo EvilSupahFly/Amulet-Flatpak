@@ -9,7 +9,9 @@ Assuming this works as intended accross the spectrum of Linux distributions, thi
 
 The initial Flatpak version was sourced from Amulet 0.10.34. With the update to 0.10.35, and the first release of the flatpak, I have included `amulet.sh` which takes care of almost everything: when run, it will check to see if the Amulet flatpak is already installed, and if so, run it. If not, it will download the latest release from [Releases](https://github.com/EvilSupahFly/Amulet-Flatpak/releases), save the Flatpak file to a temp folder, install it in user mode, remove the temp folder, then run the Amulet Flatpak.
 
-Currently the flatpak release suffers from a number of issues that plague upstream Amulet, which you can see [here](https://github.com/Amulet-Team/Amulet-Map-Editor/issues). Once the issues are resolved upstream, the flatpak will be updated accordingly.
+Currently the flatpak release suffers from a number of minor issues, including the flickering UI, which plagues upstream Amulet, available [here](https://github.com/Amulet-Team/Amulet-Map-Editor/issues). Once the issues are resolved upstream, the flatpak will be updated accordingly.
+
+The issue unique to the flatpak build, however, is the missing water and lava textures [issue #5](https://github.com/EvilSupahFly/Amulet-Flatpak/issues/5), which is still being investigated.
 
 ![Screenshot from 2024-08-11 22-26-11](https://github.com/user-attachments/assets/a45f074f-85ee-40f4-b624-987d9506258b)
 
