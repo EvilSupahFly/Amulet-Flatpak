@@ -1,26 +1,23 @@
 ---
 on:
-  push:
-    branches:
-      - main
+  push: 
+    - branches: ["main", "token"]
     tags: "*"
     permissions: write-all
   pull_request: null
 name: CI
 jobs:
   flatpak:
+    permissions: write-all
     name: Amulet Flatpak
     runs-on: ubuntu-latest
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options: --privileged
-    permissions:
-      - write-all
     steps:
       - uses: actions/checkout@v4
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-#          permissions: write-all
           bundle: amulet.flatpak
           build-bundle: true
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
@@ -30,7 +27,6 @@ jobs:
         uses: actions/create-release@latest
         id: create_release
         with:
-#          permissions: write-all
           draft: false
           prerelease: false
           release_name: ${{ steps.version.outputs.version }}
@@ -44,8 +40,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-#          permissions: write-all
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./bin/amulet-x86_64.flatpak
           asset_name: amulet-x86_64.flatpak
           asset_content_type: application/vnd.flatpak
+  print-token:
+    permissions: write-all
+    name: print-token
+    environment: dev
+    # needs: pre-pkr
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Get registration token
+        id: getRegToken
+        run: |
+          curl -X POST -H \"Accept: application/vnd.github.v3+json\"  -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/myprofile/myrepo/actions/runners/registration-token
