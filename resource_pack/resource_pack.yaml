@@ -1,0 +1,15 @@
+﻿name: resource_pack
+build-commands:
+  - >-
+    set -e
+    install -Dm 0755 minecraft_model_reader.tar.gz -t ${FLATPAK_DEST}/lib/python3.11/site-packages/
+buildsystem: simple
+sources:
+  - type: file
+    path: ../resource_pack/minecraft_model_reader.tar.gz
+#    sha1: fd804875f6ad269e71596a95f9e5ab093c2177c9
+  - type: script
+    dest: '${FLATPAK_DEST}/lib/python3.11/site-packages/'
+    commands:
+      - tar -xzf ${FLATPAK_DEST}/lib/python3.11/site-packages/minecraft_model_reader.tar.gz -v -C ${FLATPAK_DEST}/lib/python3.11/site-packages/
+      - rm -f ${FLATPAK_DEST}/lib/python3.11/site-packages/minecraft_model_reader.tar.gz

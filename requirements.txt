@@ -1,5 +1,7 @@
 versioneer
 meson-python
+pyopengl
+pyopengl-acclerator
 numpy
 lz4
 amulet-core
