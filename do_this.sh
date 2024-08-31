@@ -84,7 +84,9 @@ for arg in "$@"; do
         echo -e "\n${GREEN}\nRunning without ${WHITE}--do-pip${GREEN} will skip running"
         echo -e "${WHITE}flatpak-pip-generator${GREEN} to generate a new \"amulet.yml\"."
         echo -e "\nHowever, there's no error checking, so if ${WHITE}amulet.yml${GREEN} doesn't"
-        echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, and all that jazz.${RESET}\n"
+        echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, and all that jazz.\n"
+        echo -e "\nYou can also specify ${WHITE}--auto${GREEN} and this script will also (try)"
+        echo -e "to automatically install and run ${WHITE}amulet-x86_64.flatpak${GREEN} for you."
         exit 0
     else
         echo -e "\n${YELLOW}    Skipping flatpak-pip-generator, starting ${WHITE}flatpak-builder${YELLOW}.${RESET}\n"
@@ -101,8 +103,8 @@ fi
 
 report_good "flatpak-builder succeeded!"
 
-# Bundle the contents of the local repository into "amulet.flatpak"
-echo -e "\n${WHITE}flatpak build-bundle io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak${WHITE}\n"
+# Bundle the contents of the local repository into "amulet-x86_64.flatpak"
+echo -e "\n${WHITE}flatpak build-bundle io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHITE}\n"
 if ! flatpak build-bundle io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
     report_err "flatpak build-bundle faied."
     exit 3

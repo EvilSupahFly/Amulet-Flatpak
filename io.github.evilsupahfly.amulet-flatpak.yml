@@ -22,5 +22,5 @@ modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip_gen.yaml
-  - resource_pack/resource_pack.yaml
+#  - resource_pack/resource_pack.yaml
 

@@ -7,7 +7,6 @@ buildsystem: simple
 sources:
   - type: file
     path: ../resource_pack/minecraft_model_reader.tar.gz
-#    sha1: fd804875f6ad269e71596a95f9e5ab093c2177c9
   - type: script
     dest: '${FLATPAK_DEST}/lib/python3.11/site-packages/'
     commands:
