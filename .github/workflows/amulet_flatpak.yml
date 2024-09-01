@@ -1,15 +1,17 @@
 on:
   push:
-    branches:
+#    branches:
 #      - testing
-      - main
+#      - main
     tags: "*"
   pull_request: null
 name: CI
 jobs:
   flatpak:
-    name: Amulet Flatpak
+    name: Make Amulet Flatpak
     runs-on: ubuntu-latest
+    premissions:
+      contents: write-all
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options:
@@ -48,3 +50,4 @@ jobs:
           path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
 #          asset_content_type: application/vnd.flatpak
           overwrite: true
+          compression-level: 0 # no compression
