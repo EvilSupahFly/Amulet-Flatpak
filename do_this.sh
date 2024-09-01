@@ -15,19 +15,20 @@ GREEN="${BOLD}${BGND}\e[1;92m" #Bold/Hi-int Green
 WHITE="${BOLD}${BGND}\e[1;97m" #Bold/Hi-int White
 
 # Function to report process errors
-report_err() {
-    echo -e "\n${RED}Error: $1${RESET}\n" >&2
-}
-
-# Function to report process errors
-report_good() {
-    echo -e "\n${GREEN}Congratulations! $1${RESET}\n"
+report() {
+    if "$1" == "F"; then
+        # F - for FAILURE
+        echo -e "\n${RED}Error: $2${RESET}\n" >&2
+    elif "$1" == "P"; then
+        # P - for PASS
+        echo -e "\n${GREEN}Congratulations! $2${RESET}\n"
+    fi
 }
 
 function doFlatpakPIP {
     # Generate everything we need to build Amulet in the Flatpak sandbox
     if ! ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=flatpak-pip-modules; then
-        report_err "flatpak-pip-generator failed."
+        report "F" "flatpak-pip-generator failed."
         exit 1
     fi
 
@@ -63,7 +64,7 @@ modules:
 #### <<< do_this.sh
 EOL
 
-report_good "flatpak-pip-generator succeeded!"
+report "P" "flatpak-pip-generator succeeded!"
 }
 
 echo -e "${GREEN}"
@@ -97,26 +98,26 @@ done
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 echo -e "${WHITE}flatpak-builder -vvv -y --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean\n${RESET}"
 if ! flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean; then
-    report_err "flatpak-builder failed."
+    report "F" "flatpak-builder failed."
     exit 2
 fi
 
-report_good "flatpak-builder succeeded!"
+report "P" "flatpak-builder succeeded!"
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
-echo -e "\n${WHITE}flatpak build-bundle io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHITE}\n"
-if ! flatpak build-bundle io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
-    report_err "flatpak build-bundle faied."
+echo -e "\n${WHITE}flatpak build-bundle -vv io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHITE}\n"
+if ! flatpak build-bundle -vv io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
+    report "F" "flatpak build-bundle faied."
     exit 3
 fi
 
-report_good "flatpak build-bundle succeeded!"
+report "P" "flatpak build-bundle succeeded!"
 
 for arg in "$@"; do
     if [[ "$arg" == "auto" || "$arg" == "-auto" || "$arg" == "--auto" ]]; then
         # Install bundle
         echo -e "\n${YELLOW}    Installing bundle...\n${WHITE}"
-        flatpak install -y -u amulet-x86_64.flatpak
+        flatpak install -vv -y -u amulet-x86_64.flatpak
         # Run bundle with optional output verbosity (-v, -vv, -vvv)
        echo -e "\n${YELLOW}    Running install...\n${WHITE}"
        flatpak run -vv io.github.evilsupahfly.amulet-flatpak

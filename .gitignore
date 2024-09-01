@@ -1,5 +1,5 @@
 .flatpak-builder
-amulet.flatpak
+*.flatpak
 tmp*.*
 tmp.*
 *.bak
