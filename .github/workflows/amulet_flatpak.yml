@@ -18,12 +18,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: amulet-x86_64.flatpak
+          bundle: amulet.flatpak
           build-bundle: true
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
           manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
           cache-key: flatpak-builder-${{ github.sha }}
-#          upload-artifact: true
+          upload-artifact: true
 #      - name: release
 #        uses: actions/create-release@latest
 #        id: create_release
