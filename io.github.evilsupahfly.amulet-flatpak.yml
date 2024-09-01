@@ -16,11 +16,8 @@ finish-args:
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
-  - --env=XAPP_GTK3=true
 
 modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip_gen.yaml
-#  - resource_pack/resource_pack.yaml
-

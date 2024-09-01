@@ -2,14 +2,16 @@ on:
   push:
     branches:
       - testing
-      - main
+#      - main
     tags: "*"
   pull_request: null
 name: CI
 jobs:
   flatpak:
-    name: Amulet Flatpak
+    name: Make Amulet Flatpak
     runs-on: ubuntu-latest
+    premissions:
+      contents: write-all
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options:
@@ -37,13 +39,15 @@ jobs:
 #      - name: build artifacts
 #        run: make build-linux
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        if: failure() || cancelled()
+        uses: actions/upload-artifact@v4
+#        if: failure() || cancelled()
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
 #          upload_url: ${{ steps.create_release.outputs.upload_url }}
 #          asset_path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
           name: amulet-x86_64.flatpak
-          path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64
+          path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
 #          asset_content_type: application/vnd.flatpak
+          overwrite: true
+          compression-level: 0 # no compression
