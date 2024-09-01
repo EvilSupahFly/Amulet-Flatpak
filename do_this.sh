@@ -30,7 +30,7 @@ report() {
 function doFlatpakPIP {
     # Generate everything we need to build Amulet in the Flatpak sandbox
     if ! ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=flatpak-pip-modules; then
-        report "F" "flatpak-pip-generator failed."
+        report F "flatpak-pip-generator failed."
         exit 1
     fi
 
@@ -55,13 +55,11 @@ finish-args:
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
-  - --env=XAPP_GTK3=true
 
 modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip_gen.yaml
-  - resource_pack/resource_pack.yaml
 
 #### <<< do_this.sh
 EOL
@@ -90,6 +88,9 @@ for arg in "$@"; do
         echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, and all that jazz.\n"
         echo -e "\nYou can also specify ${WHITE}--auto${GREEN} and this script will also (try)"
         echo -e "to automatically install and run ${WHITE}amulet-x86_64.flatpak${GREEN} for you."
+        echo -e "Limited error checking is included for each step so ${RED}if one step fails${GREEN},"
+        echo -e "we won't just continue to ${RED}blindly muddle through${GREEN} to the next step and"
+        echo -e "we will instead try to ${WHITE}exit gracefully.${RESET}"
         exit 0
     else
         echo -e "\n${YELLOW}    Skipping flatpak-pip-generator, starting ${WHITE}flatpak-builder${YELLOW}.${RESET}\n"
