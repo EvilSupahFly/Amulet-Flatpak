@@ -14,14 +14,16 @@ RED="${BOLD}${BGND}\e[1;91m" #Bold/Hi-int Red
 GREEN="${BOLD}${BGND}\e[1;92m" #Bold/Hi-int Green
 WHITE="${BOLD}${BGND}\e[1;97m" #Bold/Hi-int White
 
-# Function to report process errors
+# Function to report after process completions
 report() {
-    if "$1" == "F"; then
-        # F - for FAILURE
-        echo -e "\n${RED}Error: $2${RESET}\n" >&2
-    elif "$1" == "P"; then
-        # P - for PASS
-        echo -e "\n${GREEN}Congratulations! $2${RESET}\n"
+    local status=$1 # F = failure, P = pass
+    local message=$2
+    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    if [[ "$status" == "F" ]]; then
+        echo -e "\n${RED}[$timestamp] ERROR: $message\n${RESET}"
+    elif [[ "$status" == "P" ]]; then
+        echo -e "\n${WHITE}[$timestamp] SUCCESS: $message\n${RESET}"
     fi
 }
 
@@ -64,7 +66,7 @@ modules:
 #### <<< do_this.sh
 EOL
 
-report "P" "flatpak-pip-generator succeeded!"
+report P "flatpak-pip-generator succeeded!"
 }
 
 echo -e "${GREEN}"
@@ -98,37 +100,43 @@ done
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 echo -e "${WHITE}flatpak-builder -vvv -y --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean\n${RESET}"
 if ! flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean; then
-    report "F" "flatpak-builder failed."
+    report F "flatpak-builder failed."
     exit 2
 fi
 
-report "P" "flatpak-builder succeeded!"
+report P "flatpak-builder succeeded!"
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
 echo -e "\n${WHITE}flatpak build-bundle -vv io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHITE}\n"
 if ! flatpak build-bundle -vv io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
-    report "F" "flatpak build-bundle faied."
+    report F "flatpak build-bundle failed."
     exit 3
 fi
 
-report "P" "flatpak build-bundle succeeded!"
+report P "flatpak build-bundle succeeded!"
 
 for arg in "$@"; do
     if [[ "$arg" == "auto" || "$arg" == "-auto" || "$arg" == "--auto" ]]; then
         # Install bundle
         echo -e "\n${YELLOW}    Installing bundle...\n${WHITE}"
-        flatpak install -vv -y -u amulet-x86_64.flatpak
+        if ! flatpak install -vv -y -u amulet-x86_64.flatpak; then
+            report F "flatpak install failed."
+        else
+            report P "flatpak install succeeded!"
+        fi
         # Run bundle with optional output verbosity (-v, -vv, -vvv)
-       echo -e "\n${YELLOW}    Running install...\n${WHITE}"
-       flatpak run -vv io.github.evilsupahfly.amulet-flatpak
-    else
-        echo -e "\n${YELLOW}    To install the Amulet Flatpak, type:"
-        echo -e "${WHITE}        flatpak install -u amulet-x86_64.flatpak"
-        echo -e "\n${YELLOW}    To run your install, type:"
-        echo -e "${WHITE}        flatpak run io.github.evilsupahfly.amulet-flatpak"
+        echo -e "\n${YELLOW}    Running install...\n${WHITE}"
+        if ! flatpak run -vv io.github.evilsupahfly.amulet-flatpak; then
+            report F "Amulet crashed..."
+        else
+            report P "It works!"
+        fi
     fi
 done
 
-#Uninstall bundle if it doesn't work or you just don't need it
-echo -e "\n${YELLOW}    To uninstall this, type:"
+echo -e "\n${YELLOW}    To install or reinstall the Amulet Flatpak, type:"
+echo -e "${WHITE}        flatpak install -u amulet-x86_64.flatpak"
+echo -e "\n${YELLOW}    To run your install, type:"
+echo -e "${WHITE}        flatpak run io.github.evilsupahfly.amulet-flatpak"
+echo -e "\n${YELLOW}    To uninstall the Amulet flatpak, type:"
 echo -e "${RED}        flatpak uninstall io.github.evilsupahfly.amulet-flatpak${RESET} \n"
