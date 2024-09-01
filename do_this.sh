@@ -59,7 +59,6 @@ modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip_gen.yaml
-  - resource_pack/resource_pack.yaml
 
 #### <<< do_this.sh
 EOL
@@ -106,7 +105,7 @@ report "P" "flatpak-builder succeeded!"
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
 echo -e "\n${WHITE}flatpak build-bundle -vv io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHITE}\n"
-if ! flatpak build-bundle -vv io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
+if ! flatpak build-bundle -vvv io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
     report "F" "flatpak build-bundle faied."
     exit 3
 fi
@@ -117,10 +116,10 @@ for arg in "$@"; do
     if [[ "$arg" == "auto" || "$arg" == "-auto" || "$arg" == "--auto" ]]; then
         # Install bundle
         echo -e "\n${YELLOW}    Installing bundle...\n${WHITE}"
-        flatpak install -vv -y -u amulet-x86_64.flatpak
+        flatpak install -vvv -y -u amulet-x86_64.flatpak
         # Run bundle with optional output verbosity (-v, -vv, -vvv)
        echo -e "\n${YELLOW}    Running install...\n${WHITE}"
-       flatpak run -vv io.github.evilsupahfly.amulet-flatpak
+       flatpak run -vvv io.github.evilsupahfly.amulet-flatpak
     else
         echo -e "\n${YELLOW}    To install the Amulet Flatpak, type:"
         echo -e "${WHITE}        flatpak install -u amulet-x86_64.flatpak"
