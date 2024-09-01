@@ -1,0 +1,2 @@
+[pyinstaller40]
+hook-dirs = amulet.__pyinstaller:get_hook_dirs

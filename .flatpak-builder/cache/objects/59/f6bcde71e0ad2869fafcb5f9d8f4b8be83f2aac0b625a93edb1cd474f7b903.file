@@ -1,0 +1,74 @@
+Metadata-Version: 2.1
+Name: amulet-map-editor
+Version: 0.10.35
+Summary: A new Minecraft world editor and converter that supports all versions since Java 1.12 and Bedrock 1.7.
+Home-page: https://www.amuletmc.com
+Author: James Clare, Ben Gothard et al.
+Author-email: amuleteditor@gmail.com
+Platform: any
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: Pillow >=10.0.1
+Requires-Dist: wxPython
+Requires-Dist: numpy ~=1.17
+Requires-Dist: pyopengl ~=3.0
+Requires-Dist: packaging
+Requires-Dist: amulet-core ~=1.9
+Requires-Dist: amulet-nbt ~=2.0
+Requires-Dist: pymctranslate ~=1.2
+Requires-Dist: minecraft-resource-pack ~=1.3
+Requires-Dist: platformdirs ~=3.1
+Provides-Extra: dev
+Requires-Dist: black >=22.3 ; extra == 'dev'
+Requires-Dist: pre-commit >=1.11.1 ; extra == 'dev'
+Provides-Extra: docs
+Requires-Dist: Sphinx >=1.7.4 ; extra == 'docs'
+Requires-Dist: sphinx-autodoc-typehints >=1.3.0 ; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme >=0.3.1 ; extra == 'docs'
+
+# Amulet Map Editor
+
+![Build](../../workflows/Build/badge.svg)
+![Unittests](../../workflows/Unittests/badge.svg?event=push)
+![Stylecheck](../../workflows/Stylecheck/badge.svg?event=push)
+[![Documentation Status](https://readthedocs.org/projects/amulet-map-editor/badge)](https://amulet-map-editor.readthedocs.io)
+
+A new Minecraft world editor and converter that supports all versions since Java 1.12 and Bedrock 1.7.
+
+![edit](resource/img/edit.jpg)
+
+## Running compiled builds
+
+Download the zip file for your operating system from the list of [compiled builds](https://github.com/Amulet-Team/Amulet-Map-Editor/releases). (Currently Windows only)
+
+Extract the contained folder to a location on your computer and run the executable.
+
+## Running from Source
+
+**If you are running a compiled build you do NOT need to do this.**
+
+1) Install [Python 3.9+](https://www.python.org/)
+2) We recommend setting up a [python virtual environment](https://docs.python.org/3/tutorial/venv.html) so you don't run into issues with dependency conflicts.
+3) run `python -m pip install amulet-map-editor` to install the library and all its dependencies.
+4) run `python -m amulet_map_editor` to run the program
+
+### Notes
+
+If you have python 2 installed `python` may point to the wrong version in which case you will have to swap out `python` for `python3`
+
+When installing from source the following dependencies will be installed
+
+- numpy
+- wxpython
+- pyopengl
+- [Amulet-Core](https://github.com/Amulet-Team/Amulet-Core)  The library to handle loading and saving data to the world formats.
+- [Amulet-NBT](https://github.com/Amulet-Team/Amulet-NBT)  The library to handle reading and saving NBT and SNBT.
+- [PyMCTranslate](https://github.com/gentlegiantJGC/PyMCTranslate)  The library to handle block, block entity, entity and biome translation. between versions
+- [Minecraft-Model-Reader](https://github.com/gentlegiantJGC/Minecraft-Model-Reader)  The library to handle loading block models and textures from a resource pack for use in the renderer.
+- [Amulet-LevelDB](https://github.com/Amulet-Team/Amulet-LevelDB)  The wrapper for Mojang's custom LevelDB.
+
+## Contributing
+
+For information about contributing to this project, please read the [contribution](contributing.md) file.

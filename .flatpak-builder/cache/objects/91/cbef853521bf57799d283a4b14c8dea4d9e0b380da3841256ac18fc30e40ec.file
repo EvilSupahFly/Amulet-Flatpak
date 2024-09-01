@@ -1,0 +1,5 @@
+[Runtime]
+name=io.github.evilsupahfly.amulet_flatpak.Debug
+
+[ExtensionOf]
+ref=app/io.github.evilsupahfly.amulet-flatpak/x86_64/master

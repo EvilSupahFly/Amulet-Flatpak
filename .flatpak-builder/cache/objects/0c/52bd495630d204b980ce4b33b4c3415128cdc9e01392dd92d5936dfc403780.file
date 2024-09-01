@@ -1,0 +1,5 @@
+[Application]
+name=io.github.evilsupahfly.amulet-flatpak
+runtime=org.freedesktop.Platform/x86_64/23.08
+sdk=org.freedesktop.Sdk/x86_64/23.08
+tags=v0.10.35-beta;

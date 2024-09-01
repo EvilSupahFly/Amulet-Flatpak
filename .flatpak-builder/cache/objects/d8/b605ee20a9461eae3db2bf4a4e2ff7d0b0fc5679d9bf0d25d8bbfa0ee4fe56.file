@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: PyOpenGL-accelerate
+Version: 3.1.7
+Summary: Acceleration code for PyOpenGL
+Home-page: http://pyopengl.sourceforge.net
+Download-URL: http://sourceforge.net/project/showfiles.php?group_id=5988
+Author: Mike C. Fletcher
+Author-email: mcfletch@vrplumber.com
+License: BSD
+Keywords: PyOpenGL,accelerate,Cython
+Platform: Win32
+Platform: Linux
+Platform: OS-X
+Platform: Posix
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: C
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Multimedia :: Graphics :: 3D Rendering
+Classifier: Intended Audience :: Developers
+Description-Content-Type: text/plain
+

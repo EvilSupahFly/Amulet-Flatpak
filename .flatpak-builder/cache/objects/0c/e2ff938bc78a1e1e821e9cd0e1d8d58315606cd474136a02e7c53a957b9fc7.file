@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: glad
+Version: 0.1.36
+Summary: Multi-Language GL/GLES/EGL/GLX/WGL Loader-Generator based on the official specs.
+Home-page: https://github.com/Dav1dde/glad
+Author: David Herberth
+Author-email: glad@dav1d.de
+License: MIT
+Keywords: opengl glad generator gl wgl egl gles glx
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Topic :: Games/Entertainment
+Classifier: Topic :: Multimedia :: Graphics
+Classifier: Topic :: Multimedia :: Graphics :: 3D Rendering
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Topic :: Utilities
+License-File: LICENSE
+
+
+Glad
+----
+
+Glad uses the official Khronos-XML specs to generate a
+GL/GLES/EGL/GLX/WGL Loader made for your needs.
+
+Checkout the GitHub repository: https://github.com/Dav1dde/glad
+
+

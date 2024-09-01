@@ -1,3 +1,4 @@
+*.flatpak
 tmp*.*
 tmp.*
 *.bak
@@ -9,5 +10,4 @@ req_rev_3.txt
 amulet_testing.yml
 amulet-testing.yml
 amulet_flatpak_repo/.lock
-*.flatpak
-resource_pack
+lz4.yaml

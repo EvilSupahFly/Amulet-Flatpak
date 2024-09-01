@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - testing
+      - main
     tags: "*"
   pull_request: null
 name: CI
@@ -22,24 +23,28 @@ jobs:
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
           manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
           cache-key: flatpak-builder-${{ github.sha }}
-      - name: release
-        uses: actions/create-release@latest
-        id: create_release
-        with:
-          draft: false
-          prerelease: true
-          release_name: Amulet Flatpak
-          tag_name: v0.10.35
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+#          upload-artifact: true
+#      - name: release
+#        uses: actions/create-release@latest
+#        id: create_release
+#        with:
+#          draft: false
+#          prerelease: true
+#          release_name: Amulet Flatpak
+#          tag_name: v0.10.35-beta
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
 #      - name: build artifacts
 #        run: make build-linux
-      - name: upload linux artifact
-        uses: actions/upload-release-asset@latest
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+#        if: failure() || cancelled()
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/amulet-x86_64.flatpak
-          asset_name: amulet-x86_64.flatpak
-          asset_content_type: application/vnd.flatpak
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+          name: amulet-x86_64.flatpak
+          path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+#          asset_content_type: application/vnd.flatpak
+          overwrite: true
