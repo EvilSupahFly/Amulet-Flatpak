@@ -1,5 +1,3 @@
-.flatpak-builder
-amulet.flatpak
 tmp*.*
 tmp.*
 *.bak
@@ -12,3 +10,4 @@ amulet_testing.yml
 amulet-testing.yml
 amulet_flatpak_repo/.lock
 *.flatpak
+resource_pack
