@@ -95,7 +95,7 @@ for arg in "$@"; do
 done
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-echo -e "${WHITE}flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean\n${RESET}"
+echo -e "${WHITE}flatpak-builder -vvv -y --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean\n${RESET}"
 if ! flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=0.10.35 --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean; then
     report_err "flatpak-builder failed."
     exit 2
@@ -116,7 +116,7 @@ for arg in "$@"; do
     if [[ "$arg" == "auto" || "$arg" == "-auto" || "$arg" == "--auto" ]]; then
         # Install bundle
         echo -e "\n${YELLOW}    Installing bundle...\n${WHITE}"
-        flatpak install -u amulet-x86_64.flatpak
+        flatpak install -y -u amulet-x86_64.flatpak
         # Run bundle with optional output verbosity (-v, -vv, -vvv)
        echo -e "\n${YELLOW}    Running install...\n${WHITE}"
        flatpak run -vv io.github.evilsupahfly.amulet-flatpak
