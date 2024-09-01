@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - testing
+#      - testing
       - main
     tags: "*"
   pull_request: null
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: amulet.flatpak
+          bundle: amulet-x86_64.flatpak
           build-bundle: true
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
           manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
