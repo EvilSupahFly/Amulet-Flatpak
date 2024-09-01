@@ -13,8 +13,6 @@ Currently the flatpak release suffers from a number of minor issues, including t
 
 The issue unique to the flatpak build, however, is the missing water and lava textures [issue #5](https://github.com/EvilSupahFly/Amulet-Flatpak/issues/5), which is still being investigated.
 
-![Screenshot from 2024-08-11 22-26-11](https://github.com/user-attachments/assets/a45f074f-85ee-40f4-b624-987d9506258b)
-
 ![Screenshot from 2024-08-11 22-33-44](https://github.com/user-attachments/assets/d9526f27-d74d-4c1a-8be0-37d14387feb9)
 
 ![Screenshot from 2024-08-15 23-04-29](https://github.com/user-attachments/assets/c9d42035-67e2-4f0a-8515-a325c0a36532)
