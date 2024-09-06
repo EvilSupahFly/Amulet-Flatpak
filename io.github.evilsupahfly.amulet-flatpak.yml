@@ -21,3 +21,20 @@ modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip_gen.yaml
+
+  - name: python3-minecraft-resource-pack
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - >-
+        pip3 install --verbose --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} "minecraft-resource-pack"
+        --report=pip_report.json --no-build-isolation
+    sources:
+      - type: file
+        path: >-
+          minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
+        sha256: be8ec6282c1aa38174a92be1663d411940655f39a9df6d1c72776b1d3c752b18
+

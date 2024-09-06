@@ -23,6 +23,8 @@ except ImportError:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('packages', nargs='*')
+parser.add_argument('--python2', action='store_true',
+                    help='Look for a Python 2 package')
 parser.add_argument('--cleanup', choices=['scripts', 'all'],
                     help='Select what to clean up after build')
 parser.add_argument('--requirements-file', '-r',
@@ -50,7 +52,7 @@ parser.add_argument('--output', '-o',
                     help='Specify output file name')
 parser.add_argument('--runtime',
                     help='Specify a flatpak to run pip inside of a sandbox, ensures python version compatibility')
-parser.add_argument('--yaml', action='store_true',
+parser.add_argument('--json', action='store_true',
                     help='Use YAML as output format instead of JSON')
 parser.add_argument('--ignore-errors', action='store_true',
                     help='Ignore errors when downloading packages')
@@ -200,8 +202,8 @@ for i in packages:
 with open(requirements_file_output, 'r') as req_file:
     use_hash = '--hash=' in req_file.read()
 
-pip_executable = 'pip3'
 python_version = '3'
+pip_executable = 'pip3'
 
 if opts.runtime:
     flatpak_cmd = [
@@ -249,9 +251,8 @@ sources = {}
 tempdir_prefix = 'pip-generator-{}'.format(output_package)
 with tempfile.TemporaryDirectory(prefix=tempdir_prefix) as tempdir:
     pip_download = flatpak_cmd + [
-        #'--python=3.10.12',
         'download',
-        #'--isolated',
+        '--exists-action=i',
         '--dest',
         tempdir,
         '-r',
@@ -437,8 +438,7 @@ for package in packages:
         '--no-index',
         '--find-links="file://${PWD}"',
         '--prefix=${FLATPAK_DEST}',
-        '"{}"'.format(name_for_pip),
-        '--report=pip_report.json'
+        '"{}"'.format(name_for_pip)
     ]
     if package.name in opts.ignore_installed:
         pip_command.append('--ignore-installed')
@@ -448,9 +448,6 @@ for package in packages:
     module = OrderedDict([
         ('name', module_name),
         ('buildsystem', 'simple'),
-        #('build-options',''),
-        #('  build-args',''),
-        #('    - --share=network',''),
         ('build-commands', [' '.join(pip_command)]),
         ('sources', package_sources),
     ])
@@ -471,9 +468,6 @@ else:
     pypi_module = {
         'name': output_package,
         'buildsystem': 'simple',
-        #'build-options': ,
-        #'  build-args': ,
-        #'    - --share=network',
         'build-commands': [],
         'modules': modules,
     }
