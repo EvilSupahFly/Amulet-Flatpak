@@ -15,6 +15,15 @@ GREEN="${BOLD}${BGND}\e[1;92m" #Bold/Hi-int Green
 WHITE="${BOLD}${BGND}\e[1;97m" #Bold/Hi-int White
 DEBUG=FALSE
 
+lastword() {
+    echo -e "\n${YELLOW}    To install or reinstall the Amulet Flatpak manually, type:"
+    echo -e "${WHITE}        flatpak install -u amulet-x86_64.flatpak"
+    echo -e "\n${YELLOW}    To run your installed flatpak manually, type:"
+    echo -e "${WHITE}        flatpak run io.github.evilsupahfly.amulet-flatpak"
+    echo -e "\n${YELLOW}    To uninstall the Amulet flatpak, type:"
+    echo -e "${RED}        flatpak uninstall io.github.evilsupahfly.amulet-flatpak${RESET} \n"
+}
+
 # Function to report after process completions
 report() {
     local status=$1 # F = failure, P = pass
@@ -106,7 +115,7 @@ for arg in "$@"; do
 done
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-echo -e "${WHITE}flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=v0.10.35-beta --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean\n${RESET}"
+echo -e "${WHITE}flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=v0.10.35-beta --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean\n${GREEN}"
 if ! flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=v0.10.35-beta --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean; then
     ERR=$?
     report F "flatpak-builder failed with error $ERR."
@@ -140,25 +149,17 @@ for arg in "$@"; do
             echo -e "\n${RED}    Running flatpak in debug mode...\n${WHITE}"
             echo -e "\n${YELLOW}    Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YELLOW}' to run Amulet though ${WHITE}PDB${YELLOW}.\n${WHITE}"
             flatpak-builder --run amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml sh
-            echo
+            echo -e ${RESET}
+            exit 0
         else
             echo -e "\n${YELLOW}    Running flatpak...\n${WHITE}"
-        fi
-
-        if DEBUG=FALSE; then
             if ! flatpak run -vvv io.github.evilsupahfly.amulet-flatpak; then
                 ERR=$?
                 report F "Amulet crashed, reporting error $ERR."
             else
                 report P "It works!"
             fi
+            lastword
         fi
     fi
 done
-
-echo -e "\n${YELLOW}    To install or reinstall the Amulet Flatpak manually, type:"
-echo -e "${WHITE}        flatpak install -u amulet-x86_64.flatpak"
-echo -e "\n${YELLOW}    To run your installed flatpak manually, type:"
-echo -e "${WHITE}        flatpak run io.github.evilsupahfly.amulet-flatpak"
-echo -e "\n${YELLOW}    To uninstall the Amulet flatpak, type:"
-echo -e "${RED}        flatpak uninstall io.github.evilsupahfly.amulet-flatpak${RESET} \n"
