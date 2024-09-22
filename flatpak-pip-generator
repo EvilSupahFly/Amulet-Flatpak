@@ -23,8 +23,6 @@ except ImportError:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('packages', nargs='*')
-parser.add_argument('--python2', action='store_true',
-                    help='Look for a Python 2 package')
 parser.add_argument('--cleanup', choices=['scripts', 'all'],
                     help='Select what to clean up after build')
 parser.add_argument('--requirements-file', '-r',
@@ -202,11 +200,8 @@ for i in packages:
 with open(requirements_file_output, 'r') as req_file:
     use_hash = '--hash=' in req_file.read()
 
-python_version = '2' if opts.python2 else '3'
-if opts.python2:
-    pip_executable = 'pip2'
-else:
-    pip_executable = 'pip3'
+pip_executable = 'pip3'
+python_version = '3'
 
 if opts.runtime:
     flatpak_cmd = [
@@ -347,7 +342,7 @@ with tempfile.TemporaryDirectory(prefix=tempdir_prefix) as tempdir:
         else:
             url = get_pypi_url(name, filename)
             source = OrderedDict([
-                ('type', 'file'), #file changed to archive
+                ('type', 'file'),
                 ('url', url),
                 ('sha256', sha256)])
             if opts.checker_data:
@@ -435,14 +430,6 @@ for package in packages:
     module_name = 'python{}-{}'.format(python_version, package.name)
 
     pip_command = [
-        #pip_executable,
-        #'wheel',
-        #'--verbose',
-        #'--no-index',
-        #'--find-links="file://${PWD}"',
-        #'--wheel-dir=${FLATPAK_DEST}',
-        #'"{}"'.format(name_for_pip),
-        #'&&',
         pip_executable,
         'install',
         '--verbose',
@@ -461,6 +448,9 @@ for package in packages:
     module = OrderedDict([
         ('name', module_name),
         ('buildsystem', 'simple'),
+        #('build-options',''),
+        #('  build-args',''),
+        #('    - --share=network',''),
         ('build-commands', [' '.join(pip_command)]),
         ('sources', package_sources),
     ])
@@ -481,6 +471,9 @@ else:
     pypi_module = {
         'name': output_package,
         'buildsystem': 'simple',
+        #'build-options': ,
+        #'  build-args': ,
+        #'    - --share=network',
         'build-commands': [],
         'modules': modules,
     }
