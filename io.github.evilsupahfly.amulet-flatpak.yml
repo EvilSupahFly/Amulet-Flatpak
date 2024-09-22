@@ -32,7 +32,7 @@ modules:
         - --share=network
     build-commands:
       - >-
-        pipx install --verbose --no-index --find-links="file://${PWD}"
+        pip3 install --verbose --no-index --find-links="file://${PWD}"
         --prefix=${FLATPAK_DEST} "minecraft-resource-pack"
         --report=pip_report.json --no-build-isolation
     sources:
