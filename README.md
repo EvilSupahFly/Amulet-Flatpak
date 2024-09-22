@@ -14,8 +14,6 @@ Currently the flatpak release suffers from one minor issue:
 
 ![Screenshot from 2024-08-15 23-04-29](https://github.com/user-attachments/assets/c9d42035-67e2-4f0a-8515-a325c0a36532)
 
-If you're feeling ambitious, you can fork or clone this project and try tweaking it. For those brave souls who wish to try, I've written the `[do_this.sh](https://github.com/EvilSupahFly/Amulet-Flatpak/blob/main/do_this.sh)` script to help you on your way with a `--help` switch you can pass for specifics.
-
-Of course, if you manage to resolve the missing textures, please let me know how you did it!
+If you're feeling ambitious, you can fork or clone this project and try tweaking it. For those brave souls who wish to try, I've written the [do_this.sh](https://github.com/EvilSupahFly/Amulet-Flatpak/blob/main/do_this.sh) script to help you on your way with a `--help` switch you can pass for specifics.
 
 The flatpak version has so far been tested on Manjaro, Ubuntu, and Mint. Feedback is most welcome!
