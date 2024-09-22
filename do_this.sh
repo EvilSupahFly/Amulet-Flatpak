@@ -74,7 +74,6 @@ modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip-gen.yaml
-
   - name: python3-minecraft-resource-pack
     buildsystem: simple
     build-options:

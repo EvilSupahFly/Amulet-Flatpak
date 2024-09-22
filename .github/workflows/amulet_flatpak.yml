@@ -10,6 +10,8 @@ jobs:
   flatpak:
     name: Make Amulet Flatpak
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options:
