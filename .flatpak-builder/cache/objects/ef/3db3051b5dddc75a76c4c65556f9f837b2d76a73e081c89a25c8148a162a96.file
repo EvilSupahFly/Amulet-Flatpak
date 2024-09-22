@@ -1,2 +1,0 @@
-[pyinstaller40]
-hook-dirs = amulet_nbt.__pyinstaller:get_hook_dirs

@@ -10,8 +10,6 @@ jobs:
   flatpak:
     name: Make Amulet Flatpak
     runs-on: ubuntu-latest
-    premissions:
-      contents: write-all
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options:
@@ -25,7 +23,7 @@ jobs:
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
           manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
           cache-key: flatpak-builder-${{ github.sha }}
-          upload-artifact: true
+          verbose: true
 #      - name: release
 #        uses: actions/create-release@latest
 #        id: create_release
