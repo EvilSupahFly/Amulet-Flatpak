@@ -1,8 +1,8 @@
 on:
   push:
     branches:
-      - testing
-#      - main
+#      - testing
+      - main
     tags: "*"
   pull_request: null
 name: CI
@@ -25,7 +25,7 @@ jobs:
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
           manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
           cache-key: flatpak-builder-${{ github.sha }}
-          upload-artifact: true
+          verbose: true
 #      - name: release
 #        uses: actions/create-release@latest
 #        id: create_release

@@ -1,3 +1,4 @@
+*.flatpak
 tmp*.*
 tmp.*
 *.bak
@@ -10,4 +11,10 @@ amulet_testing.yml
 amulet-testing.yml
 amulet_flatpak_repo/.lock
 .flatpak-builder
+lz4.yaml
+.flatpak-buider
 amulet-flatpak_build_dir
+watch.sh
+.vscode
+.lock
+*.lock
