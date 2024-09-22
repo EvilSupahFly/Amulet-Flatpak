@@ -1,8 +1,8 @@
 on:
   push:
-#    branches:
+    branches:
 #      - testing
-#      - main
+      - main
     tags: "*"
   pull_request: null
 name: CI
