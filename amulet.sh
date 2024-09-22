@@ -2,10 +2,10 @@
 
 RESET="\e[0m" #Normal
 BOLD="\033[1m" #Bold
-BGND="\e[40m" #Background prefix
-RED="${BOLD}${BGND}\e[1;91m" #Bold Red
-GREEN="${BOLD}${BGND}\e[1;92m" #Bold Green
-WHITE="${BOLD}${BGND}\e[1;97m" #Bold White
+#BGND="\e[40m" #Background prefix
+RED="${BOLD}\e[1;91m" #Bold Red
+GREEN="${BOLD}\e[1;92m" #Bold Green
+WHITE="${BOLD}\e[1;97m" #Bold White
 
 AFP="com.github.amulet_map_editor"
 AFPR="https://github.com/EvilSupahFly/Amulet-Flatpak/releases/latest/download/amulet-x86_64.flatpak"
