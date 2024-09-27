@@ -1,0 +1,47 @@
+name: Build and Release Amulet Flatpak
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Amulet Flatpak manifest
+        run: curl -O https://raw.githubusercontent.com/EvilSupahFly/Amulet-Flatpak/refs/heads/main/io.github.evilsupahfly.amulet-flatpak.yml
+
+      - name: Build Amulet
+        run: flatpak-builder --force-clean --install-deps-only --repo=repo build-dir io.github.evilsupahfly.amulet-flatpak.yml
+
+      - name: Check for version increment
+        id: version_check
+        run: |
+          VERSION=$(grep 'version:' io.github.evilsupahfly.amulet-flatpak.yml | awk '{print $2}')
+          if [[ "$VERSION" == *"-SNAPSHOT" ]]; then
+            echo "increment=true" >> $GITHUB_ENV
+          else
+            echo "increment=false" >> $GITHUB_ENV
+          fi
+
+      - name: Increment version
+        if: env.increment == 'true'
+        run: |
+          VERSION=$(grep 'version:' io.github.evilsupahfly.amulet-flatpak.yml | awk '{print $2}' | sed 's/-SNAPSHOT//')
+          NEW_VERSION=$(echo $VERSION + 1 | bc)
+          sed -i "s/version: $VERSION/version: $NEW_VERSION-SNAPSHOT/" io.github.evilsupahfly.amulet-flatpak.yml
+
+      - name: Build Flatpak with new version
+        run: flatpak-builder --repo=repo build-dir io.github.evilsupahfly.amulet-flatpak.yml
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build-dir/*.flatpak
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
