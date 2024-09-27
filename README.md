@@ -5,7 +5,7 @@ Since the [linux.com guide](https://www.linux.com/training-tutorials/how-install
 
 The `amulet.flatpak` file, available from [Releases](https://github.com/EvilSupahFly/Amulet-Flatpak/releases), is the actual flatpak application and can be downloaded and run locally if you have the Flatpak framework installed by simply running `flatpak install amulet-x86_64.flatpak` from the terminal in the same folder you've saved it to, then run with `flatpak run io.github.evilsupahfly.amulet-flatpak`. Uninstall is equally simplistic, achieved by running `flatpak uninstall io.github.evilsupahfly.amulet-flatpak` or save and run the `amulet.sh` script available in this repo, in Releases.
 
-Assuming this works as intended accross the spectrum of Linux distributions, this project will be handed over to the Amulet team to manage officially.
+Assuming this works as intended accross the spectrum of Linux distributions, this project will be handed over to the Amulet team to manage officially, should they be so inclined.
 
 The initial Flatpak version (which didn't work!) was sourced from Amulet 0.10.34. With Amulet being updated to 0.10.35, and the first working release of the flatpak now based on 0.10.36 (or higher), I have included `amulet.sh` which takes care of almost everything: when run, it will check to see if the Amulet flatpak is already installed, and if so, run it. If not, it will download the latest release from [Releases](https://github.com/EvilSupahFly/Amulet-Flatpak/releases), save the Flatpak file to a temp folder, install it in user mode, remove the temp folder, then run the Amulet Flatpak.
 
