@@ -1,7 +1,6 @@
-# Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=pip-gen
-
-#build-commands: []
-#buildsystem: simple
+# Generated with flatpak-pip-generator -r requirements.txt --yaml -o amulet-0.10.36b
+build-commands: []
+buildsystem: simple
 modules:
   - name: python3-versioneer
     buildsystem: simple
@@ -65,8 +64,8 @@ modules:
     sources:
       - &id001
         type: file
-        path: lz4-4.3.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: 0e9c410b11a31dbdc94c05ac3c480cb4b222460faf9231f12538d0074e56c563
+        url: https://files.pythonhosted.org/packages/a4/31/ec1259ca8ad11568abaf090a7da719616ca96b60d097ccc5799cd0ff599c/lz4-4.3.3.tar.gz
+        sha256: 01fe674ef2889dbb9899d8a67361e0c4a2c833af5aeb37dd505727cf5d2a131e
   - name: python3-amulet-core
     buildsystem: simple
     build-commands:
@@ -162,4 +161,4 @@ modules:
       - *id002
       - *id013
       - *id010
-name: pip-gen
+name: amulet-0.10.36b

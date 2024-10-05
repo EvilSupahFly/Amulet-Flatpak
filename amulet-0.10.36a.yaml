@@ -1,10 +1,11 @@
-# Generated with flatpak-pip-generator --requirements-file=req_rev_3.txt --yaml --output=pip-gen
-
-#build-commands: []
-#buildsystem: simple
+# Generated with flatpak-pip-generator -r requirements.txt --yaml -o amulet-0.10.36
+build-commands: []
+buildsystem: simple
 modules:
   - name: python3-versioneer
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "versioneer" --report=pip_report.json --no-build-isolation
@@ -13,7 +14,9 @@ modules:
         url: https://files.pythonhosted.org/packages/b0/79/f0f1ca286b78f6f33c521a36b5cbd5bd697c0d66217d8856f443aeb9dd77/versioneer-0.29-py3-none-any.whl
         sha256: 0f1a137bb5d6811e96a79bb0486798aeae9b9c6efc24b389659cebb0ee396cb9
   - name: python3-meson-python
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "meson-python" --report=pip_report.json --no-build-isolation
@@ -29,7 +32,9 @@ modules:
         url: https://files.pythonhosted.org/packages/aa/5f/bb5970d3d04173b46c9037109f7f05fc8904ff5be073ee49bb6ff00301bc/pyproject_metadata-0.8.0-py3-none-any.whl
         sha256: ad858d448e1d3a1fb408ac5bac9ea7743e7a8bbb472f2693aaa334d2db42f526
   - name: python3-glad
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "glad" --report=pip_report.json --no-build-isolation
@@ -38,7 +43,9 @@ modules:
         url: https://files.pythonhosted.org/packages/3b/07/1b313fc6ccdd38447f162f5a77700f070342ff71c4146dc05404bd6e053d/glad-0.1.36-py3-none-any.whl
         sha256: ff84d7f0f0f2d6ecb8eaed17ffbe8787215b923995e3e2617b62769b72ed280f
   - name: python3-pyopengl
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "pyopengl" --report=pip_report.json --no-build-isolation
@@ -48,7 +55,9 @@ modules:
         url: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
         sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
   - name: python3-numpy
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "numpy" --report=pip_report.json --no-build-isolation
@@ -58,17 +67,21 @@ modules:
         url: https://files.pythonhosted.org/packages/65/6e/09db70a523a96d25e115e71cc56a6f9031e7b8cd166c1ac8438307c14058/numpy-1.26.4.tar.gz
         sha256: 2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010
   - name: python3-lz4
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "lz4" --report=pip_report.json --no-build-isolation
     sources:
       - &id001
         type: file
-        path: lz4-4.3.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: 0e9c410b11a31dbdc94c05ac3c480cb4b222460faf9231f12538d0074e56c563
+        url: https://files.pythonhosted.org/packages/a4/31/ec1259ca8ad11568abaf090a7da719616ca96b60d097ccc5799cd0ff599c/lz4-4.3.3.tar.gz
+        sha256: 01fe674ef2889dbb9899d8a67361e0c4a2c833af5aeb37dd505727cf5d2a131e
   - name: python3-amulet-core
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-core" --report=pip_report.json --no-build-isolation
@@ -104,7 +117,9 @@ modules:
         url: https://files.pythonhosted.org/packages/9b/fb/a70a4214956182e0d7a9099ab17d50bfcba1056188e9b14f35b9e2b62a0d/portalocker-2.10.1-py3-none-any.whl
         sha256: 53a5984ebc86a025552264b459b46a2086e269b21823cb572f8f28ee759e45bf
   - name: python3-amulet-map-editor
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-map-editor" --report=pip_report.json --no-build-isolation
@@ -135,14 +150,18 @@ modules:
         url: https://files.pythonhosted.org/packages/a4/f5/8c272764770f47fd419cc2eff4c4fa1c0681c71bcc2f3158b3a83d1339ff/wxPython-4.2.2.tar.gz
         sha256: 5dbcb0650f67fdc2c5965795a255ffaa3d7b09fb149aa8da2d0d9aa44e38e2ba
   - name: python3-amulet-leveldb
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-leveldb" --report=pip_report.json --no-build-isolation
     sources:
       - *id007
   - name: python3-amulet-nbt
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-nbt" --report=pip_report.json --no-build-isolation
@@ -151,7 +170,9 @@ modules:
       - *id008
       - *id002
   - name: python3-minecraft-resource-pack
-    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "minecraft-resource-pack" --report=pip_report.json --no-build-isolation
@@ -162,4 +183,4 @@ modules:
       - *id002
       - *id013
       - *id010
-name: pip-gen
+name: amulet-0.10.36

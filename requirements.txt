@@ -4,7 +4,6 @@ glad
 pyopengl
 numpy
 lz4
-json5
 amulet-core
 amulet-map-editor
 amulet-leveldb

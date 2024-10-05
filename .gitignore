@@ -19,3 +19,10 @@ watch.sh
 .lock
 *.lock
 flatpak-pip-generator-mod
+/.flatpak-builder
+flatpak-pip-generator-bak
+flatpak-pip-generator-mod
+flatpak-pip-generator-bak
+amulet-0.10.36.yaml
+amulet-0.10.36a.yaml
+amulet-0.10.36b.yaml
