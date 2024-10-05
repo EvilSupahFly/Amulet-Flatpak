@@ -18,3 +18,4 @@ watch.sh
 .vscode
 .lock
 *.lock
+flatpak-pip-generator-mod
