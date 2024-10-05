@@ -23,24 +23,16 @@ jobs:
           bundle: amulet-x86_64.flatpak
           build-bundle: true
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
-          manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
+          manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yaml
           cache-key: flatpak-builder-${{ github.sha }}
           verbose: true
-#      - name: release
-#        uses: actions/create-release@latest
-#        id: create_release
-#        with:
-#          draft: false
-#          prerelease: true
-#          release_name: Amulet Flatpak
-#          tag_name: v0.10.35-beta
-#        env:
-#          GITHUB_TOKEN: ${{ github.token }}
-#      - name: build artifacts
-#        run: make build-linux
+      - name: Extract version from manifest
+        id: get_version
+        run: |
+          VERSION=$(grep 'version:' io.github.evilsupahfly.amulet-flatpak.yaml | awk '{print $2}')
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
       - name: Upload artifact
         uses: actions/upload-artifact@v4
-#        if: failure() || cancelled()
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -48,6 +40,10 @@ jobs:
 #          asset_path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
           name: amulet-x86_64.flatpak
           path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
-#          asset_content_type: application/vnd.flatpak
           overwrite: true
           compression-level: 0 # no compression
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        run: |
+          gh release upload ${{VERSION}} /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
