@@ -38,6 +38,7 @@ jobs:
         with:
 #          upload_url: ${{ steps.create_release.outputs.upload_url }}
 #          asset_path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+          tag: "amulet-${{ env.VERSION }}"
           name: amulet-x86_64.flatpak
           path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
           overwrite: true
@@ -46,4 +47,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         run: |
-          gh release upload ${{VERSION}} /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+          gh release upload ${{ env.VERSION }} /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
