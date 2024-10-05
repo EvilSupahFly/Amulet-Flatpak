@@ -202,7 +202,7 @@ modules:
     sources:
       - type: file
         path: minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
-        sha256: 7cb97f2d7f83b8cfa30ee12bd6ab84b4d91d8fa10572b88edd3648109f10445d
+        sha256: 5f5bb5e97c1c117dfafc24f0cf88aa68b8d2f8f1dc07474b3ea6fe41021822fd
       - *id005
       - *id012
       - *id008
