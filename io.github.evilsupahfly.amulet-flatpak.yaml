@@ -36,9 +36,6 @@ modules:
         --report=pip_report.json --no-build-isolation
     sources:
       - type: file
-        path: >-
-          minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
-        sha256: 7cb97f2d7f83b8cfa30ee12bd6ab84b4d91d8fa10572b88edd3648109f10445d
         path: minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
         sha256: 7cb97f2d7f83b8cfa30ee12bd6ab84b4d91d8fa10572b88edd3648109f10445d
 

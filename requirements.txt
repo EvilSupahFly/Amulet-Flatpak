@@ -2,6 +2,7 @@ versioneer
 meson-python
 glad
 pyopengl
+PyOpenGL-accelerate
 numpy
 lz4
 amulet-core
