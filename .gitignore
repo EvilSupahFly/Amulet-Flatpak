@@ -27,3 +27,5 @@ amulet-0.10.36.yaml
 amulet-0.10.36a.yaml
 amulet-0.10.36b.yaml
 amulet_testing.yaml
+ci-cd-flatpak.yaml
+speed-run.sh

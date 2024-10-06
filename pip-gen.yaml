@@ -94,8 +94,8 @@ modules:
     sources:
       - &id001
         type: file
-        url: https://files.pythonhosted.org/packages/cf/d4/12915eb3083dfd1746d50b71b73334030b129cd25abbed9133dd2d413c21/lz4-4.3.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: 0e9c410b11a31dbdc94c05ac3c480cb4b222460faf9231f12538d0074e56c563
+        url: https://files.pythonhosted.org/packages/d9/93/4a7e489156fa7ded03ba9cde4a8ca7f373672b5787cac9a0391befa752a1/lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        sha256: bca8fccc15e3add173da91be8f34121578dc777711ffd98d399be35487c934bf
   - name: python3-amulet-core
     buildsystem: simple
     build-options:
@@ -155,8 +155,8 @@ modules:
       - *id001
       - &id012
         type: file
-        url: https://files.pythonhosted.org/packages/f6/ab/c1f829d3e8daf82374367f2e57ff1a94f1d79aa462f3f0065bec65ef4415/minecraft_resource_pack-1.4.5-py3-none-any.whl
-        sha256: da47113933dadecba76a442669c7d66e10f78146ec7da55643424c3f607e9fba
+        path: minecraft_resource_pack-1.4.4+3.g9d6916a.dirty-py3-none-any.whl
+        sha256: 3b8f3fb4b68fc996b49af7d24aee62fed625d5ec5417f73ed29492ff1caa3a9e
       - *id008
       - *id002
       - *id009
@@ -201,8 +201,8 @@ modules:
         "minecraft-resource-pack" --report=pip_report.json --no-build-isolation
     sources:
       - type: file
-        path: minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
-        sha256: 5f5bb5e97c1c117dfafc24f0cf88aa68b8d2f8f1dc07474b3ea6fe41021822fd
+        path: minecraft_resource_pack-1.4.4+3.g9d6916a.dirty-py3-none-any.whl
+        sha256: 3b8f3fb4b68fc996b49af7d24aee62fed625d5ec5417f73ed29492ff1caa3a9e
       - *id005
       - *id012
       - *id008
