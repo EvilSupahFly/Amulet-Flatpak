@@ -1,11 +1,11 @@
 on:
   push:
     branches:
-#      - testing
-      - main
+      - testing
+#      - main
     tags: "*"
   pull_request: null
-name: CI
+name: Snapshot Testing
 jobs:
   flatpak:
     name: Make Amulet Flatpak
