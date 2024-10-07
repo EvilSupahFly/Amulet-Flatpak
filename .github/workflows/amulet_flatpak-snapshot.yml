@@ -1,47 +1,37 @@
-name: Build and Release Amulet Flatpak
-
 on:
   push:
     branches:
+#      - testing
       - main
-
+    tags: "*"
+  pull_request: null
+name: CI
 jobs:
-  build:
+  flatpak:
+    name: Make Amulet Flatpak
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:freedesktop-24.08
+      options:
+        --privileged
     steps:
-      - name: Checkout repository
-        uses: actions/checkout
-
-      - name: Fetch Amulet Flatpak manifest
-        run: curl -O https://raw.githubusercontent.com/EvilSupahFly/Amulet-Flatpak/refs/heads/main/io.github.evilsupahfly.amulet-flatpak.yml
-
-      - name: Build Amulet
-        run: flatpak-builder --force-clean --install-deps-only --repo=repo build-dir io.github.evilsupahfly.amulet-flatpak.yml
-
-      - name: Check for version increment
-        id: version_check
-        run: |
-          VERSION=$(grep 'version:' io.github.evilsupahfly.amulet-flatpak.yml | awk '{print $2}')
-          if [[ "$VERSION" == *"-SNAPSHOT" ]]; then
-            echo "increment=true" >> $GITHUB_ENV
-          else
-            echo "increment=false" >> $GITHUB_ENV
-          fi
-
-      - name: Increment version
-        if: env.increment == 'true'
-        run: |
-          VERSION=$(grep 'version:' io.github.evilsupahfly.amulet-flatpak.yml | awk '{print $2}' | sed 's/-SNAPSHOT//')
-          NEW_VERSION=$(echo $VERSION + 1 | bc)
-          sed -i "s/version: $VERSION/version: $NEW_VERSION-SNAPSHOT/" io.github.evilsupahfly.amulet-flatpak.yml
-
-      - name: Build Flatpak with new version
-        run: flatpak-builder --repo=repo build-dir io.github.evilsupahfly.amulet-flatpak.yml
-
-      - name: Publish Release
-        uses: softprops/action-gh-release
+      - uses: actions/checkout@v4
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          files: build-dir/*.flatpak
+          bundle: amulet-x86_64.flatpak
+          build-bundle: true
+          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
+          manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+          verbose: true
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          name: amulet-x86_64.flatpak
+          path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+          overwrite: true
+          compression-level: 0 # no compression
