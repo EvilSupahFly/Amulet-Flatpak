@@ -96,6 +96,8 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/d9/93/4a7e489156fa7ded03ba9cde4a8ca7f373672b5787cac9a0391befa752a1/lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
         sha256: bca8fccc15e3add173da91be8f34121578dc777711ffd98d399be35487c934bf
+        url: https://files.pythonhosted.org/packages/d9/93/4a7e489156fa7ded03ba9cde4a8ca7f373672b5787cac9a0391befa752a1/lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        sha256: bca8fccc15e3add173da91be8f34121578dc777711ffd98d399be35487c934bf
   - name: python3-amulet-core
     buildsystem: simple
     build-options:

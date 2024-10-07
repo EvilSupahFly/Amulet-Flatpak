@@ -76,7 +76,9 @@ cat << EOL > "io.github.evilsupahfly.amulet-flatpak.yaml"
 id: io.github.evilsupahfly.amulet-flatpak
 name: Amulet Map Editor
 version: 0.10.36.01
+version: 0.10.36.01
 runtime: org.freedesktop.Platform
+runtime-version: '24.08'
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: amulet_map_editor
@@ -100,6 +102,19 @@ modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip-gen.yaml
+#  - name: python3-minecraft-resource-pack
+#    buildsystem: simple
+#    build-options:
+#      build-args:
+#        - --share=network
+#    build-commands:
+#      - pip3 install --verbose --no-index --find-links="file://\${PWD}"
+#        --prefix=\${FLATPAK_DEST} "minecraft-resource-pack"
+#        --report=pip_report.json --no-build-isolation
+#    sources:
+#      - type: file
+#        path: minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
+#        sha256: 5f5bb5e97c1c117dfafc24f0cf88aa68b8d2f8f1dc07474b3ea6fe41021822fd
 #  - name: python3-minecraft-resource-pack
 #    buildsystem: simple
 #    build-options:
@@ -141,7 +156,12 @@ for arg in "$@"; do
         doFlatpakPIP
     elif [[ -z "$arg" || "$arg" == "--help" ]]; then
         doHelp
+    elif [[ -z "$arg" || "$arg" == "--help" ]]; then
+        doHelp
         exit 0
+    elif [ "$arg" == "--just-build" ]; then
+        echo -e "\n${WHT}Skipping DEBUG and AUTO modes.\n"
+        sleep 1
     elif [ "$arg" == "--just-build" ]; then
         echo -e "\n${WHT}Skipping DEBUG and AUTO modes.\n"
         sleep 1
@@ -167,6 +187,7 @@ fi
 report P "flatpak-builder succeeded!"
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
+echo -e "\n${WHT}flatpak build-bundle -vvv io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHT}\n"
 echo -e "\n${WHT}flatpak build-bundle -vvv io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHT}\n"
 if ! flatpak build-bundle -vvv io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
     report F "flatpak build-bundle failed."
@@ -194,6 +215,7 @@ for arg in "$@"; do
             flatpak-builder --run amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yaml sh
             exit 0
         elif DEBUG=FALSE; then
+            echo -e "\n${YLW}    Running flatpak...\n${WHT}"
             echo -e "\n${YLW}    Running flatpak...\n${WHT}"
             if ! flatpak run -vvv io.github.evilsupahfly.amulet-flatpak; then
                 report F "Amulet crashed. Review Traceback logs for details."
