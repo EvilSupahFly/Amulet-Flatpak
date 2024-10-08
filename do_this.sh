@@ -2,26 +2,52 @@
 
 # Check if the script is running in a Python 3 virtual environment
 #if [[ -z "$VIRTUAL_ENV" ]]; then
-#    echo "Error: This script must be run inside a Python 3 virtual environment."
+#    echo -e "Error: This script must be run inside a Python 3 virtual environment."
 #    exit 1
 #fi
 
-BOLD="\033[1m" #Bold or Hi-Intensty - depends on your terminal app
-RESET="\e[0m" #Normal
-#BGND="\e[40m" #Background
-YELLOW="${BOLD}\e[1;33m" #Bold/Hi-int Yellow
-RED="${BOLD}\e[1;91m" #Bold/Hi-int Red
-GREEN="${BOLD}\e[1;92m" #Bold/Hi-int Green
-WHITE="${BOLD}\e[1;97m" #Bold/Hi-int White
+#BLD="\033[1m" # Bold or Hi-Intensty - depends on your terminal app
+NRM="\033[0m" # Normal
+#BGND="\033[40m" # Background
+YLW="\033[1m\033[1;33m" # Yellow
+RED="\033[1m\033[1;91m" # Red
+GRN="\033[1m\033[1;92m" # Green
+WHT="\033[1m\033[1;97m" # White
+PRP="\033[1m\033[35m" # Magenta (Purple)
 DEBUG=FALSE
 
+doHelp() {
+    echo -e "${GRN}\nThis little script will build a local repository for the amulet-flatpak."
+    echo -e "Upon completion, it assembles \"${WHT}amulet.flatpak${GRN}\" from the local repo."
+    echo -e "\nYou can run it like this:"
+    echo -e "${YLW}    $0 --just-build"
+    echo -e "\n${GRN}\nRunning ${WHT}--just-build${GRN} exits after building the flatpak and repo."
+    echo -e "\n\n${YLW}    $0 --do-pip"
+    echo -e "Without explicitly running with ${WHT}--do-pip${GRN} this will skip running"
+    echo -e "${WHT}flatpak-pip-generator${GRN} to generate a new \"pip-gen.yaml\"."
+    echo -e "\nHowever, if ${WHT}io.github.evilsupahfly.amulet-flatpak.yaml${GRN} or"
+    echo -e "${WHT}pip-gen.yaml ${GRN}don't exist, ${RED}this WILL break. ${GRN}Buyer beware, and all that jazz.\n"
+    echo -e "\n\n${YLW}    $0 --auto"
+    echo -e "\nYou can also specify ${WHT}--auto${GRN} and this script will also (try)"
+    echo -e "to automatically install and run ${WHT}amulet-x86_64.flatpak${GRN} for you."
+    echo -e "Limited error checking is included for each step so ${RED}if one step fails${GRN},"
+    echo -e "we won't just continue to ${RED}blindly muddle through${GRN} to the next step and"
+    echo -e "we will instead try to ${WHT}exit gracefully."
+    echo -e "\n\n${YLW}    $0 --debug"
+    echo -e "\n${GRN}I've also included a ${WHT}--debug ${GRN}option to allow troubleshooting"
+    echo -e "of the Amulet Flatpak ${YLW}inside ${GRN}the flatpak sandbox, if neccessary.${NRM}\n"
+    echo -e "\n\n${YLW}    $0"
+    echo -e "${YLW}    $0 --help"
+    echo -e "${GRN}Running with no options or with ${WHT}--help${GRN} displays this help text.\n${NRM}"
+}
+
 lastword() {
-    echo -e "\n${YELLOW}    To install or reinstall the Amulet Flatpak manually, type:"
-    echo -e "${WHITE}        flatpak install -u amulet-x86_64.flatpak"
-    echo -e "\n${YELLOW}    To run your installed flatpak manually, type:"
-    echo -e "${WHITE}        flatpak run io.github.evilsupahfly.amulet-flatpak"
-    echo -e "\n${YELLOW}    To uninstall the Amulet flatpak, type:"
-    echo -e "${RED}        flatpak uninstall io.github.evilsupahfly.amulet-flatpak${RESET} \n"
+    echo -e "\n${YLW}    To install or reinstall the Amulet Flatpak manually, type:"
+    echo -e "${WHT}        flatpak install -u amulet-x86_64.flatpak"
+    echo -e "\n${YLW}    To run your installed flatpak manually, type:"
+    echo -e "${WHT}        flatpak run io.github.evilsupahfly.amulet-flatpak"
+    echo -e "\n${YLW}    To uninstall the Amulet flatpak, type:"
+    echo -e "${RED}        flatpak uninstall io.github.evilsupahfly.amulet-flatpak${NRM} \n"
 }
 
 # Function to report after process completions
@@ -31,27 +57,27 @@ report() {
     local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
 
     if [[ "$status" == "F" ]]; then
-        echo -e "\n${RED}[$timestamp] ERROR: $message\n${RESET}"
+        echo -e "\n${RED}[$timestamp] ERROR: $message\n${NRM}"
     elif [[ "$status" == "P" ]]; then
-        echo -e "\n${WHITE}[$timestamp] SUCCESS: $message\n${RESET}"
+        echo -e "\n${WHT}[$timestamp] SUCCESS: $message\n${NRM}"
     fi
 }
 
 function doFlatpakPIP {
     # Generate everything we need to build Amulet in the Flatpak sandbox
     if ! ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=pip-gen; then
-        ERR=$?
-        report F "flatpak-pip-generator failed with error $ERR."
+        report F "flatpak-pip-generator failed."
         exit 1
     fi
 
-    # Create the initial header for our "proper" manifest
-cat << EOL > "io.github.evilsupahfly.amulet-flatpak.yml"
+    # Create the initial header for our primary manifest
+cat << EOL > "io.github.evilsupahfly.amulet-flatpak.yaml"
 #### do_this.sh >>>
 id: io.github.evilsupahfly.amulet-flatpak
 name: Amulet Map Editor
+version: 0.10.36.12
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: amulet_map_editor
 
@@ -66,88 +92,87 @@ finish-args:
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
-#  - --env=PYTHONDEBUG=3
-#  - --env=PYTHONVERBOSE=3
-#  - --env=PYTHONTRACEMALLOC=10
+  - --env=PYTHONDEBUG=3
+  - --env=PYTHONVERBOSE=3
+  - --env=PYTHONTRACEMALLOC=10
 
 modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
   - pip-gen.yaml
-  - name: python3-minecraft-resource-pack
-    buildsystem: simple
-    build-options:
-      build-args:
-        - --share=network
-    build-commands:
-      - >-
-        pip3 install --verbose --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "minecraft-resource-pack"
-        --report=pip_report.json --no-build-isolation
-    sources:
-      - type: file
-        path: >-
-          minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
-        sha256: 7cb97f2d7f83b8cfa30ee12bd6ab84b4d91d8fa10572b88edd3648109f10445d
+
+versioning:
+  auto-increment: true
 #### <<< do_this.sh
 EOL
 
 report P "flatpak-pip-generator succeeded!"
 }
 
-echo -e "\n${WHITE}Colour ${YELLOW}Coding ${GREEN}Ative!\n"
+echo -e "\n${WHT}Colour ${YLW}Coding ${GRN}Active!\n"
+
+AFPREPO="io.github.evilsupahfly.amulet-flatpak-repo"
+AFP_YML="io.github.evilsupahfly.amulet-flatpak.yaml"
+
+if [[ ! -f "$AFP_YML" ]]; then
+    echo "Error: File '$AFP_YML' not found."
+    exit 1
+else
+    AFP_VER=$(grep '^version:' "$AFP_YML" | awk '{print $2}')
+    echo -e "${WHT}Amulet Flatpak version is: $AFP_VER\n"
+fi
+
+# Check if Flathub is installed at the user level
+echo -e "${WHT}Checking for Flathub...\n"
+if ! flatpak remote-list --user | grep -q "flathub"; then
+    echo -e "\n${RED}Flathub is not installed. ${WHT}Adding Flathub repository...\n"
+    if ! flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
+        echo -e "${RED}Flathub repository couldn't be added.\n${NRM}"
+        exit 1
+    else
+        echo -e "${GRN}Flathub repository added successfully.${NRM}\n"
+    fi
+else
+    echo -e "${GRN}Flathub already installed.\n"
+fi
 
 for arg in "$@"; do
     if [ "$arg" == "--do-pip" ]; then
-        echo -e "\n${GREEN}    Proceeding with flatpak-pip-generator.${RESET}"
+        echo -e "\n${GRN}    Proceeding with ${YLW}flatpak-pip-generator${GRN}....${NRM}\n"
         sleep 1
         doFlatpakPIP
-    elif [ "$arg" == "--help" ]; then
-        echo -e "${GREEN}\nThis little script will build a local repository for the amulet-flatpak."
-        echo -e "Upon completion, it assembles \"${WHITE}amulet.flatpak${GREEN}\" from the local repo."
-        echo -e "\nYou can either run it like this:"
-        echo -e "${YELLOW}    $0"
-        echo -e "\n${GREEN}Or like this:"
-        echo -e "${YELLOW}    $0 --do-pip"
-        echo -e "\n${GREEN}\nRunning without ${WHITE}--do-pip${GREEN} will skip running"
-        echo -e "${WHITE}flatpak-pip-generator${GREEN} to generate a new \"amulet.yml\"."
-        echo -e "\nHowever, there's no error checking, so if ${WHITE}amulet.yml${GREEN} doesn't"
-        echo -e "exist, ${RED}this WILL all breakdown. ${GREEN}Buyer beware, and all that jazz.\n"
-        echo -e "\nYou can also specify ${WHITE}--auto${GREEN} and this script will also (try)"
-        echo -e "to automatically install and run ${WHITE}amulet-x86_64.flatpak${GREEN} for you."
-        echo -e "Limited error checking is included for each step so ${RED}if one step fails${GREEN},"
-        echo -e "we won't just continue to ${RED}blindly muddle through${GREEN} to the next step and"
-        echo -e "we will instead try to ${WHITE}exit gracefully."
-        echo -e "\n${GREEN}I've also included a ${WHITE}--debug ${GREEN}option to allow troubleshooting"
-        echo -e "of the Amulet Flatpak ${YELLOW}inside ${GREEN}the flatpak sandbox, if neccessary.${RESET}\n"
+    elif [[ -z "$arg" || "$arg" == "--help" ]]; then
+        doHelp
         exit 0
+    elif [ "$arg" == "--just-build" ]; then
+        echo -e "\n${WHT}Skipping DEBUG and AUTO modes.\n"
+        sleep 1
     elif [ "$arg" == "--debug" ]; then
         DEBUG=TRUE
-        echo -e "\n${WHITE}----------------------"
-        echo -e "|${RED} DEBUG MODE ACTIVE. ${WHITE}|"
-        echo -e "----------------------${RESET}\n"
+        echo -e "\n${WHT}----------------------"
+        echo -e "|${RED} DEBUG MODE ACTIVE. ${WHT}|"
+        echo -e "----------------------${NRM}\n"
+        sleep 1
     else
-        echo -e "\n${YELLOW}    Skipping flatpak-pip-generator, starting ${WHITE}flatpak-builder${YELLOW}.${RESET}\n"
+        echo -e "\n${YLW}    Skipping flatpak-pip-generator, starting ${WHT}flatpak-builder${YLW}.${NRM}\n"
         sleep 1
     fi
 done
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-echo -e "${WHITE}flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=v0.10.36-beta --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean\n${GREEN}"
-if ! flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=v0.10.36-beta --bundle-sources --repo=io.github.evilsupahfly.amulet-flatpak-repo amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml --force-clean; then
-    ERR=$?
+echo -e "${WHT}flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean\n${GRN}"
+if ! flatpak-builder -vvv --install-deps-from=flathub --mirror-screenshots-url=https://dl.flathub.org/media/ --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean; then
     report F "flatpak-builder failed."
-    exit $ERR
+    exit 1
 fi
 
 report P "flatpak-builder succeeded!"
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
-echo -e "\n${WHITE}flatpak build-bundle -vvv io.github.evilsupahfly.amulet-flatpak-repo  io.github.evilsupahfly.amulet-flatpak${WHITE}\n"
-if ! flatpak build-bundle -vvv io.github.evilsupahfly.amulet-flatpak-repo amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
-    ERR=$?
+echo -e "\n${WHT}flatpak build-bundle -vvv $AFPREPO io.github.evilsupahfly.amulet-flatpak${WHT}\n"
+if ! flatpak build-bundle -vvv $AFPREPO amulet-x86_64.flatpak io.github.evilsupahfly.amulet-flatpak; then
     report F "flatpak build-bundle failed."
-    exit $ERR
+    exit 1
 fi
 
 report P "flatpak build-bundle succeeded!"
@@ -155,28 +180,27 @@ report P "flatpak build-bundle succeeded!"
 for arg in "$@"; do
     if [ "$arg" == "--auto" ]; then
         # Install bundle
-        echo -e "\n${WHITE}---------------------"
-        echo -e "|${RED} AUTO MODE ACTIVE. ${WHITE}|"
-        echo -e "---------------------${RESET}\n"
-        echo -e "\n${YELLOW}    Installing bundle...\n${WHITE}"
+        echo -e "\n${WHT}---------------------"
+        echo -e "|${YLW} AUTO MODE ACTIVE. ${WHT}|"
+        echo -e "---------------------${NRM}\n"
+        echo -e "\n${YLW}    Installing bundle...\n${WHT}"
         if ! flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak; then
-            ERR=$?
             report F "flatpak install failed."
+            exit 1
         else
             report P "flatpak install succeeded!"
         fi
         # Run bundle with optional output verbosity (-v, -vv, -vvv)
         if DEBUG=TRUE; then
-            echo -e "\n${RED}    Running flatpak in debug mode...\n${WHITE}"
-            echo -e "\n${YELLOW}    Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YELLOW}' to run Amulet though ${WHITE}PDB${YELLOW}.\n${WHITE}"
-            flatpak-builder --run amulet-flatpak_build_dir io.github.evilsupahfly.amulet-flatpak.yml sh
-            echo -e ${RESET}
+            echo -e "\n${RED}    Running flatpak in debug mode...\n${WHT}"
+            echo -e "\n${YLW}    Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}\n"
+            flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
             exit 0
         elif DEBUG=FALSE; then
-            echo -e "\n${YELLOW}    Running flatpak...\n${WHITE}"
+            echo -e "\n${YLW}    Running flatpak...\n${WHT}"
             if ! flatpak run -vvv io.github.evilsupahfly.amulet-flatpak; then
-                ERR=$?
-                report F "Amulet crashed, reporting error $ERR."
+                report F "Amulet crashed. Review Traceback logs for details."
+                exit 1
             else
                 report P "It works!"
             fi
