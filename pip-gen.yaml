@@ -1,9 +1,12 @@
-# Generated with flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=pip-gen
+# Generated with flatpak-pip-generator --yaml --requirements-file requirements.txt --output amulet_testing
 build-commands: []
 buildsystem: simple
 modules:
   - name: python3-versioneer
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "versioneer" --report=pip_report.json --no-build-isolation
@@ -13,6 +16,9 @@ modules:
         sha256: 0f1a137bb5d6811e96a79bb0486798aeae9b9c6efc24b389659cebb0ee396cb9
   - name: python3-meson-python
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "meson-python" --report=pip_report.json --no-build-isolation
@@ -29,6 +35,9 @@ modules:
         sha256: ad858d448e1d3a1fb408ac5bac9ea7743e7a8bbb472f2693aaa334d2db42f526
   - name: python3-glad
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "glad" --report=pip_report.json --no-build-isolation
@@ -38,6 +47,9 @@ modules:
         sha256: ff84d7f0f0f2d6ecb8eaed17ffbe8787215b923995e3e2617b62769b72ed280f
   - name: python3-pyopengl
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "pyopengl" --report=pip_report.json --no-build-isolation
@@ -46,8 +58,23 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
         sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
+#  - name: python3-PyOpenGL-accelerate
+#    buildsystem: simple
+#    build-options:
+#      build-args:
+#        - --share=network
+#    build-commands:
+#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+#        "PyOpenGL-accelerate" --report=pip_report.json --no-build-isolation
+#    sources:
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/93/09/d08b3d07dbd88258276496a47273778f330f5ccf8390cb21b16b29d660de/PyOpenGL-accelerate-3.1.7.tar.gz
+#        sha256: 2b123621273a939f7fd2ec227541e399f9b5d4e815d69ae0bdb1b6c70a293680
   - name: python3-numpy
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "numpy" --report=pip_report.json --no-build-isolation
@@ -58,25 +85,22 @@ modules:
         sha256: 2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010
   - name: python3-lz4
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "lz4" --report=pip_report.json --no-build-isolation
     sources:
       - &id001
         type: file
-        path: lz4-4.3.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: 0e9c410b11a31dbdc94c05ac3c480cb4b222460faf9231f12538d0074e56c563
-  - name: python3-json5
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "json5" --report=pip_report.json --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/8a/3c/4f8791ee53ab9eeb0b022205aa79387119a74cc9429582ce04098e6fc540/json5-0.9.25-py3-none-any.whl
-        sha256: 34ed7d834b1341a86987ed52f3f76cd8ee184394906b6e22a1e0deb9ab294e8f
+        url: https://files.pythonhosted.org/packages/a4/31/ec1259ca8ad11568abaf090a7da719616ca96b60d097ccc5799cd0ff599c/lz4-4.3.3.tar.gz
+        sha256: 01fe674ef2889dbb9899d8a67361e0c4a2c833af5aeb37dd505727cf5d2a131e
   - name: python3-amulet-core
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-core" --report=pip_report.json --no-build-isolation
@@ -113,6 +137,9 @@ modules:
         sha256: 53a5984ebc86a025552264b459b46a2086e269b21823cb572f8f28ee759e45bf
   - name: python3-amulet-map-editor
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-map-editor" --report=pip_report.json --no-build-isolation
@@ -128,8 +155,8 @@ modules:
       - *id001
       - &id012
         type: file
-        url: https://files.pythonhosted.org/packages/f6/ab/c1f829d3e8daf82374367f2e57ff1a94f1d79aa462f3f0065bec65ef4415/minecraft_resource_pack-1.4.5-py3-none-any.whl
-        sha256: da47113933dadecba76a442669c7d66e10f78146ec7da55643424c3f607e9fba
+        path: minecraft_resource_pack-1.4.5.tar.gz
+        sha256: 6de951a21d40fbc69c4b3caf6053ae5bf0ca62f435b70aa4368c3cec1adcb9e1
       - *id008
       - *id002
       - *id009
@@ -144,6 +171,9 @@ modules:
         sha256: 5dbcb0650f67fdc2c5965795a255ffaa3d7b09fb149aa8da2d0d9aa44e38e2ba
   - name: python3-amulet-leveldb
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-leveldb" --report=pip_report.json --no-build-isolation
@@ -151,6 +181,9 @@ modules:
       - *id007
   - name: python3-amulet-nbt
     buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "amulet-nbt" --report=pip_report.json --no-build-isolation
@@ -158,16 +191,22 @@ modules:
       - *id005
       - *id008
       - *id002
-#  - name: python3-minecraft-resource-pack
-#    buildsystem: simple
-#    build-commands:
-#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-#        "minecraft-resource-pack" --report=pip_report.json --no-build-isolation
-#    sources:
-#      - *id005
-#      - *id012
-#      - *id008
-#      - *id002
-#      - *id013
-#      - *id010
+  - name: python3-minecraft-resource-pack
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "minecraft-resource-pack" --report=pip_report.json --no-build-isolation
+    sources:
+      - type: file
+        path: minecraft_resource_pack-1.4.5.tar.gz
+        sha256: 6de951a21d40fbc69c4b3caf6053ae5bf0ca62f435b70aa4368c3cec1adcb9e1
+      - *id005
+      - *id012
+      - *id008
+      - *id002
+      - *id013
+      - *id010
 name: pip-gen
