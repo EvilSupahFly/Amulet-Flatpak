@@ -18,7 +18,7 @@ jobs:
         --privileged
     steps:
       - uses: actions/checkout@v4
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@latest #v6
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle: amulet-x86_64.flatpak
           build-bundle: true
@@ -27,7 +27,7 @@ jobs:
           cache-key: flatpak-builder-${{ github.sha }}
           verbose: true
       - name: Upload artifact
-        uses: actions/upload-artifact@latest #v4
+        uses: actions/upload-artifact@v4
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
