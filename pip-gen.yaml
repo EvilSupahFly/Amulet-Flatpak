@@ -94,7 +94,7 @@ modules:
     sources:
       - &id001
         type: file
-        url: https://files.pythonhosted.org/packages/a4/31/ec1259ca8ad11568abaf090a7da719616ca96b60d097ccc5799cd0ff599c/lz4-4.3.3.tar.gz
+        path: lz4-4.3.3.tar.gz
         sha256: 01fe674ef2889dbb9899d8a67361e0c4a2c833af5aeb37dd505727cf5d2a131e
   - name: python3-amulet-core
     buildsystem: simple
