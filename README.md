@@ -1,5 +1,5 @@
 # Amulet Minecraft Map Editor - Flatpak Edition
-My hope, with this project, is to make Amulet easier to install and use for people who aren't used to tinkering with source repositories, or don't have experience with programming, and might not be comfortable attempting to install dependencies and run thigs from source, or through the terminal.
+My hope, with this project, is to make Amulet easier to install and use for people who aren't used to tinkering with source repositories, or don't have experience with programming, and might not be comfortable attempting to install dependencies and run things from source, or through the terminal.
 
 Since the [linux.com guide](https://www.linux.com/training-tutorials/how-install-and-use-flatpak-linux/) is so well done, there's no need for me to go over the installation and setup of Flatpak.
 
