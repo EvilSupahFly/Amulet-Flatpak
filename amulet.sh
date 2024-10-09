@@ -2,7 +2,6 @@
 
 RESET="\033[0m" #Normal
 BOLD="\033[1m" #Bold
-#BGND="\033[40m" #Background prefix
 RED="${BOLD}\033[1;91m" #Bold Red
 GREEN="${BOLD}\033[1;92m" #Bold Green
 WHITE="${BOLD}\033[1;97m" #Bold White
@@ -41,4 +40,3 @@ else
 fi
 
 flatpak run "$AFP"
-
