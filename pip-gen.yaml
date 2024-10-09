@@ -94,8 +94,8 @@ modules:
     sources:
       - &id001
         type: file
-        path: lz4-4.3.3.tar.gz
-        sha256: 01fe674ef2889dbb9899d8a67361e0c4a2c833af5aeb37dd505727cf5d2a131e
+        path: lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        sha256: bca8fccc15e3add173da91be8f34121578dc777711ffd98d399be35487c934bf
   - name: python3-amulet-core
     buildsystem: simple
     build-options:
