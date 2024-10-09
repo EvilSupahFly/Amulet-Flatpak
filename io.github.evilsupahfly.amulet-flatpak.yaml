@@ -1,0 +1,30 @@
+id: io.github.evilsupahfly.amulet-flatpak
+name: Amulet Map Editor
+version: 0.10.36.13
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: amulet_map_editor
+
+finish-args:
+  - --device=all
+  - --share=network
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --filesystem=home:create
+  - --talk-name=org.freedesktop.Notifications
+  - --env=LIBGL_ALWAYS_SOFTWARE="0"
+  - --env=OPENGL_VERSION=3.3
+  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+  - --env=PYTHONDEBUG=3
+  - --env=PYTHONVERBOSE=3
+  - --env=PYTHONTRACEMALLOC=10
+
+modules:
+  - shared-modules/glew/glew.json
+  - shared-modules/glu/glu-9.json
+  - pip-gen.yaml
+
+versioning:
+  auto-increment: true
