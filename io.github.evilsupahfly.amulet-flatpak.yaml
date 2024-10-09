@@ -1,6 +1,6 @@
 id: io.github.evilsupahfly.amulet-flatpak
 name: Amulet Map Editor
-version: 0.10.36.11
+version: 0.10.36.13
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 runtime-version: '24.08'
@@ -37,8 +37,8 @@ modules:
 #        --report=pip_report.json --no-build-isolation
 #    sources:
 #      - type: file
-#        path: minecraft_resource_pack-1.4.4+2.g8b81eba.dirty-py3-none-any.whl
-#        sha256: 5f5bb5e97c1c117dfafc24f0cf88aa68b8d2f8f1dc07474b3ea6fe41021822fd
+#        path: minecraft_resource_pack-1.4.5.tar.gz
+#        sha256: 6de951a21d40fbc69c4b3caf6053ae5bf0ca62f435b70aa4368c3cec1adcb9e1
 
 versioning:
   auto-increment: true

@@ -157,8 +157,8 @@ modules:
       - *id001
       - &id012
         type: file
-        path: minecraft_resource_pack-1.4.4+3.g9d6916a.dirty.tar.gz
-        sha256: 0e6cd04f201994b6ff73626fcd96f27336e820cd1946ac4fd3860271f3d6a2e6
+        path: minecraft_resource_pack-1.4.5.tar.gz
+        sha256: 6de951a21d40fbc69c4b3caf6053ae5bf0ca62f435b70aa4368c3cec1adcb9e1
       - *id008
       - *id002
       - *id009
@@ -203,8 +203,8 @@ modules:
         "minecraft-resource-pack" --report=pip_report.json --no-build-isolation
     sources:
       - type: file
-        path: minecraft_resource_pack-1.4.4+3.g9d6916a.dirty.tar.gz
-        sha256: 0e6cd04f201994b6ff73626fcd96f27336e820cd1946ac4fd3860271f3d6a2e6
+        path: minecraft_resource_pack-1.4.5.tar.gz
+        sha256: 6de951a21d40fbc69c4b3caf6053ae5bf0ca62f435b70aa4368c3cec1adcb9e1
       - *id005
       - *id012
       - *id008
