@@ -58,18 +58,18 @@ modules:
         type: file
         url: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
         sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
-  - name: python3-PyOpenGL-accelerate
-    buildsystem: simple
-    build-options:
-      build-args:
-        - --share=network
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "PyOpenGL-accelerate" --report=pip_report.json --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/93/09/d08b3d07dbd88258276496a47273778f330f5ccf8390cb21b16b29d660de/PyOpenGL-accelerate-3.1.7.tar.gz
-        sha256: 2b123621273a939f7fd2ec227541e399f9b5d4e815d69ae0bdb1b6c70a293680
+#  - name: python3-PyOpenGL-accelerate
+#    buildsystem: simple
+#    build-options:
+#      build-args:
+#        - --share=network
+#    build-commands:
+#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+#        "PyOpenGL-accelerate" --report=pip_report.json --no-build-isolation
+#    sources:
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/93/09/d08b3d07dbd88258276496a47273778f330f5ccf8390cb21b16b29d660de/PyOpenGL-accelerate-3.1.7.tar.gz
+#        sha256: 2b123621273a939f7fd2ec227541e399f9b5d4e815d69ae0bdb1b6c70a293680
   - name: python3-numpy
     buildsystem: simple
     build-options:
@@ -94,10 +94,8 @@ modules:
     sources:
       - &id001
         type: file
-        url: https://files.pythonhosted.org/packages/d9/93/4a7e489156fa7ded03ba9cde4a8ca7f373672b5787cac9a0391befa752a1/lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: bca8fccc15e3add173da91be8f34121578dc777711ffd98d399be35487c934bf
-        url: https://files.pythonhosted.org/packages/d9/93/4a7e489156fa7ded03ba9cde4a8ca7f373672b5787cac9a0391befa752a1/lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: bca8fccc15e3add173da91be8f34121578dc777711ffd98d399be35487c934bf
+        url: https://files.pythonhosted.org/packages/a4/31/ec1259ca8ad11568abaf090a7da719616ca96b60d097ccc5799cd0ff599c/lz4-4.3.3.tar.gz
+        sha256: 01fe674ef2889dbb9899d8a67361e0c4a2c833af5aeb37dd505727cf5d2a131e
   - name: python3-amulet-core
     buildsystem: simple
     build-options:
