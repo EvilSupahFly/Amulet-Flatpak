@@ -1,0 +1,52 @@
+id: io.github.evilsupahfly.amulet_flatpak
+name: Amulet Map Editor
+#version: 0.10.36
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: amulet_map_editor
+
+finish-args:
+  - --device=all
+  - --share=network
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --filesystem=home:persistent
+  - --filesystem=~/.cache:persistent
+  - --filesystem=host:create
+  - --env=LIBGL_ALWAYS_SOFTWARE="0"
+  - --env=OPENGL_VERSION=3.3
+  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+  - --env=PYTHONDEBUG=3
+  - --env=PYTHONVERBOSE=3
+  - --env=PYTHONTRACEMALLOC=10
+# According to the official docs (https://docs.flatpak.org/en/latest/sandbox-permissions.html), the following directories are blacklisted:
+# - /lib, /lib32, /lib64, /bin, /sbin, /usr, /boot, /root, /tmp, /etc, /app, /run, /proc, /sys, /dev, /var
+# Meaning you can't give an app access to them even using the override method.
+modules:
+  - shared-modules/glew/glew.json
+  - shared-modules/glu/glu-9.json
+  - pip-gen.yaml
+  - name: metainfo-xml
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/
+    sources:
+      - type: file
+        path: io.github.evilsupahfly.amulet_flatpak.metainfo.xml
+  - name: metainfo-ico
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
+    sources:
+      - type: file
+        path: io.github.evilsupahfly.amulet_flatpak.png
+  - name: metainfo-desktop
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 io.github.evilsupahfly.amulet_flatpak.desktop -t ${FLATPAK_DEST}/share/applications/
+    sources:
+      - type: file
+        path: io.github.evilsupahfly.amulet_flatpak.desktop
+

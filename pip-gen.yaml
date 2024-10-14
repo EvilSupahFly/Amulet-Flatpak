@@ -156,7 +156,7 @@ modules:
       - &id012
         type: file
         path: minecraft_resource_pack-1.4.5.tar.gz
-        sha256: 6de951a21d40fbc69c4b3caf6053ae5bf0ca62f435b70aa4368c3cec1adcb9e1
+        sha256: 84de45ca2adf0f8c520976a1a6a004106ea87f08a37630cf8eb3fe39810c1b9f
       - *id008
       - *id002
       - *id009
@@ -202,7 +202,7 @@ modules:
     sources:
       - type: file
         path: minecraft_resource_pack-1.4.5.tar.gz
-        sha256: 6de951a21d40fbc69c4b3caf6053ae5bf0ca62f435b70aa4368c3cec1adcb9e1
+        sha256: 84de45ca2adf0f8c520976a1a6a004106ea87f08a37630cf8eb3fe39810c1b9f
       - *id005
       - *id012
       - *id008

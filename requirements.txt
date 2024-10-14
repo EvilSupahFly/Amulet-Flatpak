@@ -2,7 +2,6 @@ versioneer
 meson-python
 glad
 pyopengl
-PyOpenGL-accelerate
 numpy
 lz4
 amulet-core
@@ -10,3 +9,4 @@ amulet-map-editor
 amulet-leveldb
 amulet-nbt
 minecraft-resource-pack
+six
