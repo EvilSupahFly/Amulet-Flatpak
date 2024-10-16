@@ -49,4 +49,11 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.desktop
+  - name: vanilla-textures
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 VanillaDefault_1.21.zip -t ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
+    sources:
+      - type: file
+        path: VanillaDefault_1.21.zip
 

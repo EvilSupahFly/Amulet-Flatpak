@@ -25,6 +25,7 @@
     </release>
   </releases>
   <launchable type="desktop-id">io.github.evilsupahfly.amulet_flatpak.desktop</launchable>
+  <icon type="stock">io.github.evilsupahfly.amulet_flatpak</icon>
   <content_rating type="oars-1.0">
     <content_attribute id="social-chat">moderate</content_attribute>
   </content_rating>

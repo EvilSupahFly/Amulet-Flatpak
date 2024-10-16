@@ -136,7 +136,7 @@ if [[ ! -f "$AFP_YML" ]]; then
     report F "Error: File '$AFP_YML' not found. \n"
     exit 1
 else
-    AFP_VER=$(grep '^version:' "$AFP_YML" | awk '{print $2}')
+    AFP_VER=$(grep '^#version:' "$AFP_YML" | awk '{print $2}')
     report P "${WHT}Amulet Flatpak version is: $AFP_VER\n"
 fi
 
