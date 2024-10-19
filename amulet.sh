@@ -16,7 +16,7 @@ if ! flatpak remote-list --user | grep -q "flathub"; then
     echo -e "${RED}Flathub is not installed. ${WHITE}Attempting to add Flathub repository...\n"
     if ! flatpak remote-add --if-not-exists --user --assume-yes flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
         echo -e "${RED}Flathub repository couldn't be added."
-        echo -e "Try installing the flatpak base with your system package manager.\n${RESET}"
+        echo -e "Try installing the flatpak base manually.\n${RESET}"
         exit 1
     else
         echo -e "${GREEN}Flathub repository added successfully.${RESET}\n"
