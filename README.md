@@ -18,3 +18,4 @@ Currently the flatpak release suffers from two minor issues:
 If you're feeling ambitious, you can fork or clone this project and try tweaking it. For those brave souls who wish to try, I've written the [do_this.sh](https://github.com/EvilSupahFly/Amulet-Flatpak/blob/testing/do_this.sh) script to help you on your way with a `--help` switch you can pass for usage enlightenment.
 
 The flatpak version has so far been tested on Manjaro, Ubuntu, Kubuntu and Mint. Feedback is most welcome!
+
