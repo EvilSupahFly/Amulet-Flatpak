@@ -155,11 +155,13 @@ modules:
       - *id001
       - &id012
         type: file
-        path: minecraft_resource_pack-1.4.5.tar.gz
-        sha256: e33f63b8e23e5d91eacb7992166c76c39a68274df7da0bf9516bddf76273a11d
+        path: minecraft_resource_pack-1.4.5-py3-none-any.whl
+        sha256: b788747b8985ce19b07e3640e66ca2fecffa56e303a4793af8639122dd3bfcad
+      - *id005
+      - *id012
       - *id008
       - *id002
-      - *id009
+      - *id010
       - &id013
         type: file
         url: https://files.pythonhosted.org/packages/cd/74/ad3d526f3bf7b6d3f408b73fde271ec69dfac8b81341a318ce825f2b3812/pillow-10.4.0.tar.gz
@@ -191,22 +193,4 @@ modules:
       - *id005
       - *id008
       - *id002
-#  - name: python3-minecraft-resource-pack
-#    buildsystem: simple
-#    build-options:
-#      build-args:
-#        - --share=network
-#    build-commands:
-#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-#        "minecraft-resource-pack" --report=pip_report.json --no-build-isolation
-#    sources:
-#      - type: file
-#        path: minecraft_resource_pack-1.4.5.tar.gz
-#        sha256: e33f63b8e23e5d91eacb7992166c76c39a68274df7da0bf9516bddf76273a11d
-#      - *id005
-#      - *id012
-#      - *id008
-#      - *id002
-#      - *id013
-#      - *id010
 name: pip-gen
