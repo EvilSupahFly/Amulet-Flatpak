@@ -161,18 +161,15 @@ check_version() {
     fi
 }
 
-for arg in "$@"; do
-    if [[ -z "$arg" || "$arg" == "--help" ]]; then
-        doHelp
-    fi
-done
-
 echo
 report N "\n${WHT}--------------------------------\n${WHT}| ${RED}PRELIMINARY CHECKS INITIATED ${WHT}|\n${WHT}--------------------------------"
 echo
 sleep 2
 
 for arg in "$@"; do
+    if [[ -z "$arg" || "$arg" == "--help" ]]; then
+        doHelp
+    fi
     case "$arg" in
         --version)
             shift
@@ -185,7 +182,7 @@ for arg in "$@"; do
             ;;
         --do-pip)
             PIP_GEN=TRUE
-            if [ "$DONE_PIP" == "FALSE" ]; then
+            if [[ "$DONE_PIP" == "FALSE" ]]; then
                 report N "${GRN}Proceeding with ${YLW}flatpak-pip-generator${GRN}....${NRM}"
                 sleep 1
                 doFlatpakPIP
@@ -202,7 +199,7 @@ for arg in "$@"; do
             sleep 1
             ;;
         --debug)
-            if [ "$@" == *"--just-build"* ]; then
+            if [[ "$@" == *"--just-build"* ]]; then
                 report N "${RED}Error: --debug cannot be used with --just-build.${NRM}"
                 exit 1
             fi
@@ -211,7 +208,7 @@ for arg in "$@"; do
             sleep 1
             ;;
         --auto)
-            if [ "$@" == *"--just-build"* ]; then
+            if [[ "$@" == *"--just-build"* ]]; then
                 report N "${RED}Error: --auto cannot be used with --just-build.${NRM}"
                 exit 1
             fi
