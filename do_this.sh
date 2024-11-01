@@ -68,11 +68,11 @@ report() {
     local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
 
     if [[ "$status" == "F" ]]; then
-        echo -e "\n${RED}[$timestamp] ERROR: ${WHT}$message\n${NRM}"
+        echo -e "\n${WHT}[$timestamp] ${RED}ERROR: ${WHT}$message\n${NRM}"
     elif [[ "$status" == "P" ]]; then
-        echo -e "\n${GRN}[$timestamp] SUCCESS: ${WHT}$message\n${NRM}"
+        echo -e "\n${WHT}[$timestamp] ${GRN}SUCCESS: ${WHT}$message\n${NRM}"
     elif [[ "$status" == "N" ]]; then
-        echo -e "${YLW}[$timestamp] NOTICE: ${WHT}$message ${NRM}"
+        echo -e "${WHT}[$timestamp] ${YLW}NOTICE: ${WHT}$message ${NRM}"
     fi
 }
 
