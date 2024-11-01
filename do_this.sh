@@ -184,7 +184,7 @@ for arg in "$@"; do
             PIP_GEN=TRUE
             if [[ "$DONE_PIP" == "FALSE" ]]; then
                 report N "${GRN}Proceeding with ${YLW}flatpak-pip-generator${GRN}....${NRM}"
-                sleep 1
+                sleep 2
                 doFlatpakPIP
             else
                 report N "${YLW}flatpak-pip-generator ${RED}has already run.\n${YLW}Delete or rename the previous run's ${RED}pip-gen.yaml${YLW} before trying again.\n${WHT}Using existing ${RED}pip-gen.yaml${WHT} for this build."
@@ -196,7 +196,7 @@ for arg in "$@"; do
                 exit 1
             fi
             report N "${WHT}Skipping ${RED}DEBUG ${WHT}and ${RED}AUTO ${WHT}modes."
-            sleep 1
+            sleep 2
             ;;
         --debug)
             if [[ "$@" == *"--just-build"* ]]; then
@@ -205,7 +205,7 @@ for arg in "$@"; do
             fi
             DEBUG=TRUE
             report N "\n${WHT}----------------------\n|${RED} DEBUG MODE ACTIVE. ${WHT}|\n${WHT}----------------------"
-            sleep 1
+            sleep 2
             ;;
         --auto)
             if [[ "$@" == *"--just-build"* ]]; then
@@ -220,7 +220,7 @@ done
 
 if PIP_GEN=FALSE; then
     report N "${WHT}Skipping ${YLW}flatpak-pip-generator${WHT}, starting ${YLW}flatpak-builder${WHT}."
-    sleep 1
+    sleep 2
 fi
 
 # Check if Flathub is installed at the user level
@@ -295,7 +295,7 @@ else
 fi
 
 report N "\n${WHT}--------------------------------\n${WHT}|${RED} PRELIMINARY CHECKS COMPLETED ${WHT}|\n${WHT}--------------------------------"
-sleep 1
+sleep 2
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 report N "${WHT}flatpak-builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean\n${GRN}"
