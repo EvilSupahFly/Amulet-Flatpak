@@ -213,7 +213,7 @@ for arg in "$@"; do
                 exit 1
             fi
             AUTO=TRUE
-            report N "\n${WHT}---------------------\n|${YLW} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
+            report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
             ;;
     esac
 done
