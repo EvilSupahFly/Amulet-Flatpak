@@ -18,6 +18,7 @@ PRP="\033[1m\033[35m" # Magenta (Purple)
 DEBUG=FALSE
 SETVER=FALSE
 DONE_PIP=FALSE
+AUTO=FALSE
 AFPBASE="io.github.evilsupahfly.amulet_flatpak"
 AFPREPO="${AFPBASE}-repo"
 AFP_YML="${AFPBASE}.yaml"
@@ -41,7 +42,6 @@ doHelp() {
     echo -e "${YLW}$0 --help"
     echo -e "${WHT}Running with no options or with ${YLW}--help${WHT} displays this help text. When specifying ${YLW}--help${WHT}, all other options are ignored.${NRM}\n"
     lastWord
-    exit 0
 }
 
 # Some parting words for future runs
@@ -57,6 +57,7 @@ lastWord(){
     echo -e "${YLW}    python -vvv -m pdb -m amulet_map_editor"
     echo -e "\n${WHT}To uninstall the Amulet flatpak, type:"
     echo -e "${RED}    flatpak uninstall $AFPBASE \n"
+    exit 0
 }
 
 # Function to report after process completions
@@ -177,19 +178,35 @@ for arg in "$@"; do
             AFP_VER="$1"
             check_version "$AFP_VER"
             shift
-            break
+            ;;
+        --help)
+            doHelp
+            ;;
+        --do-pip)
+            if [ "$DONE_PIP" == "FALSE" ]; then
+                report N "${GRN}Proceeding with ${YLW}flatpak-pip-generator${GRN}....${NRM}"
+                sleep 1
+                doFlatpakPIP
+            else
+                report N "${YLW}flatpak-pip-generator ${RED}has already run.\n${YLW}Delete or rename the previous run's ${RED}pip-gen.yaml${YLW} before trying again."
+            fi
+            ;;
+        --just-build)
+            report N "${WHT}Skipping ${RED}DEBUG ${WHT}and ${RED}AUTO ${WHT}modes."
+            sleep 1
+            ;;
+        --debug)
+            DEBUG=TRUE
+            report N "\n${WHT}----------------------\n|${RED} DEBUG MODE ACTIVE. ${WHT}|\n${WHT}----------------------"
+            sleep 1
+            ;;
+        --auto)
+            AUTO=TRUE
+            report N "\n${WHT}---------------------\n|${YLW} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
             ;;
         *)
-            report N "${WHT}Argument ${YLW}--version${WHT} was not provided. Checking ${YLW}$AFP_YML ${WHT}for version number.\n"
-            if [[ ! -f "$AFP_YML" ]]; then
-                report F "Error: File '$AFP_YML' not found. \n"
-                exit 1
-            else
-                AFP_VER=$(grep '^#version:' "$AFP_YML" | awk '{print $2}')
-                report P "Version ${GRN}$AFP_VER${WHT} from ${YLW}$AFP_YML ${WHT}being used.\n"
-                sleep 2
-                break
-            fi
+            report N "${WHT}Skipping ${YLW}flatpak-pip-generator${WHT}, starting ${YLW}flatpak-builder${WHT}."
+            sleep 1
             ;;
     esac
 done
@@ -268,28 +285,6 @@ fi
 report N "\n${WHT}--------------------------------\n${WHT}|${RED} PRELIMINARY CHECKS COMPLETED ${WHT}|\n${WHT}--------------------------------"
 sleep 1
 
-for arg in "$@"; do
-    if [ "$arg" == "--do-pip" ]; then
-        if [ DONE_PIP == FALSE ]; then
-            report N "${GRN}Proceeding with ${YLW}flatpak-pip-generator${GRN}....${NRM}"
-            sleep 1
-            doFlatpakPIP
-       else
-           report N "${YLW}flatpak-pip-generator ${RED}a;ready run."
-       fi
-    elif [ "$arg" == "--just-build" ]; then
-        report N "${WHT}Skipping ${RED}DEBUG ${WHT}and ${RED}AUTO ${WHT}modes."
-        sleep 1
-    elif [ "$arg" == "--debug" ]; then
-        DEBUG=TRUE
-        report N "\n${WHT}----------------------\n|${RED} DEBUG MODE ACTIVE. ${WHT}|\n${WHT}----------------------"
-        sleep 1
-    else
-        report N "${WHT}Skipping ${YLW}flatpak-pip-generator${WHT}, starting ${YLW}flatpak-builder${WHT}."
-        sleep 1
-    fi
-done
-
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 report N "${WHT}flatpak-builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean\n${GRN}"
 if ! flatpak-builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean; then
@@ -300,50 +295,52 @@ fi
 report P "flatpak-builder succeeded! \n"
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
-report N "${WHT}flatpak build-bundle -vvv $AFPREPO $AFPBASE${WHT}\n"
 if ! flatpak build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE; then
     report F "flatpak build-bundle failed.\n"
     exit 1
 fi
 
 report P "flatpak build-bundle succeeded! \n"
+# Install bundle
+report N "${YLW}Installing bundle..."
 
-for arg in "$@"; do
-    if [ "$arg" == "--auto" ]; then
-        # Install bundle
-        report N "\n${WHT}---------------------\n|${YLW} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
-        report N "${YLW}Installing bundle..."
-        report N "\n${WHT}flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak${NRM}\n"
-        if ! flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak; then
-            report F "flatpak install failed. \n"
-            exit 1
-        else
-            report P "flatpak install succeeded! \n"
-        fi
-        report N "${WHT}Removing old flatpak version, and installing the new one...${NRM}\n"
-        report N "${WHT}flatpak uninstall -y amulet\n"
-        flatpak uninstall -y amulet
-        echo
-        report N "${WHT}flatpak --user install -y amulet-x86_64.flatpak\n"
-        flatpak --user install -y amulet-x86_64.flatpak
-        echo
-        # Run bundle with optional output verbosity (-v, -vv, -vvv)
-        if DEBUG=TRUE; then
-            report N "${RED}Running flatpak in debug mode...\n"
-            clear
-            echo -e "\n${YLW}Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}"; sleep 2
-            flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
-            echo
-            exit 0
-        elif DEBUG=FALSE; then
-            echo -e "\n${YLW}Running flatpak...\n${WHT}"
-            if ! flatpak run -vvv $AFPBASE; then
-                report F "Amulet crashed. Review Traceback logs for details. \n"
-                exit 1
-            else
-                report P "It works! \n"
-            fi
-        fi
+if AUTO=TRUE; then
+    report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
+    report N "${WHT}Removing old flatpak version, and installing the new one...${NRM}\n"
+    flatpak uninstall -y amulet
+    flatpak --user install -y amulet-x86_64.flatpak
+    echo
+    # Run bundle with optional output verbosity (-v, -vv, -vvv)
+elif AUTO=FALSE; then
+    report N report N "${WHT}Auto mode isn't active - you'll have to manually uninstall and reinstall Amulet Flatpak Edition.${NRM}\n"
+fi
+
+if DEBUG=TRUE; then
+    if ! flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak; then
+        report F "flatpak install failed. \n"
+        exit 1
+    else
+        report P "flatpak install succeeded! \n"
     fi
-done
-
+    report N "${RED}Running flatpak in debug mode...\n"
+    clear
+    echo -e "\n${YLW}Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}"; sleep 2
+    flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
+    echo
+    lastWord
+elif DEBUG=FALSE; then
+    if ! flatpak install -vvv -y -u amulet-x86_64.flatpak; then
+        report F "flatpak install failed. \n"
+        exit 1
+    else
+        report P "flatpak install succeeded! \n"
+    fi
+    echo -e "\n${YLW}Running flatpak...\n${WHT}"
+    if ! flatpak run -vvv $AFPBASE; then
+        report F "Amulet crashed. Review Traceback logs for details. \n"
+        exit 1
+    else
+        report P "It works! \n"
+        lastWord
+    fi
+fi
