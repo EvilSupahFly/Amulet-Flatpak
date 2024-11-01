@@ -18,6 +18,7 @@ PRP="\033[1m\033[35m" # Magenta (Purple)
 DEBUG=FALSE
 SETVER=FALSE
 DONE_PIP=FALSE
+PIP_GEN=FALSE
 AUTO=FALSE
 AFPBASE="io.github.evilsupahfly.amulet_flatpak"
 AFPREPO="${AFPBASE}-repo"
@@ -183,33 +184,47 @@ for arg in "$@"; do
             doHelp
             ;;
         --do-pip)
+            PIP_GEN=TRUE
             if [ "$DONE_PIP" == "FALSE" ]; then
                 report N "${GRN}Proceeding with ${YLW}flatpak-pip-generator${GRN}....${NRM}"
                 sleep 1
                 doFlatpakPIP
             else
-                report N "${YLW}flatpak-pip-generator ${RED}has already run.\n${YLW}Delete or rename the previous run's ${RED}pip-gen.yaml${YLW} before trying again."
+                report N "${YLW}flatpak-pip-generator ${RED}has already run.\n${YLW}Delete or rename the previous run's ${RED}pip-gen.yaml${YLW} before trying again.\n${WHT}Using existing ${RED}pip-gen.yaml${WHT} for this build."
             fi
             ;;
         --just-build)
+            if [[ "$@" == *"--auto"* || "$@" == *"--debug"* ]]; then
+                report N "${RED}Error: --just-build cannot be used with --auto, or --debug.${NRM}"
+                exit 1
+            fi
             report N "${WHT}Skipping ${RED}DEBUG ${WHT}and ${RED}AUTO ${WHT}modes."
             sleep 1
             ;;
         --debug)
+            if [ "$@" == *"--just-build"* ]; then
+                report N "${RED}Error: --debug cannot be used with --just-build.${NRM}"
+                exit 1
+            fi
             DEBUG=TRUE
             report N "\n${WHT}----------------------\n|${RED} DEBUG MODE ACTIVE. ${WHT}|\n${WHT}----------------------"
             sleep 1
             ;;
         --auto)
+            if [ "$@" == *"--just-build"* ]; then
+                report N "${RED}Error: --auto cannot be used with --just-build.${NRM}"
+                exit 1
+            fi
             AUTO=TRUE
             report N "\n${WHT}---------------------\n|${YLW} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
             ;;
-        *)
-            report N "${WHT}Skipping ${YLW}flatpak-pip-generator${WHT}, starting ${YLW}flatpak-builder${WHT}."
-            sleep 1
-            ;;
     esac
 done
+
+if PIP_GEN=FALSE; then
+    report N "${WHT}Skipping ${YLW}flatpak-pip-generator${WHT}, starting ${YLW}flatpak-builder${WHT}."
+    sleep 1
+fi
 
 # Check if Flathub is installed at the user level
 report N "${WHT}Checking for Flathub..."
@@ -307,7 +322,7 @@ report N "${YLW}Installing bundle..."
 if AUTO=TRUE; then
     report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
     report N "${WHT}Removing old flatpak version, and installing the new one...${NRM}\n"
-    flatpak uninstall -y amulet
+    flatpak --user uninstall -y amulet
     flatpak --user install -y amulet-x86_64.flatpak
     echo
     # Run bundle with optional output verbosity (-v, -vv, -vvv)
