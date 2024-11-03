@@ -76,6 +76,38 @@ report() {
     fi
 }
 
+function doInstall {
+    report F "${RED}$1 not found.\n${WHT}Checking distribution..."
+
+    # Determine the distribution
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        DISTRO=$ID
+        report P "${WHT}Attempting install for ${YLW}$DISTRO${WHT}..."; sleep 2
+        echo
+    fi
+
+    # Determine the package manager and install appstreamcli
+    case $DISTRO in
+        ubuntu|debian)
+            apt update && sudo apt install -y $1
+            ;;
+        fedora)
+            sudo dnf install -y $1
+            ;;
+        centos|rhel)
+            sudo yum install -y $1
+            ;;
+        arch)
+            sudo pacman -Syu $1
+            ;;
+        *)
+            report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}Please manually install using your graphical package manager.\n${NRM}"
+            exit 1
+            ;;
+    esac
+}
+
 function doFlatpakPIP {
     # Generate everything we need to build Amulet in the Flatpak sandbox
     if ! ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=pip-gen; then
@@ -161,9 +193,7 @@ check_version() {
     fi
 }
 
-echo
 report N "\n${WHT}--------------------------------\n${WHT}| ${RED}PRELIMINARY CHECKS INITIATED ${WHT}|\n${WHT}--------------------------------"
-echo
 sleep 2
 
 for arg in "$@"; do
@@ -226,7 +256,8 @@ fi
 # Check if Flathub is installed at the user level
 report N "${WHT}Checking for Flathub..."
 if ! flatpak remote-list --user | grep -q "flathub"; then
-    report F "${RED}Flathub is not installed. ${WHT}Attempting to add Flathub repository..."
+    doInstall flatpak
+    # Check if installation was successful
     if ! flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
         report F "${RED}Flathub repository couldn't be added.${NRM}"
         exit 1
@@ -255,35 +286,7 @@ fi
 report N "${WHT}Checking for AppStream..."; sleep 2
 
 if ! command -v appstreamcli &> /dev/null; then
-    report F "${RED}AppStream not found.\n${WHT}Checking distribution..."
-
-    # Determine the distribution
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        DISTRO=$ID
-        report P "${WHT}Attempting install for ${YLW}$DISTRO${WHT}..."; sleep 2
-        echo
-    fi
-
-    # Determine the package manager and install appstreamcli
-    case $DISTRO in
-        ubuntu|debian)
-            apt update && sudo apt install -y appstream
-            ;;
-        fedora)
-            sudo dnf install -y appstream
-            ;;
-        centos|rhel)
-            sudo yum install -y appstream
-            ;;
-        arch)
-            sudo pacman -Syu appstream
-            ;;
-        *)
-            report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}Please manually install using your platform's package manager.\n${NRM}"
-            exit 1
-            ;;
-    esac
+    doInstall appstream
     # Check if installation was successful
     echo
     if ! command -v appstreamcli &> /dev/null; then
@@ -291,7 +294,7 @@ if ! command -v appstreamcli &> /dev/null; then
         exit 1
     fi
 else
-    report P "${GRN}AppStream located at: ${WHT}$(command -v appstreamcli)\n${NRM}"; sleep 2
+    report P "${GRN}AppStream install verified.\n${NRM}"; sleep 2
 fi
 
 report N "\n${WHT}--------------------------------\n${WHT}|${RED} PRELIMINARY CHECKS COMPLETED ${WHT}|\n${WHT}--------------------------------"
@@ -320,39 +323,34 @@ if AUTO=TRUE; then
     report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
     report N "${WHT}Removing old flatpak version, and installing the new one...${NRM}\n"
     flatpak --user uninstall -y amulet
-    flatpak --user install -y amulet-x86_64.flatpak
-    echo
-    # Run bundle with optional output verbosity (-v, -vv, -vvv)
+    if DEBUG=TRUE; then
+        if ! flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak; then
+            report F "flatpak install failed. \n"
+            exit 1
+        else
+            report P "flatpak install succeeded! \n"
+        fi
+        clear
+        echo -e "\n${YLW}Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}"; sleep 2
+        flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
+        lastWord
+    elif DEBUG=FALSE;
+        if ! flatpak install -vvv -y -u amulet-x86_64.flatpak; then
+            report F "flatpak install failed. \n"
+            exit 1
+        else
+            report P "flatpak install succeeded! \n"
+        fi
+        echo -e "\n${YLW}Running flatpak...\n${WHT}"
+        if ! flatpak run -vvv $AFPBASE; then
+            report F "Amulet crashed. Review Traceback logs for details. \n"
+            exit 1
+        else
+            report P "It works! \n"
+            lastWord
+        fi
+    fi
 elif AUTO=FALSE; then
     report N report N "${WHT}Auto mode isn't active - you'll have to manually uninstall and reinstall Amulet Flatpak Edition.${NRM}\n"
-fi
-
-if DEBUG=TRUE; then
-    if ! flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak; then
-        report F "flatpak install failed. \n"
-        exit 1
-    else
-        report P "flatpak install succeeded! \n"
-    fi
-    report N "${RED}Running flatpak in debug mode...\n"
-    clear
-    echo -e "\n${YLW}Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}"; sleep 2
-    flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
-    echo
     lastWord
-elif DEBUG=FALSE; then
-    if ! flatpak install -vvv -y -u amulet-x86_64.flatpak; then
-        report F "flatpak install failed. \n"
-        exit 1
-    else
-        report P "flatpak install succeeded! \n"
-    fi
-    echo -e "\n${YLW}Running flatpak...\n${WHT}"
-    if ! flatpak run -vvv $AFPBASE; then
-        report F "Amulet crashed. Review Traceback logs for details. \n"
-        exit 1
-    else
-        report P "It works! \n"
-        lastWord
-    fi
 fi
