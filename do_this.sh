@@ -321,8 +321,14 @@ report N "${YLW}Installing bundle..."
 
 if AUTO=TRUE; then
     report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
-    report N "${WHT}Removing old flatpak version, and installing the new one...${NRM}\n"
-    flatpak --user uninstall -y amulet
+    report N "${WHT}Checking for a previous version...${NRM}\n"
+    if flatpak list | grep -q "amulet"; then
+        report N "${WHT}Previous version found. Removing...${NRM}\n"
+        flatpak --user uninstall -y amulet
+        report N "${WHT}Installing new version.${NRM}\n"
+    else
+        report N "${WHT}Previous version not found. Installing new version.${NRM}\n"
+    fi
     if DEBUG=TRUE; then
         if ! flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak; then
             report F "flatpak install failed. \n"
@@ -334,7 +340,7 @@ if AUTO=TRUE; then
         echo -e "\n${YLW}Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}"; sleep 2
         flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
         lastWord
-    elif DEBUG=FALSE;
+    else
         if ! flatpak install -vvv -y -u amulet-x86_64.flatpak; then
             report F "flatpak install failed. \n"
             exit 1
