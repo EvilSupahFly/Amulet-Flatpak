@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#set -x
 # Check if the script is running in a Python 3 virtual environment
 #if [[ -z "$VIRTUAL_ENV" ]]; then
 #    echo -e "Error: This script must be run inside a Python 3 virtual environment."
@@ -31,8 +31,8 @@ doHelp() {
     echo -e "Options are as follows:"
     echo -e "\n${YLW}$0 --just-build"
     echo -e "${WHT}Running ${YLW}--just-build${WHT} exits after building the flatpak and repo and ${RED}can not ${WHT}be used in conjunction with any other option except ${YLW}--version${WHT}."
-    echo -e "\n${YLW}$0 --do-pip"
-    echo -e "Specifying ${WHT}--do-pip${WHT} will run ${GRN}flatpak-pip-generator${WHT} to generate a new 'pip-gen.yaml'. However, if ${RED}$AFP_YML${WHT} or ${RED}pip-gen.yaml ${WHT}don't exist, this ${RED}WILL${WHT} break things. This option is compatible with all other options except ${YLW}--just-build ${WHT}and ${YLW}--help${WHT}."
+    echo -e "\n${YLW}$0 --pip-gen"
+    echo -e "Specifying ${WHT}--pip-gen${WHT} will run ${GRN}flatpak-pip-generator${WHT} to generate a new 'pip-gen.yaml'. However, if ${RED}$AFP_YML${WHT} or ${RED}pip-gen.yaml ${WHT}don't exist, this ${RED}WILL${WHT} break things. This option is compatible with all other options except ${YLW}--just-build ${WHT}and ${YLW}--help${WHT}."
     echo -e "\n${YLW}$0 --version x.y.z.aa"
     echo -e "${WHT}Running ${WHT}--version ${WHT} will override the version number otherwise set by ${YLW}$AFP_YML${WHT}. Version numbers follow the same rules as Python for dotted decimals (i.e. 0.10.36 or 9.10.0.19), and this option is compatible with all other options except ${YLW}--just-build ${WHT}and ${YLW}--help${WHT}."
     echo -e "\n${YLW}$0 --auto"
@@ -72,25 +72,28 @@ report() {
     elif [[ "$status" == "P" ]]; then
         echo -e "\n${WHT}[$timestamp] ${GRN}SUCCESS: ${WHT}$message\n${NRM}"
     elif [[ "$status" == "N" ]]; then
-        echo -e "${WHT}[$timestamp] ${YLW}NOTICE: ${WHT}$message ${NRM}"
+        echo -e "${WHT}[$timestamp] ${YLW}NOTICE: ${WHT}$message \n${NRM}"
     fi
 }
 
 function doInstall {
     report F "${RED}$1 not found.\n${WHT}Checking distribution..."
-
     # Determine the distribution
     if [ -f /etc/os-release ]; then
         . /etc/os-release
         DISTRO=$ID
-        report P "${WHT}Attempting install for ${YLW}$DISTRO${WHT}..."; sleep 2
+        report P "\n${WHT}Distro determined as ${YLW}$DISTRO${WHT}..."; sleep 2
+        report N "\n${WHT}Attempting to install $1 for ${YLW}$DISTRO${WHT}..."; sleep 2
         echo
+    else
+        report F "${RED}Unsupported distribution. \n${WHT}Please manually install $1 using your graphical package manager.\n${NRM}"
+        exit 1
     fi
 
-    # Determine the package manager and install appstreamcli
+    # Determine the package manager and install the package
     case $DISTRO in
         ubuntu|debian)
-            apt update && sudo apt install -y $1
+            sudo apt update && sudo apt install -y $1
             ;;
         fedora)
             sudo dnf install -y $1
@@ -98,12 +101,28 @@ function doInstall {
         centos|rhel)
             sudo yum install -y $1
             ;;
-        arch)
+        arch|endeavouros)
             sudo pacman -Syu $1
             ;;
+        opensuse)
+            sudo zypper install -y $1
+            ;;
         *)
-            report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}Please manually install using your graphical package manager.\n${NRM}"
-            exit 1
+            # Fallback to package manager detection
+            if command -v apt &> /dev/null; then
+                sudo apt update && sudo apt install -y $1
+            elif command -v dnf &> /dev/null; then
+                sudo dnf install -y $1
+            elif command -v yum &> /dev/null; then
+                sudo yum install -y $1
+            elif command -v pacman &> /dev/null; then
+                sudo pacman -Syu $1
+            elif command -v zypper &> /dev/null; then
+                sudo zypper install -y $1
+            else
+                report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}No known package manager found. Please manually install using your graphical package manager.\n${NRM}"
+                exit 1
+            fi
             ;;
     esac
 }
@@ -186,7 +205,8 @@ DONE_PIP=TRUE
 check_version() {
     local version="$1"
     if [[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-        report P "Version ${GRN}$version${WHT} from ${YLW}command line ${WHT}being used.\n"
+        report P "Using version ${GRN}$version${WHT}.\n"
+        AFP_VER=$version
     else
         report F "'${RED}$version${WHT}' must be a dotted decimal number.\n"
         exit 1
@@ -196,68 +216,58 @@ check_version() {
 report N "\n${WHT}--------------------------------\n${WHT}| ${RED}PRELIMINARY CHECKS INITIATED ${WHT}|\n${WHT}--------------------------------"
 sleep 2
 
-for arg in "$@"; do
-    if [[ -z "$arg" || "$arg" == "--help" ]]; then
-        doHelp
-    fi
-    case "$arg" in
+PCOUNT=$#
+if [ $PCOUNT -eq 0 ]; then
+    doHelp
+fi
+
+while [[ "$1" != "" ]]; do
+    case $1 in
         --version)
             shift
-            AFP_VER="$1"
-            check_version "$AFP_VER"
+            check_version "$1"
+            shift
+            ;;
+        --version=*)
+            check_version "${1#*=}"
             shift
             ;;
         --help)
             doHelp
             ;;
-        --do-pip)
-            PIP_GEN=TRUE
-            if [[ "$DONE_PIP" == "FALSE" ]]; then
-                report N "${GRN}Proceeding with ${YLW}flatpak-pip-generator${GRN}....${NRM}"
-                sleep 2
-                doFlatpakPIP
-            else
-                report N "${YLW}flatpak-pip-generator ${RED}has already run.\n${YLW}Delete or rename the previous run's ${RED}pip-gen.yaml${YLW} before trying again.\n${WHT}Using existing ${RED}pip-gen.yaml${WHT} for this build."
-            fi
-            ;;
-        --just-build)
-            if [[ "$@" == *"--auto"* || "$@" == *"--debug"* ]]; then
-                report N "${RED}Error: --just-build cannot be used with --auto, or --debug.${NRM}"
-                exit 1
-            fi
-            report N "${WHT}Skipping ${RED}DEBUG ${WHT}and ${RED}AUTO ${WHT}modes."
-            sleep 2
-            ;;
         --debug)
-            if [[ "$@" == *"--just-build"* ]]; then
-                report N "${RED}Error: --debug cannot be used with --just-build.${NRM}"
-                exit 1
-            fi
             DEBUG=TRUE
-            report N "\n${WHT}----------------------\n|${RED} DEBUG MODE ACTIVE. ${WHT}|\n${WHT}----------------------"
-            sleep 2
+            shift
             ;;
         --auto)
-            if [[ "$@" == *"--just-build"* ]]; then
-                report N "${RED}Error: --auto cannot be used with --just-build.${NRM}"
-                exit 1
-            fi
             AUTO=TRUE
-            report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
+            shift
+            ;;
+        --pip-gen)
+            PIP_GEN=TRUE
+            shift
+            ;;
+        *)
+            report F "Invalid option: $1\n"
+            exit 1
             ;;
     esac
 done
 
-if PIP_GEN=FALSE; then
-    report N "${WHT}Skipping ${YLW}flatpak-pip-generator${WHT}, starting ${YLW}flatpak-builder${WHT}."
-    sleep 2
+# If "--version" was not provided, then read from $AFP_YML
+if [[ -z "$AFP_VER" ]]; then
+    check_version "$(grep -oP '#version: \K[0-9]+(\.[0-9]+)*' "$AFP_YML")"
 fi
 
-# Check if Flathub is installed at the user level
-report N "${WHT}Checking for Flathub..."
-if ! flatpak remote-list --user | grep -q "flathub"; then
+# Check if Flatpak is installed at the user level
+report N "${WHT}Checking for Flatpak..."
+if ! command -v flatpak &> /dev/null; then
     doInstall flatpak
-    # Check if installation was successful
+    # Verify if the installation was successful
+    if ! command -v flatpak &> /dev/null; then
+        report F "${RED}Installation of Flatpak failed. Please check your package manager logs for more details.${NRM}"
+        exit 1
+    fi
     if ! flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
         report F "${RED}Flathub repository couldn't be added.${NRM}"
         exit 1
@@ -265,7 +275,7 @@ if ! flatpak remote-list --user | grep -q "flathub"; then
         report P "${GRN}Flathub repository added successfully.${NRM}"
     fi
 else
-    report P "${GRN}Flathub already installed. ${WHT}Checking for updates..."; sleep 2
+    report P "${GRN}Flathub already installed. ${WHT}Checking for updates...\n"; sleep 2
     flatpak update -y -u
     echo
 fi
@@ -300,6 +310,13 @@ fi
 report N "\n${WHT}--------------------------------\n${WHT}|${RED} PRELIMINARY CHECKS COMPLETED ${WHT}|\n${WHT}--------------------------------"
 sleep 2
 
+if [[ "$PIP_GEN" == "FALSE" ]]; then
+    report N "${WHT}Skipping ${YLW}flatpak-pip-generator${WHT}, starting ${YLW}flatpak-builder${WHT}."
+    sleep 2
+elif [[ "$PIP_GEN" == "TRUE" ]]; then
+    doFlatpakPIP
+fi
+
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 report N "${WHT}flatpak-builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean\n${GRN}"
 if ! flatpak-builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean; then
@@ -319,44 +336,49 @@ report P "flatpak build-bundle succeeded! \n"
 # Install bundle
 report N "${YLW}Installing bundle..."
 
-if AUTO=TRUE; then
-    report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n"
-    report N "${WHT}Checking for a previous version...${NRM}\n"
-    if flatpak list | grep -q "amulet"; then
+if [ ! -f "amulet-x86_64.flatpak" ]; then
+    report F "${RED}FATAL ERROR: ${WHT}Installation file '${YLW}amulet-x86_64.flatpak${WHT}' not found. Terminating script.\n"
+    exit 1
+fi
+
+if [ "$AUTO" = "TRUE" ]; then
+    report N "\n${WHT}---------------------\n|${RED} AUTO MODE ACTIVE. ${WHT}|\n---------------------\n${WHT}Checking for a previous version...${NRM}\n"
+    if flatpak list | grep -q "$AFPBASE"; then
         report N "${WHT}Previous version found. Removing...${NRM}\n"
-        flatpak --user uninstall -y amulet
+        flatpak --user uninstall -y "$AFPBASE"
         report N "${WHT}Installing new version.${NRM}\n"
     else
         report N "${WHT}Previous version not found. Installing new version.${NRM}\n"
     fi
-    if DEBUG=TRUE; then
-        if ! flatpak install --include-sdk --include-debug -vvv -y -u amulet-x86_64.flatpak; then
-            report F "flatpak install failed. \n"
-            exit 1
-        else
-            report P "flatpak install succeeded! \n"
-        fi
-        clear
-        echo -e "\n${YLW}Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}"; sleep 2
-        flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
-        lastWord
-    else
-        if ! flatpak install -vvv -y -u amulet-x86_64.flatpak; then
-            report F "flatpak install failed. \n"
-            exit 1
-        else
-            report P "flatpak install succeeded! \n"
-        fi
-        echo -e "\n${YLW}Running flatpak...\n${WHT}"
-        if ! flatpak run -vvv $AFPBASE; then
-            report F "Amulet crashed. Review Traceback logs for details. \n"
-            exit 1
-        else
-            report P "It works! \n"
-            lastWord
-        fi
-    fi
-elif AUTO=FALSE; then
-    report N report N "${WHT}Auto mode isn't active - you'll have to manually uninstall and reinstall Amulet Flatpak Edition.${NRM}\n"
+else
+    report N "${WHT}Auto mode isn't active - you'll have to manually uninstall and reinstall Amulet Flatpak Edition.${NRM}\n"
     lastWord
+fi
+
+if [ "$DEBUG" = "TRUE" ]; then
+    if ! flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak; then
+        report F "flatpak install failed. \n"
+        exit 1
+    else
+        report P "flatpak install succeeded! \n"
+    fi
+    clear
+    echo -e "\n${YLW}Once inside, type '${RED}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}.\n${NRM}"; sleep 2
+    flatpak-builder --run amulet-flatpak_build_dir $AFP_YML sh
+    lastWord
+else
+    if ! flatpak install -vvv -y --user amulet-x86_64.flatpak; then
+        report F "flatpak install failed. \n"
+        exit 1
+    else
+        report P "flatpak install succeeded! \n"
+    fi
+    echo -e "\n${YLW}Running flatpak...\n${WHT}"
+    if ! flatpak run -vvv $AFPBASE; then
+        report F "Amulet crashed. Review Traceback logs for details. \n"
+        exit 1
+    else
+        report P "It works! \n"
+        lastWord
+    fi
 fi
