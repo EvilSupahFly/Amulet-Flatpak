@@ -121,7 +121,7 @@ function doInstall {
             elif command -v zypper &> /dev/null; then
                 sudo zypper install -y $1
             else
-                report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}No known package manager found. Please manually install using your graphical package manager.\n${NRM}"
+                report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}No known package manager found. Please manually install using your graphical package manager, or contact the author to have $DISTRO support added.\n${NRM}"
                 exit 1
             fi
             ;;
