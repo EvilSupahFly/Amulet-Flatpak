@@ -86,9 +86,6 @@ function doInstall {
         report P "\n${WHT}Distro determined as ${YLW}$DISTRO${WHT}..."; sleep 2
         report N "\n${WHT}Attempting to install $1 for ${YLW}$DISTRO${WHT}..."; sleep 2
         echo
-    else
-        report F "${RED}Unsupported distribution. \n${WHT}Please manually install $1 using your graphical package manager.\n${NRM}"
-        exit 1
     fi
 
     # Determine the package manager and install the package
@@ -121,7 +118,7 @@ function doInstall {
             elif command -v zypper &> /dev/null; then
                 sudo zypper install -y $1
             else
-                report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}No known package manager found. Please manually install using your graphical package manager, or contact the author to have $DISTRO support added.\n${NRM}"
+                report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}No known package manager found. Please manually install $1 using your graphical package manager, or contact the author to have $DISTRO support added.\n${NRM}"
                 exit 1
             fi
             ;;
