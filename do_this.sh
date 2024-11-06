@@ -276,15 +276,15 @@ if ! command -v flatpak &> /dev/null; then
     doInstall flatpak
     # Verify if the installation was successful
     if ! command -v flatpak &> /dev/null; then
-        report F "${RED}Installation of Flatpak failed. Please check your package manager logs for more details.${NRM}"
+        report F "${RED}Installation of Flatpak failed. Please check your package manager logs for more details."
         exit 1
     fi
     report N "${WHT}Adding 'flathub' repository..."; sleep 2
     if ! flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
-        report F "${RED}Flathub repository couldn't be added.${NRM}"
+        report F "${RED}Flathub repository couldn't be added."
         exit 1
     else
-        report P "${GRN}Flathub repository added successfully.${NRM}"
+        report P "${GRN}Flathub repository added successfully."
     fi
 else
     report P "${GRN}Flathub already installed. ${WHT}Checking for updates..."; sleep 2
