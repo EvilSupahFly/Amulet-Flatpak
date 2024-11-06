@@ -260,12 +260,14 @@ fi
 # Check if Flatpak is installed at the user level
 report N "${WHT}Checking for Flatpak..."
 if ! command -v flatpak &> /dev/null; then
+    sleep 2
     doInstall flatpak
     # Verify if the installation was successful
     if ! command -v flatpak &> /dev/null; then
         report F "${RED}Installation of Flatpak failed. Please check your package manager logs for more details.${NRM}"
         exit 1
     fi
+    report N "${WHT}Adding 'flathub' repository...\n"; sleep 2
     if ! flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
         report F "${RED}Flathub repository couldn't be added.${NRM}"
         exit 1
@@ -278,10 +280,10 @@ else
     echo
 fi
 
-# Check if Flathub is installed at the user level
+# Check if Flatpak Builder is installed at the user level
 report N "${WHT}Checking for Flatpak Builder..."; sleep 2
 if ! flatpak list | grep -q "org.flatpak.Builder"; then
-    report F "${RED}Flatpak Builder not found. ${WHT}Attempting to install..."; sleep 2
+    sleep 2
     if ! flatpak install --user -y org.flatpak.Builder; then
         report F "${RED}Fatal Error: Flatpak Builder couldn't be installed."
         exit 1
@@ -294,6 +296,7 @@ fi
 report N "${WHT}Checking for AppStream..."; sleep 2
 
 if ! command -v appstreamcli &> /dev/null; then
+    sleep 2
     doInstall appstream
     # Check if installation was successful
     echo
@@ -316,8 +319,8 @@ elif [[ "$PIP_GEN" == "TRUE" ]]; then
 fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-report N "${WHT}flatpak-builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean\n${GRN}"
-if ! flatpak-builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean; then
+report N "${WHT}flatpak run org.flatpak.Builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean\n${GRN}"
+if ! flatpak run org.flatpak.Builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean; then
     report F "flatpak-builder failed. \n"
     exit 1
 fi
