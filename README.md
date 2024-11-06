@@ -12,6 +12,7 @@ The initial Flatpak version was sourced from Amulet 0.10.34. With the update to 
 Currently the flatpak release suffers from two minor issues: 
   - flickering UI, which plagues upstream Amulet (see [here](https://github.com/Amulet-Team/Amulet-Map-Editor/issues))
   - missing water and lava textures, which is unique to the flatpak version [issue #7](https://github.com/EvilSupahFly/Amulet-Flatpak/issues/7) and still being investigated.
+  - Trying to run on Wayland, unless you have installed Xwayland, is mostly pointless because of some twenty-year-old code in wxPython - expect the error "Unable to access the X Display, is $DISPLAY set properly?"
 
 ![Screenshot from 2024-08-15 23-04-29](https://github.com/user-attachments/assets/c9d42035-67e2-4f0a-8515-a325c0a36532)
 
