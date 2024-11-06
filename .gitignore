@@ -18,3 +18,7 @@ do_this.sh.new
 transparency_cache_prettified.json
 water_list.json
 .gnome-terminal.log.swp
+konsole.log.txt
+do_this.sh-endeavouros.log.txt
+*.log
+*.new
