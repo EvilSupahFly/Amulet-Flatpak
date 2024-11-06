@@ -1,6 +1,6 @@
 id: io.github.evilsupahfly.amulet_flatpak
 name: Amulet Map Editor
-#version: 0.10.36.2
+#version: 0.10.36.55
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
@@ -13,10 +13,10 @@ finish-args:
   - --allow=per-app-dev-shm
   - --share=network
   - --share=ipc
-  - --socket=fallback-x11
+  - --socket=inherit-wayland-socket
   - --socket=wayland
+  - --socket=fallback-x11
   - --filesystem=home:persistent
-#  - --filesystem=.cache:persistent
   - --filesystem=host
   - --filesystem=host-os
   - --persist=.cache
@@ -28,6 +28,7 @@ finish-args:
   - --env=XDG_CONFIG_HOME=$HOST_XDG_CONFIG_HOME
   - --env=XDG_STATE_HOME=$HOST_XDG_STATE_HOME
   - --env=XDG_DATA_HOME=$HOST_XDG_DATA_HOME
+# Remove or comment out these options to reduce debug output verbosity
   - --env=PYTHONDEBUG=3
   - --env=PYTHONVERBOSE=3
   - --env=PYTHONTRACEMALLOC=10

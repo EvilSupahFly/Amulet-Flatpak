@@ -15,3 +15,5 @@ amulet-x86_84.tar.gz
 *.log
 amulet-x86_64.flatpak.zip
 do_this.sh.new
+transparency_cache_prettified.json
+water_list.json
