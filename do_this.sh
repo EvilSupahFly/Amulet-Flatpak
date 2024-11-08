@@ -218,10 +218,10 @@ check_version() {
     local version="$1"
     report N "${WHT}Checking for version number..."; sleep 2
     if [[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-        report P "Using version ${GRN}$version${WHT}.\n"
+        report P "Using version ${GRN}$version${WHT}."
         AFP_VER=$version
     else
-        report F "'${RED}$version${WHT}' must be a dotted decimal number.\n"
+        report F "'${RED}$version${WHT}' must be a dotted decimal number."
         exit 1
     fi
 }
@@ -251,14 +251,17 @@ while [[ "$1" != "" ]]; do
             ;;
         --debug)
             DEBUG=TRUE
+            report N "${WHT}DEBUG=TRUE"
             shift
             ;;
         --auto)
             AUTO=TRUE
+            report N "${WHT}AUTO=TRUE"
             shift
             ;;
         --pip-gen)
             PIP_GEN=TRUE
+            report N "${WHT}PIP_GEN=TRUE"
             shift
             ;;
         *)
@@ -284,7 +287,7 @@ if ! command -v flatpak &> /dev/null; then
         exit 1
     fi
     report N "${WHT}Adding 'flathub' repository..."; sleep 2
-    if ! flatpak --ostree-verbose -v remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
+    if ! flatpak -v remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
         report F "${RED}Flathub repository couldn't be added."
         exit 1
     else
@@ -300,7 +303,7 @@ fi
 report N "${WHT}Checking for Flatpak Builder..."; sleep 2
 if ! flatpak list | grep -q "org.flatpak.Builder"; then
     sleep 2
-    if ! flatpak --ostree-verbose -v install --user -y org.flatpak.Builder; then
+    if ! flatpak -v install --user -y org.flatpak.Builder; then
         report F "${RED}Fatal Error: ${WHT}Flatpak Builder couldn't be installed."
         exit 1
     fi
@@ -336,7 +339,7 @@ fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 report N "${WHT}flatpak --ostree-verbose run org.flatpak.Builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean\n${GRN}"
-if ! flatpak --ostree-verbose run org.flatpak.Builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean; then
+if ! flatpak run org.flatpak.Builder -vvv --user --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO amulet-flatpak_build_dir $AFP_YML --force-clean; then
     report F "flatpak-builder failed."
     exit 1
 fi
@@ -344,7 +347,7 @@ fi
 report P "flatpak-builder succeeded!"
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
-if ! flatpak --ostree-verbose build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE; then
+if ! flatpak build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE; then
     report F "flatpak build-bundle failed."
     exit 1
 fi
@@ -362,7 +365,7 @@ if [ "$AUTO" = "TRUE" ]; then
     report N "\n${WHT}---------------------\n| AUTO MODE ACTIVE. |\n---------------------\n${YLW}Checking for a previous version..."
     if flatpak list | grep -q "$AFPBASE"; then
         report N "${WHT}Previous version found. Removing..."
-        flatpak --ostree-verbose --user uninstall -y "$AFPBASE"
+        flatpak --user uninstall -y "$AFPBASE"
         report N "${WHT}Installing new version."
     else
         report N "${RED}Previous version not found. ${WHT}Installing new version."
@@ -373,34 +376,37 @@ else
 fi
 
 if [ "$DEBUG" = "TRUE" ]; then
-    if ! flatpak --ostree-verbose install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak; then
+    report N "${WHT}Running DEBUG install..."; sleep 2
+    echo -e "flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak"
+    if ! flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak; then
         report F "Amulet Flatpak install failed."
         exit 1
     else
         report P "Amulet Flatpak install succeeded."
     fi
     #clear
-    echo -e "\n${YLW}Once inside, type '${WHT}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}."; sleep 2
-    if ! flatpak --ostree-verbose run $AFPBASE $AFP_YML sh; then
+    report N "${WHT}Auto-Mode active. Starting flatpak in DEBUG mode."; sleep 2
+    echo -e "${YLW}Once inside, type '${WHT}python -vvv -m pdb -m amulet_map_editor${YLW}' to run Amulet though ${WHT}PDB${YLW}."; sleep 2
+    echo -e "\n${WHT}flatpak run $AFPBASE $AFP_YML"
+    if ! flatpak run $AFPBASE $AFP_YML sh; then
         report F "Amulet Flatpak install failed."
         exit 1
-    else
-        report P "Looks like it worked."
-        lastWord
     fi
 else
-    if ! flatpak install -vvv --ostree-verbose -y --user amulet-x86_64.flatpak; then
-        report F "${RED}flatpak install failed. \n${NRM}"
+    report N "${WHT}Auto-Mode active. Starting flatpak install."; sleep 2
+    echo "flatpak install -y --user amulet-x86_64.flatpak"
+    if ! flatpak install -y --user amulet-x86_64.flatpak; then
+        report F "${RED}flatpak install failed."
         exit 1
     else
-        report P "flatpak install succeeded! \n${NRM}"
+        report P "flatpak install succeeded."
     fi
-    echo -e "\n${YLW}Running flatpak...\n${WHT}"
+    report N "${WHT}Auto-Mode active. Running flatpak."; sleep 2
     if ! flatpak run --ostree-verbose $AFPBASE; then
         report F "${RED}Amulet launch failed. Please review terminal output."
         exit 1
-    else
-        report P "It works!"
-        lastWord
     fi
 fi
+
+report P "Looks like it probably worked. If it didn't, then this script is really messed up, isn't it!"
+lastWord

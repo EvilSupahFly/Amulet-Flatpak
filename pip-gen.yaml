@@ -150,8 +150,8 @@ modules:
       - *id006
       - *id007
       - type: file
-        url: https://files.pythonhosted.org/packages/9d/c3/a950c51f18ce11b753448eadc9f352ab587cfd11e2ede178ee6b6780b633/amulet_map_editor-0.10.37.tar.gz
-        sha256: 8ea7e7672ffc79bb0069727a3f96ecaf9cb98a492220e9e75e7d94ba227e70c4
+        path: amulet_map_editor-0.10.37.tar.gz
+        sha256: 46406367994508136a263fea7204e1870af90d4802bd91b8bad7ea5bbad5e24b
       - *id001
       - &id012
         type: file
