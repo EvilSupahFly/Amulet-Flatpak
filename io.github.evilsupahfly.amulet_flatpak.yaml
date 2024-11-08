@@ -1,0 +1,74 @@
+id: io.github.evilsupahfly.amulet_flatpak
+#name: Amulet Map Editor
+#version: 0.10.36.55
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: amulet_map_editor
+
+finish-args:
+  - --device=all
+  - --device=shm
+  - --allow=devel
+  - --allow=per-app-dev-shm
+  - --share=network
+  - --share=ipc
+#  - --socket=inherit-wayland-socket
+  - --socket=wayland
+  - --socket=fallback-x11
+#  - --filesystem=home:persistent
+  - --filesystem=home:rw
+  - --filesystem=host
+  - --filesystem=host-os
+  - --persist=.cache
+  - --persist=/app/lib/python3.12/site-packages/minecraft_model_reader/api/resource_pack/java/java_vanilla_fix
+  - --env=LIBGL_ALWAYS_SOFTWARE="0"
+  - --env=OPENGL_VERSION=3.3
+  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+  - --env=XDG_CACHE_HOME=$HOST_XDG_CACHE_HOME
+  - --env=XDG_CONFIG_HOME=$HOST_XDG_CONFIG_HOME
+  - --env=XDG_STATE_HOME=$HOST_XDG_STATE_HOME
+  - --env=XDG_DATA_HOME=$HOST_XDG_DATA_HOME
+  - --env=DISPLAY=:1
+# Remove or comment out these options to reduce debug output verbosity
+#  - --env=PYTHONDEBUG=3
+#  - --env=PYTHONVERBOSE=3
+#  - --env=PYTHONTRACEMALLOC=10
+#  - --env=G_MESSAGES_DEBUG=all
+# According to the official docs (https://docs.flatpak.org/en/latest/sandbox-permissions.html), the following directories are blacklisted:
+# - /lib, /lib32, /lib64, /bin, /sbin, /usr, /boot, /root, /tmp, /etc, /app, /run, /proc, /sys, /dev, /var
+# Meaning you can't give an app access to them even using the override method.
+modules:
+  - shared-modules/glew/glew.json
+  - shared-modules/glu/glu-9.json
+  - pip-gen.yaml
+  - name: metainfo-xml
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/
+    sources:
+      - type: file
+        path: io.github.evilsupahfly.amulet_flatpak.metainfo.xml
+  - name: metainfo-ico
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
+    sources:
+      - type: file
+        path: share/icons/hicolor/256x256/apps/io.github.evilsupahfly.amulet_flatpak.png
+  - name: metainfo-desktop
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 io.github.evilsupahfly.amulet_flatpak.desktop -t ${FLATPAK_DEST}/share/applications/
+    sources:
+      - type: file
+        path: share/applications/io.github.evilsupahfly.amulet_flatpak.desktop
+    # /AmuletMapEditor/resource_packs
+  - name: vanilla-textures
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 vanilladefault_121.zip -t ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
+    sources:
+      - type: file
+        path: vanilladefault_121.zip
+
