@@ -5,7 +5,7 @@ on:
       - main
     tags: "*"
   pull_request: null
-name: Main Branch Releases
+name: Snapshot Testing
 jobs:
   flatpak:
     name: Make Amulet Flatpak
@@ -23,7 +23,7 @@ jobs:
           bundle: amulet-x86_64.flatpak
           build-bundle: true
           repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
-          manifest-path: ./io.github.evilsupahfly.amulet-flatpak.yaml
+          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           cache-key: flatpak-builder-${{ github.sha }}
           verbose: true
       - name: Upload artifact
@@ -35,13 +35,10 @@ jobs:
           path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
           overwrite: true
           compression-level: 0 # no compression
-      - name: Upload to Release Action
-      # You may pin to the exact commit or the version.
-      # uses: Shopify/upload-to-release@c77c9b3e5d288adaef98a7007bf92340ec6ce03b
-        uses: Shopify/upload-to-release@v2.0.0
-        with:
-            name: amulet-x86_64.flatpak
-            path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
-            content-type: application/vnd.flatpak
-            repo-token: ${{ github.token }}
-          
+#      - name: Upload to Release Action
+#        uses: Shopify/upload-to-release@v2.0.0
+#        with:
+#            name: amulet-x86_64.flatpak
+#            path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+#            content-type: application/vnd.flatpak
+#            repo-token: ${{ github.token }}
