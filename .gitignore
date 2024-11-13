@@ -9,7 +9,6 @@ watch.sh
 .lock
 *.lock
 speed-run.sh
-amulet_run_2024-10-07 00-05-12-terminal.log
 amulet-x86_84.tar.gz
 amulet-x86_84.tar.gz
 *.log
@@ -23,3 +22,5 @@ do_this.sh-endeavouros.log.txt
 *.log
 *.new
 Amulet-Flatpak-testing.zip
+Amulet Map Editor.desktop
+icon.ico

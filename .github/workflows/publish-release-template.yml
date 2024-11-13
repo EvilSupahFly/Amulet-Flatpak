@@ -2,7 +2,7 @@ name: Dynamic Versioned Upload Artifact to Releases
 
 on:
   workflow_run:
-    workflows: ["Your Workflow Name"]
+    workflows: ["Main Branch Releases"]
     types:
       - completed
 
@@ -16,7 +16,8 @@ jobs:
       - name: Get Artifact Name
         id: get_artifact
         run: |
-          ARTIFACT_NAME=$(ls path/to/artifacts | grep '.zip' | head -n 1)
+          #ARTIFACT_NAME=$(ls path/to/artifacts | grep '.zip' | head -n 1)
+          ARTIFACT_NAME=/__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
           echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
       - name: Get Version from Workflow
