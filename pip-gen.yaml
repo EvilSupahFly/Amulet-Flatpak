@@ -156,7 +156,7 @@ modules:
       - &id012
         type: file
         path: minecraft_resource_pack-1.4.55.tar.gz
-        sha256: 5a82df09ccb4c19432db79dab742ff9bbd1d7d252c8114d5ce79256a86040840
+        sha256: 6b5dc3e06320aa938a3ab9f08deeedf60e25c0d80ab4d605fd8c9d82c8af81a8
       - *id005
       - *id012
       - *id008
@@ -164,8 +164,8 @@ modules:
       - *id010
       - &id013
         type: file
-        url: https://files.pythonhosted.org/packages/cd/74/ad3d526f3bf7b6d3f408b73fde271ec69dfac8b81341a318ce825f2b3812/pillow-10.4.0.tar.gz
-        sha256: bed1fc8afc7e46efca81d9e935ab11f215a31e71e915602ce4e5d21587d28581
+        url: https://files.pythonhosted.org/packages/a5/26/0d95c04c868f6bdb0c447e3ee2de5564411845e36a858cfd63766bc7b563/pillow-11.0.0.tar.gz
+        sha256: 72bacbaf24ac003fea9bff9837d1eedb6088758d41e100c1552930151f677739
       - *id010
       - *id011
       - type: file
