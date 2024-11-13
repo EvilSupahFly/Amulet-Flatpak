@@ -13,15 +13,14 @@ finish-args:
   - --allow=per-app-dev-shm
   - --share=network
   - --share=ipc
-#  - --socket=inherit-wayland-socket
   - --socket=wayland
   - --socket=fallback-x11
-#  - --filesystem=home:persistent
   - --filesystem=home:rw
   - --filesystem=host
   - --filesystem=host-os
   - --persist=.cache
   - --persist=/app/lib/python3.12/site-packages/minecraft_model_reader/api/resource_pack/java/java_vanilla_fix
+  - --persist=${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
@@ -29,15 +28,12 @@ finish-args:
   - --env=XDG_CONFIG_HOME=$HOST_XDG_CONFIG_HOME
   - --env=XDG_STATE_HOME=$HOST_XDG_STATE_HOME
   - --env=XDG_DATA_HOME=$HOST_XDG_DATA_HOME
-  - --env=DISPLAY=:1
-# Remove or comment out these options to reduce debug output verbosity
+  - --env=PS1="[📦 $FLATPAK_ID \w]\$ "
+# Uncomment these options to increase debug output verbosity in the terminal
 #  - --env=PYTHONDEBUG=3
 #  - --env=PYTHONVERBOSE=3
 #  - --env=PYTHONTRACEMALLOC=10
 #  - --env=G_MESSAGES_DEBUG=all
-# According to the official docs (https://docs.flatpak.org/en/latest/sandbox-permissions.html), the following directories are blacklisted:
-# - /lib, /lib32, /lib64, /bin, /sbin, /usr, /boot, /root, /tmp, /etc, /app, /run, /proc, /sys, /dev, /var
-# Meaning you can't give an app access to them even using the override method.
 modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
