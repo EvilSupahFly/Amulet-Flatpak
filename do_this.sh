@@ -187,14 +187,14 @@ modules:
       - install -Dm644 $AFPBASE.png -t \${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
     sources:
       - type: file
-        path: $AFPBASE.png
+        path: share/icons/hicolor/256x256/apps/$AFPBASE.png
   - name: metainfo-desktop
     buildsystem: simple
     build-commands:
       - install -Dm755 $AFPBASE.desktop -t \${FLATPAK_DEST}/share/applications/
     sources:
       - type: file
-        path: $AFPBASE.desktop
+        path: share/applications/$AFPBASE.desktop
     # /AmuletMapEditor/resource_packs
   - name: vanilla-textures
     buildsystem: simple
