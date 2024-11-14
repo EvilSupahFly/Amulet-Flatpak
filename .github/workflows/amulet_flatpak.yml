@@ -5,7 +5,7 @@ on:
       - main
     tags: "*"
   pull_request: null
-name: Main Branch Releases
+name: Snapshot Testing
 jobs:
   flatpak:
     name: Make Amulet Flatpak
@@ -17,17 +17,17 @@ jobs:
       options:
         --privileged
     steps:
-      - uses: actions/checkout@v4
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      - uses: actions/checkout@v4.2.2
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
           bundle: amulet-x86_64.flatpak
           build-bundle: true
-          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/testing/io.github.evilsupahfly.amulet-flatpak
+          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
           manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           cache-key: flatpak-builder-${{ github.sha }}
           verbose: true
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.4.3
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
