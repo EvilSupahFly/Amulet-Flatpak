@@ -21,3 +21,5 @@ If you're feeling ambitious, you can fork or clone this project and try tweaking
 The flatpak version has so far been tested on Manjaro, Ubuntu, Kubuntu and Mint. Feedback is most welcome!
 
 I've found a work-around for Wayland users. The modified code is in [my fork of Amulet](https://github.com/EvilSupahFly/Amulet-Map-Editor). Possible side effect however: fonts look like crap.
+
+README Last updated 13 November, 2024
