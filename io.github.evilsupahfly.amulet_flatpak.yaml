@@ -1,6 +1,6 @@
 id: io.github.evilsupahfly.amulet_flatpak
 #name: Amulet Map Editor
-#version: 0.10.36.55
+#version: 0.10.37.01
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
@@ -51,20 +51,19 @@ modules:
       - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
     sources:
       - type: file
-        path: share/icons/hicolor/256x256/apps/io.github.evilsupahfly.amulet_flatpak.png
+        path: io.github.evilsupahfly.amulet_flatpak.png
   - name: metainfo-desktop
     buildsystem: simple
     build-commands:
       - install -Dm755 io.github.evilsupahfly.amulet_flatpak.desktop -t ${FLATPAK_DEST}/share/applications/
     sources:
       - type: file
-        path: share/applications/io.github.evilsupahfly.amulet_flatpak.desktop
+        path: io.github.evilsupahfly.amulet_flatpak.desktop
     # /AmuletMapEditor/resource_packs
-  - name: vanilla-textures
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 vanilladefault_121.zip -t ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
-    sources:
-      - type: file
-        path: vanilladefault_121.zip
-
+#  - name: vanilla-textures
+#    buildsystem: simple
+#    build-commands:
+#      - install -Dm644 vanilladefault_121.zip -t ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
+#    sources:
+#      - type: file
+#        path: vanilladefault_121.zip
