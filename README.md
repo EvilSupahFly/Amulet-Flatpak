@@ -9,7 +9,7 @@ Assuming this works as intended accross the spectrum of Linux distributions, thi
 
 The initial Flatpak version was sourced from Amulet 0.10.34. With the update to 0.10.36, and the first release of the flatpak, I have included `amulet.sh` which takes care of the foundational framework when run. First, [amulet.sh](https://github.com/EvilSupahFly/Amulet-Flatpak/blob/testing/amulet.sh) will check to see if Flathub is installed, and if not, install it. Then, it checks to see if the Amulet flatpak is already installed, and if so, run it. If not, it will download the latest release from [Releases](https://github.com/EvilSupahFly/Amulet-Flatpak/releases), save the Flatpak file to a temp folder, install it in user mode, remove the temp folder, then run the Amulet Flatpak.
 
-Currently the flatpak release suffers from two minor issues: 
+Currently the flatpak release suffers from ~~three~~ two minor issues: 
   - flickering UI, which plagues upstream Amulet (Linux users only - see [here](https://github.com/Amulet-Team/Amulet-Map-Editor/issues))
   - missing water and lava textures, which is unique to the flatpak version [issue #7](https://github.com/EvilSupahFly/Amulet-Flatpak/issues/7) and still being investigated.
   - ~~Trying to run on Wayland, unless you have installed Xwayland, is mostly pointless because of some twenty-year-old code in wxPython - expect the error "Unable to access the X Display, is $DISPLAY set properly?"~~* (with update to v0.10.37 this is [now fixed](https://github.com/Amulet-Team/Amulet-Map-Editor/blob/128de1caec6cc7da035b8336cd804d33aa3d5adc/amulet_map_editor/__main__.py#L48).)
