@@ -24,16 +24,17 @@ finish-args:
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
-  - --env=XDG_CACHE_HOME=$HOST_XDG_CACHE_HOME
+  - --env=XDG_CACHE_HOME=home/.cache:rw
   - --env=XDG_CONFIG_HOME=$HOST_XDG_CONFIG_HOME
   - --env=XDG_STATE_HOME=$HOST_XDG_STATE_HOME
   - --env=XDG_DATA_HOME=$HOST_XDG_DATA_HOME
-  - --env=PS1="[📦 $FLATPAK_ID \w]\$ "
-# Uncomment these options to increase debug output verbosity in the terminal
+  - --env=PS1=[ ⿵ AFP \w ]\$⠀
+# Uncomment the following options to increase debug output verbosity in the terminal
 #  - --env=PYTHONDEBUG=3
 #  - --env=PYTHONVERBOSE=3
 #  - --env=PYTHONTRACEMALLOC=10
 #  - --env=G_MESSAGES_DEBUG=all
+
 modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
@@ -45,13 +46,6 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.metainfo.xml
-  - name: metainfo-ico
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
-    sources:
-      - type: file
-        path: io.github.evilsupahfly.amulet_flatpak.png
   - name: metainfo-desktop
     buildsystem: simple
     build-commands:
@@ -59,6 +53,13 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.desktop
+  - name: metainfo-ico
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
+    sources:
+      - type: file
+        path: io.github.evilsupahfly.amulet_flatpak.png
     # /AmuletMapEditor/resource_packs
 #  - name: vanilla-textures
 #    buildsystem: simple

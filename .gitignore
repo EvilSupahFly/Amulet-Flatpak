@@ -24,3 +24,5 @@ do_this.sh-endeavouros.log.txt
 Amulet-Flatpak-testing.zip
 Amulet Map Editor.desktop
 icon.ico
+streamlined-flatpak-pip-gen
+io.github.evilsupahfly.amulet_flatpak.build_dir
