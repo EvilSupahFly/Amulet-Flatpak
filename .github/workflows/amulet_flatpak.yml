@@ -5,7 +5,7 @@ on:
       - main
     tags: "*"
   pull_request: null
-name: Snapshot Testing
+name: Main Branch Builds
 jobs:
   flatpak:
     name: Make Amulet Flatpak
