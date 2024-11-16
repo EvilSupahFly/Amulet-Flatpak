@@ -28,7 +28,7 @@ finish-args:
   - --env=XDG_CONFIG_HOME=$HOST_XDG_CONFIG_HOME
   - --env=XDG_STATE_HOME=$HOST_XDG_STATE_HOME
   - --env=XDG_DATA_HOME=$HOST_XDG_DATA_HOME
-  - --env=PS1=[ ⿵ AFP \w ]\$⠀
+  - --env=PS1='[ AFP \w ]\$ '
 # Uncomment the following options to increase debug output verbosity in the terminal
 #  - --env=PYTHONDEBUG=3
 #  - --env=PYTHONVERBOSE=3
