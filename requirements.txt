@@ -1,5 +1,6 @@
 versioneer
 meson-python
+xdg-base-dirs
 glad
 pyopengl
 numpy

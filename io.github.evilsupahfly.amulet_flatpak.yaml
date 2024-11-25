@@ -8,27 +8,30 @@ command: amulet_map_editor
 
 finish-args:
   - --device=all
-  - --device=shm
+  - --device=dri
   - --allow=devel
   - --allow=per-app-dev-shm
   - --share=network
   - --share=ipc
   - --socket=wayland
+#  - --socket=inherit-wayland-socket
   - --socket=fallback-x11
-  - --filesystem=home:rw
+  - --filesystem=home
+  - --filesystem=home/.cache/AmuletMapEditor
   - --filesystem=host
   - --filesystem=host-os
-  - --persist=.cache
-  - --persist=/app/lib/python3.12/site-packages/minecraft_model_reader/api/resource_pack/java/java_vanilla_fix
-  - --persist=${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
+  - --persist=xdg-cache/AmuletMapEditor
+  - --persist=HOST_XDG_STATE_HOME/AmuletMapEditor
+  - --persist=HOST_XDG_DATA_HOME
+  - --persist=HOST_XDG_CONFIG_HOME
+  - --persist=HOST_XDG_CACHE_HOME
+  - --persist=HOST_XDG_STATE_HOME
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
-  - --env=XDG_CACHE_HOME=home/.cache:rw
-  - --env=XDG_CONFIG_HOME=$HOST_XDG_CONFIG_HOME
-  - --env=XDG_STATE_HOME=$HOST_XDG_STATE_HOME
-  - --env=XDG_DATA_HOME=$HOST_XDG_DATA_HOME
-  - --env=PS1='[ AFP \w ]\$ '
+  - --env=PS1=[ AMULET_FLATPAK \w]\n\$ 
+  - --own-name=io.github.evilsupahfly.amulet_flatpak
+  - --talk-name=io.github.evilsupahfly.amulet_flatpak
 # Uncomment the following options to increase debug output verbosity in the terminal
 #  - --env=PYTHONDEBUG=3
 #  - --env=PYTHONVERBOSE=3
@@ -60,11 +63,12 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.png
-    # /AmuletMapEditor/resource_packs
-#  - name: vanilla-textures
-#    buildsystem: simple
-#    build-commands:
-#      - install -Dm644 vanilladefault_121.zip -t ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
-#    sources:
-#      - type: file
-#        path: vanilladefault_121.zip
+    # AmuletMapEditor resource pack fix - maybe
+  - name: vanilla-textures
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 vanilladefault_121.zip -t ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
+      - unzip -o vanilladefault_121.zip -d ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
+    sources:
+      - type: file
+        path: vanilladefault_121.zip

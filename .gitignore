@@ -10,7 +10,6 @@ watch.sh
 *.lock
 speed-run.sh
 amulet-x86_84.tar.gz
-amulet-x86_84.tar.gz
 *.log
 amulet-x86_64.flatpak.zip
 do_this.sh.new
@@ -19,10 +18,15 @@ water_list.json
 .gnome-terminal.log.swp
 konsole.log.txt
 do_this.sh-endeavouros.log.txt
-*.log
 *.new
 Amulet-Flatpak-testing.zip
 Amulet Map Editor.desktop
 icon.ico
 streamlined-flatpak-pip-gen
 io.github.evilsupahfly.amulet_flatpak.build_dir
+build-xdg-pip-gen.yaml
+build-xdg-requirements.txt
+pip-gen-sources.yaml
+*.old
+lz4-4.3.3.tar.gz
+lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
