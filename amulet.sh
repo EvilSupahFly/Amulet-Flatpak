@@ -7,10 +7,11 @@ GRN="\033[1m\033[1;92m" # Green
 WHT="\033[1m\033[1;97m" # White
 
 AFP="io.github.evilsupahfly.amulet_flatpak"
-REPO="https://github.com/EvilSupahFly/Amulet-Flatpak/releases/latest/download/amulet-x86_64.flatpak"
+REPO="https://github.com/EvilSupahFly/Amulet-Flatpak/releases/download/0.10.37.5/amulet-x86_64.flatpak"
 TEMP="/tmp/amulet-flatpak"
+PWD=$(pwd)
 
-report() {
+function report() {
     local status=$1 # F = failure, P = pass, N = notice (neutral)
     local message=$2
     local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
@@ -71,7 +72,7 @@ if ! command -v flatpak &> /dev/null; then
             fi
             ;;
     esac
-
+fi
 # Check if Flathub is installed at the user level
 report N "${WHT}Checking for Flathub...\n"
 if ! flatpak remote-list --user | grep -q "flathub"; then
@@ -94,13 +95,14 @@ if flatpak list | grep -q "$AFP"; then
     report N "${WHT}Installing new version."
 else
     report N "${RED}Previous version not found. ${WHT}Installing new version."
-    mkdir $TEMP
-    report N "${RED}Amulet is not installed.\n${WHT}Downloading and installing...\n"
-    wget "$REPO" --directory-prefix=$TEMP -O amulet-x86_64.flatpak
-    flatpak install -u --assume-yes $TEMP/amulet-x86_64.flatpak
-    echo -e "${WHT}Cleaning up...\n"
-    rm -f -R $TEMP
-    echo -e "${GRN}Launching Amulet...\n${RESET}"
 fi
-
+report N "${RED}Amulet is not installed.\n${WHT}Downloading and installing...\n"
+mkdir $TEMP
+cd $TEMP
+wget "$REPO"
+flatpak install -u -y amulet-x86_64.flatpak
+echo -e "${WHT}Cleaning up...\n"
+cd $PWD
+rm -f -R $TEMP
+echo -e "${GRN}Launching Amulet...\n${RESET}"
 flatpak run "$AFP"

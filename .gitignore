@@ -30,3 +30,5 @@ pip-gen-sources.yaml
 *.old
 lz4-4.3.3.tar.gz
 lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+*.1
+.nfs00000000007f62fc00034b18
