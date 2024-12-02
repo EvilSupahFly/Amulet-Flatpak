@@ -5,6 +5,7 @@ modules:
   - name: python3-versioneer
     buildsystem: simple
     build-commands:
+      #- pip3 install --verbose --no-index --find-links="file://${PWD}" -U -t /lib
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
         "versioneer" --report=pip_report.json --no-build-isolation
     sources:
@@ -27,45 +28,45 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/e8/61/9dd3e68d2b6aa40a5fc678662919be3c3a7bf22cba5a6b4437619b77e156/pyproject_metadata-0.9.0-py3-none-any.whl
         sha256: fc862aab066a2e87734333293b0af5845fe8ac6cb69c451a41551001e923be0b
-  - name: python3-xdg-base-dirs
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "xdg-base-dirs" --report=pip_report.json --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/fc/03/030b47fd46b60fc87af548e57ff59c2ca84b2a1dadbe721bb0ce33896b2e/xdg_base_dirs-6.0.2-py3-none-any.whl
-        sha256: 3c01d1b758ed4ace150ac960ac0bd13ce4542b9e2cdf01312dcda5012cfebabe
-  - name: python3-pyxdg
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "pyxdg" --report=pip_report.json --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/e5/8d/cf41b66a8110670e3ad03dab9b759704eeed07fa96e90fdc0357b2ba70e2/pyxdg-0.28-py2.py3-none-any.whl
-        sha256: bdaf595999a0178ecea4052b7f4195569c1ff4d344567bccdc12dfdf02d545ab
-  - name: python3-glad
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "glad" --report=pip_report.json --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/3b/07/1b313fc6ccdd38447f162f5a77700f070342ff71c4146dc05404bd6e053d/glad-0.1.36-py3-none-any.whl
-        sha256: ff84d7f0f0f2d6ecb8eaed17ffbe8787215b923995e3e2617b62769b72ed280f
-  - name: python3-glad2
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "glad2" --report=pip_report.json --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/5b/a1/17b55d9c36f05bfa9225f5f1d75c1abd4e0fa992110a5d5e6545df96ea4f/glad2-2.0.8-py3-none-any.whl
-        sha256: cfe84018233043554710aa747d0bf4be55015154f8bcd451765d1984bcc9d70b
-      - type: file
-        url: https://files.pythonhosted.org/packages/31/80/3a54838c3fb461f6fec263ebf3a3a41771bd05190238de3486aae8540c36/jinja2-3.1.4-py3-none-any.whl
-        sha256: bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d
+#  - name: python3-xdg-base-dirs
+#    buildsystem: simple
+#    build-commands:
+#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+#        "xdg-base-dirs" --report=pip_report.json --no-build-isolation
+#    sources:
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/fc/03/030b47fd46b60fc87af548e57ff59c2ca84b2a1dadbe721bb0ce33896b2e/xdg_base_dirs-6.0.2-py3-none-any.whl
+#        sha256: 3c01d1b758ed4ace150ac960ac0bd13ce4542b9e2cdf01312dcda5012cfebabe
+#  - name: python3-pyxdg
+#    buildsystem: simple
+#    build-commands:
+#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+#        "pyxdg" --report=pip_report.json --no-build-isolation
+#    sources:
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/e5/8d/cf41b66a8110670e3ad03dab9b759704eeed07fa96e90fdc0357b2ba70e2/pyxdg-0.28-py2.py3-none-any.whl
+#        sha256: bdaf595999a0178ecea4052b7f4195569c1ff4d344567bccdc12dfdf02d545ab
+#  - name: python3-glad
+#    buildsystem: simple
+#    build-commands:
+#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+#        "glad" --report=pip_report.json --no-build-isolation
+#    sources:
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/3b/07/1b313fc6ccdd38447f162f5a77700f070342ff71c4146dc05404bd6e053d/glad-0.1.36-py3-none-any.whl
+#        sha256: ff84d7f0f0f2d6ecb8eaed17ffbe8787215b923995e3e2617b62769b72ed280f
+#  - name: python3-glad2
+#    buildsystem: simple
+#    build-commands:
+#      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+#        "glad2" --report=pip_report.json --no-build-isolation
+#    sources:
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/5b/a1/17b55d9c36f05bfa9225f5f1d75c1abd4e0fa992110a5d5e6545df96ea4f/glad2-2.0.8-py3-none-any.whl
+#        sha256: cfe84018233043554710aa747d0bf4be55015154f8bcd451765d1984bcc9d70b
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/31/80/3a54838c3fb461f6fec263ebf3a3a41771bd05190238de3486aae8540c36/jinja2-3.1.4-py3-none-any.whl
+#        sha256: bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d
   - name: python3-pyopengl
     buildsystem: simple
     build-commands:
@@ -112,8 +113,8 @@ modules:
         sha256: a9de4fe068329c7a921f09dd4cec37c25c01ac2abeb4e10000e82e526e36d0fc
       - &id006
         type: file
-        url: https://files.pythonhosted.org/packages/ec/76/7b7165a403420685cfa3d046fe7cbb5a1f0717ee1725f6876045dc23be34/amulet_core-1.9.26-py3-none-any.whl
-        sha256: ff52dadf39d8ef531d612df1e7efbfbd09ee5306188e84390860323536a48b56
+        path: updates/amulet_core-1.9.26.tar.gz
+        sha256: 7b6de73e72d34101b45282ecbc18fa4ec668c4fea4c58c5e8af9b5119c118be1
       - &id007
         type: file
         url: https://files.pythonhosted.org/packages/8a/69/03882a4a7ed933d1f0c622d93a5b2eef2fa51c4bf8ca1ec84d43b88eb113/amulet_leveldb-1.0.2.tar.gz
@@ -126,8 +127,8 @@ modules:
       - *id002
       - &id010
         type: file
-        url: https://files.pythonhosted.org/packages/56/29/3ec311dc18804409ecf0d2b09caa976f3ae6215559306b5b530004e11156/platformdirs-3.11.0-py3-none-any.whl
-        sha256: e9d171d00af68be50e9202731309c4e658fd8bc76f55c11c7dd760d023bda68e
+        path: updates/platformdirs-4.3.7.tar.gz
+        sha256: d9a49e801871c1b0322268b623665eda40dce2ce1e72f61c19da57ec388aed02
       - &id011
         type: file
         url: https://files.pythonhosted.org/packages/9b/fb/a70a4214956182e0d7a9099ab17d50bfcba1056188e9b14f35b9e2b62a0d/portalocker-2.10.1-py3-none-any.whl
@@ -144,13 +145,13 @@ modules:
       - *id006
       - *id007
       - type: file
-        path: amulet_map_editor-0.10.37.tar.gz
-        sha256: 8f6ff3c894b38f76a9859592944c143a6da82aa83c45e3bae75fc635d16f2e44
+        path: updates/amulet_map_editor-0.10.37.tar.gz
+        sha256: 945c2228cb6e60b0690bb724ef2c92dc5d417873e8ae888c79b8cd4b32853709
       - *id001
       - &id012
         type: file
-        path: minecraft_resource_pack-1.4.55.tar.gz
-        sha256: 310b76e9d07ac83aa0cba562d64268d069fe5ac36fc47f3a1865e50079501e7d
+        path: updates/minecraft_resource_pack-1.4.61.tar.gz
+        sha256: 92158fb7a30288064dd5e0516dce97763b5969b9340e12a7fba558b264a74085
       - *id008
       - *id002
       - *id009
@@ -161,8 +162,8 @@ modules:
       - *id010
       - *id011
       - type: file
-        url: https://files.pythonhosted.org/packages/a4/f5/8c272764770f47fd419cc2eff4c4fa1c0681c71bcc2f3158b3a83d1339ff/wxPython-4.2.2.tar.gz
-        sha256: 5dbcb0650f67fdc2c5965795a255ffaa3d7b09fb149aa8da2d0d9aa44e38e2ba
+        path: updates/wxPython-4.2.3a1.dev5780+8908dd6c.tar.gz
+        sha256: 9c13940cd2f1d9bd00e6b19819fe152ff92fdcca224299a5537ae3b696a2b38c
   - name: python3-amulet-leveldb
     buildsystem: simple
     build-commands:

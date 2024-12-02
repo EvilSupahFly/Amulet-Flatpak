@@ -1,6 +1,6 @@
 id: io.github.evilsupahfly.amulet_flatpak
 #name: Amulet Map Editor
-#version: 0.10.37.01
+#version: 0.10.37
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
@@ -14,24 +14,24 @@ finish-args:
   - --share=network
   - --share=ipc
   - --socket=wayland
-#  - --socket=inherit-wayland-socket
   - --socket=fallback-x11
-  - --filesystem=home
-  - --filesystem=home/.cache/AmuletMapEditor
   - --filesystem=host
   - --filesystem=host-os
-  - --persist=xdg-cache/AmuletMapEditor
-  - --persist=HOST_XDG_STATE_HOME/AmuletMapEditor
-  - --persist=HOST_XDG_DATA_HOME
-  - --persist=HOST_XDG_CONFIG_HOME
-  - --persist=HOST_XDG_CACHE_HOME
-  - --persist=HOST_XDG_STATE_HOME
+  - --filesystem=home
+  - --filesystem=home/.cache/AmuletMapEditor:rw
+  - --filesystem=home/.config/state/AmuletMapEditor:rw
+  - --filesystem=home/.local/share/AmuletMapEditor:rw
+  - --filesystem=home/.local/state/AmuletMapEditor:rw
+  - --filesystem=home/.local/sate/AmuletMapTeam:rw
+  - --persist=home/.cache/AmuletMapEditor
+  - --persist=home/.config/state/AmuletMapEditor
+  - --persist=home/.local/share/AmuletMapEditor
+  - --persist=home/.local/state/AmuletMapEditor
+  - --persist=home/.local/sate/AmuletMapTeam
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
-  - --env=PS1=[ AMULET_FLATPAK \w]\n\$ 
-  - --own-name=io.github.evilsupahfly.amulet_flatpak
-  - --talk-name=io.github.evilsupahfly.amulet_flatpak
+  - --env=PS1=[ AMULET_FLATPAK > \w ]\n>
 # Uncomment the following options to increase debug output verbosity in the terminal
 #  - --env=PYTHONDEBUG=3
 #  - --env=PYTHONVERBOSE=3
@@ -41,6 +41,7 @@ finish-args:
 modules:
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
+  - updates.yaml
   - pip-gen.yaml
   - name: metainfo-xml
     buildsystem: simple
@@ -63,12 +64,4 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.png
-    # AmuletMapEditor resource pack fix - maybe
-  - name: vanilla-textures
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 vanilladefault_121.zip -t ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
-      - unzip -o vanilladefault_121.zip -d ${FLATPAK_DEST}/data/AmuletMapEditor/resource_packs/
-    sources:
-      - type: file
-        path: vanilladefault_121.zip
+
