@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.evilsupahfly.amulet_flatpak</id>
+  
+  <name>Amulet Map Editor - Flatpak Edition</name>
+  <summary>Amulet is a Minecraft world editor that allows users to modify and create worlds with ease</summary>
+  
+  <metadata_license>FTL</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+  
+  <description>
+    <p>
+      Amulet is a simple, yet powerful, world editor for modifying Minecraft saved worlds.
+    </p>
+  </description>
+  <developer id="io.github.evilsupahfly.amulet_flatpak">
+    <name>Amulet Developer: Team Amulet</name>
+    <name>Flatpak Developer: EvilSupahFly</name>
+  </developer>
+  <url type="homepage">https://github.com/amulet-Team/Amulet-Map-Editor/</url>
+  <url type="vcs-browser">https://github.com/EvilSupahFly/Amulet-Flatpak/</url>
+  <releases>
+    <release version="0.10.36" date="2024-01-18">
+      <url type="details">https://github.com/EvilSupahFly/Amulet-Flatpak/releases/tag/0.10.36</url>
+    </release>
+  </releases>
+  <launchable type="desktop-id">io.github.evilsupahfly.amulet_flatpak.desktop</launchable>
+  <icon type="stock">io.github.evilsupahfly.amulet_flatpak</icon>
+  <content_rating type="oars-1.0">
+    <content_attribute id="social-chat">moderate</content_attribute>
+  </content_rating>
+
+  <categories>
+    <category>Game</category>
+    <category>KidsGame</category>
+  </categories>
+  
+</component>
