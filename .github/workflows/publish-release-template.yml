@@ -2,7 +2,7 @@ name: Dynamic Versioned Upload Artifact to Releases
 
 on:
   workflow_run:
-    workflows: ["Main Branch Stuff"]
+    workflows: ["Main Branch Releases"]
     types:
       - completed
 
