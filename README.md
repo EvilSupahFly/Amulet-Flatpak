@@ -14,9 +14,9 @@ Currently the flatpak release suffers from ~~three~~ ~~two~~ one minor issue:
   - ~~missing water and lava textures, which is unique to the flatpak version [issue #7](https://github.com/EvilSupahFly/Amulet-Flatpak/issues/7) and still being investigated.~~
   - ~~Trying to run on Wayland, unless you have installed Xwayland, is mostly pointless because of some twenty-year-old code in wxPython - expect the error "Unable to access the X Display, is $DISPLAY set properly?"~~
 
-With the update to v0.10.37 and some minor changes to Amulet's source code, these two issues are now fixed:
-  - Wayland: I've implemented a brute-force override for Wayland users, and the modified code is in [my fork of Amulet](https://github.com/EvilSupahFly/Amulet-Map-Editor).
-  - Fix for textures: While I've modified [`download_resources.py`](https://github.com/EvilSupahFly/Minecraft-Model-Reader/blob/master/minecraft_model_reader/api/resource_pack/java/download_resources.py#L85) by adding a small `if` loop that examines the path requested, and modifies it if it doesn't match the Flatpak sandbox layout, this is not a permanent fix, as I still don't understand why the paths are being configured like this since even the experts on AskPython aren't sure. For now, it does resolve the [missing textures](https://github.com/EvilSupahFly/Amulet-Flatpak/issues/7) the Flatpak release was experiencing much better than my last fix, as the textures are actually properly transparent now. I also increased the timeout period for texture pack downloads.
+With the update to v0.10.37 and some minor changes to Amulet's source code, these two issues are now (mostly) fixed:
+  - Wayland: I've implemented a brute-force override for Wayland users.
+  - Fix for textures: This is on-going as each time Amulet updates, the textures break again, and I'm not sure why.
 
 ![Screenshot from 2024-08-15 23-04-29](https://github.com/user-attachments/assets/c9d42035-67e2-4f0a-8515-a325c0a36532)
 
@@ -24,4 +24,4 @@ If you're feeling ambitious, you can fork or clone this project and try tweaking
 
 The flatpak version has so far been tested on Manjaro, Ubuntu, Kubuntu and Mint. Feedback is most welcome!
 
-README Last updated 02 December, 2024
+README Last updated 15 April, 2025
