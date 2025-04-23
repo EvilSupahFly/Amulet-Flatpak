@@ -1,0 +1,46 @@
+name: Dynamic Versioned Upload Artifact to Releases
+
+on:
+  workflow_run:
+    workflows: ["Main Branch Releases"]
+    types:
+      - completed
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Get Artifact Name
+        id: get_artifact
+        run: |
+          #ARTIFACT_NAME=$(ls path/to/artifacts | grep '.zip' | head -n 1)
+          ARTIFACT_NAME=/__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+          echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+
+      - name: Get Version from Workflow
+        id: get_version
+        run: |
+          echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
+
+      - name: Upload Release Asset
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const artifactName = process.env.ARTIFACT_NAME;
+            const version = process.env.VERSION;
+            const release = await github.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: version
+            });
+            await github.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.data.id,
+              name: artifactName,
+              data: fs.readFileSync(`path/to/artifacts/${artifactName}`)
+            });
+
