@@ -26,6 +26,11 @@ jobs:
           manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           cache-key: flatpak-builder-${{ github.sha }}
           verbose: true
+      - name: Build Flatpak
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
+        with:
+          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
+          working-directory: ${{ github.workspace }}/sources
       - name: Upload artifact
         uses: actions/upload-artifact@v4.4.3
         env:
