@@ -5,3 +5,4 @@
 *.tar.gz filter=lfs diff=lfs merge=lfs -text
 *.whl filter=lfs diff=lfs merge=lfs -text
 sources/wxpython-4.2.3-cp312-cp312-linux_x86_64.whl filter=lfs diff=lfs merge=lfs -text
+sources/wxPython-4.2.3-linux-py3.12.tar.gz filter=lfs diff=lfs merge=lfs -text

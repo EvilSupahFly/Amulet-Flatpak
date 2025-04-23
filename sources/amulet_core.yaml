@@ -111,8 +111,8 @@ modules:
     sources:
       - &id009
         type: file
-        path: wxpython-4.2.3-cp312-cp312-linux_x86_64.whl
-        sha256: c499ef24b6b64263053efd29370ebff65d497069de26e4dafd7f28f1cb3a2634
+        path: wxPython-4.2.3-linux-py3.12.tar.gz
+        sha256: fb29424aeabea2d08051abe51a7e5ece03df97cfd0b5d36d0266448c0b0f255f
   - name: python3-lz4
     buildsystem: simple
     build-commands:
