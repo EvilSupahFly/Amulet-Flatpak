@@ -1,0 +1,14 @@
+build-commands: []
+buildsystem: simple
+modules:
+  - name: libjpeg8-runtime
+    buildsystem: simple
+    build-commands:
+      - install -v -D libjpeg.so.8.4.0 ${FLATPAK_DEST}/lib/libjpeg.so.8.4.0
+      - ln -sv libjpeg.so.8.4.0 ${FLATPAK_DEST}/lib/libjpeg.so.8
+      - ln -sv libjpeg.so.8 ${FLATPAK_DEST}/lib/libjpeg.so
+    sources:
+      - type: file
+        path: libjpeg.so.8.4.0
+        sha256: 42b23e05b0898c3461c9b905fabb40eb0f23bf6d231c4976b86d1301021431e3
+name: libjpeg8-runtime
