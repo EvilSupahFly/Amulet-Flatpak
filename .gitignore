@@ -33,3 +33,6 @@ lz4-4.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 .nfs00000000007f62fc00034b18
 pip_report.json
 .vscode
+do-fp-shell.sh
+flat-test.sh
+get-pip-gen.sh
