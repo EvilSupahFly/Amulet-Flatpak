@@ -18,10 +18,6 @@ jobs:
         --privileged
     steps:
       - name: Build Flatpak
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
-        with:
-          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
-          working-directory: ${{ github.workspace }}/sources
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
           bundle: amulet-x86_64.flatpak
@@ -30,6 +26,7 @@ jobs:
           manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           cache-key: flatpak-builder-${{ github.sha }}
           verbose: true
+          working-directory: ${{ github.workspace }}/sources
       - uses: actions/checkout@v4.2.2
       - name: Upload artifact
         uses: actions/upload-artifact@v4.4.3
