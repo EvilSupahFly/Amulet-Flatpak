@@ -30,20 +30,25 @@ jobs:
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
-          manifest-path: sources/io.github.evilsupahfly.amulet_flatpak.yaml
+          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           verbose: true
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.4.3
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            Automatic release for ${{ github.ref_name }}.
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+      - name: Upload to Release
+        uses: Shopify/upload-to-release@v2.0.0
         with:
           name: amulet-x86_64.flatpak
           path: ${{ github.workspace }}/amulet-x86_64.flatpak
-          overwrite: true
-          compression-level: 0 # no compression
-#      - name: Upload to Release Action
-#        uses: Shopify/upload-to-release@v2.0.0
-#        with:
-#            name: amulet-x86_64.flatpak
-#            path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
-#            content-type: application/vnd.flatpak
-#            repo-token: ${{ github.token }}
+          content-type: application/vnd.flatpak
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
