@@ -1,11 +1,12 @@
+name: Main Branch Builds
+
 on:
   push:
     branches:
-#      - testing
       - main
     tags: "*"
   pull_request: null
-name: Main Branch Builds
+
 jobs:
   flatpak:
     name: Make Amulet Flatpak
@@ -14,30 +15,29 @@ jobs:
       contents: write
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-24.08
-      options:
-        --privileged
+      options: --privileged
     steps:
-      - uses: actions/checkout@v4.2.2
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
-        with:
-          bundle: amulet-x86_64.flatpak
-          build-bundle: true
-          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
-          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
-          cache-key: flatpak-builder-${{ github.sha }}
-          verbose: true
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Debug File Structure
+        run: |
+          echo "Root workspace files:"
+          ls -R ${{ github.workspace }}
+          echo "Sources folder files:"
+          ls -R ${{ github.workspace }}/sources
+
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
-          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
-          working-directory: ${{ github.workspace }}/sources
+          manifest-path: sources/io.github.evilsupahfly.amulet_flatpak.yaml
+          verbose: true
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4.4.3
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         with:
           name: amulet-x86_64.flatpak
-          path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
+          path: ${{ github.workspace }}/amulet-x86_64.flatpak
           overwrite: true
           compression-level: 0 # no compression
 #      - name: Upload to Release Action
