@@ -13,8 +13,8 @@ modules:
         sha256: 30a75c52578ef14aff8392677b09c39346e0a24d2b2c6204b8ed30583c11269c
       - &id001
         type: file
-        path: packaging-24.2-py3-none-any.whl
-        sha256: 09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759
+        path: packaging-25.0-py3-none-any.whl
+        sha256: 29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484
       - type: file
         path: pyproject_metadata-0.9.1-py3-none-any.whl
         sha256: ee5efde548c3ed9b75a354fc319d5afd25e9585fa918a34f62f904cc731973ad
