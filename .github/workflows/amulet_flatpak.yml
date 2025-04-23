@@ -20,12 +20,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
 
-      - name: Debug File Structure
-        run: |
-          echo "Root workspace files:"
-          ls -R ${{ github.workspace }}
-          echo "Sources folder files:"
-          ls -R ${{ github.workspace }}/sources
+#      - name: Debug File Structure
+#        run: |
+#          echo "Root workspace files:"
+#          ls -R ${{ github.workspace }}
+#          echo "Sources folder files:"
+#          ls -R ${{ github.workspace }}/sources
 
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
