@@ -1,7 +1,0 @@
-# Generated with flatpak-pip-generator --output pyyaml --yaml pyyaml
-name: python3-pyyaml
-buildsystem: simple
-build-commands:
-  - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-    "pyyaml" --report=pip_report.json --no-build-isolation
-sources: []
