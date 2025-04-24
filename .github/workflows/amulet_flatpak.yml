@@ -1,3 +1,4 @@
+#v11
 name: Main Branch Builds
 
 on:
@@ -21,40 +22,43 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
 
-      # Step 2: Debug file structure inside the Docker container
+      # Step 2: Verify file structure and checksum after checkout
       - name: Debug File Structure After Checkout
         run: |
           echo "Listing files in sources directory inside the container:"
           ls -R /__w/Amulet-Flatpak/Amulet-Flatpak/sources
 
-      # Step 3: Verify the file exists inside the Docker container
       - name: Verify File Exists After Checkout
         run: |
-          if [ -f /__w/Amulet-Flatpak/Amulet-Flatpak/sources/packaging-25.0-py3-none-any.whl ]; then
-            echo "File exists: packaging-25.0-py3-none-any.whl"
+          if [ -f /__w/Amulet-Flatpak/Amulet-Flatpak/sources/meson_python-0.17.1-py3-none-any.whl ]; then
+            echo "File exists: meson_python-0.17.1-py3-none-any.whl"
           else
-            echo "File not found: packaging-25.0-py3-none-any.whl"
+            echo "File not found: meson_python-0.17.1-py3-none-any.whl"
             exit 1
           fi
 
-      # Step 4: Verify the checksum of the file inside the Docker container
       - name: Verify File Checksum After Checkout
-        run: sha256sum /__w/Amulet-Flatpak/Amulet-Flatpak/sources/packaging-25.0-py3-none-any.whl
+        run: sha256sum /__w/Amulet-Flatpak/Amulet-Flatpak/sources/meson_python-0.17.1-py3-none-any.whl
 
-      # Step 5: Clear Flatpak Cache
+      # Step 3: Clear Flatpak Cache
       - name: Clear Flatpak Cache
         run: rm -rf ~/.cache/flatpak-builder
 
-      # Step 6: Run the Flatpak Build
+      # Step 4: Run the Flatpak Build
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
           manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           verbose: true
 
-      # Step 7: Debug Flatpak Logs if Build Fails
-      - name: Debug Build Logs
-        if: failure()
+      # Step 5: Copy Flatpak Build Logs from Docker Container
+      - name: Copy Build Logs for Debugging
         run: |
-          echo "Build failed. Capturing logs..."
-          cat ~/.cache/flatpak-builder/logs/*
+          mkdir -p /__w/logs
+          cp -r ~/.cache/flatpak-builder/logs/* /__w/logs
+        if: failure()
+
+      # Step 6: Output Captured Logs
+      - name: Output Build Logs
+        run: cat /__w/logs/*
+        if: failure()
