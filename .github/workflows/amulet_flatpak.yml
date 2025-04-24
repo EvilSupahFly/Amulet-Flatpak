@@ -19,15 +19,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
-        with:
-          fetch-depth: 0
-          submodules: recursive
-#      - name: Debug File Structure
-#        run: |
-#          echo "Root workspace files:"
-#          ls -R ${{ github.workspace }}
-#          echo "Sources folder files:"
-#          ls -R ${{ github.workspace }}/sources
+
+      - name: Verify File Checksum After Checkout
+        run: sha256sum ${{ github.workspace }}/sources/packaging-25.0-py3-none-any.whl
+
+      - name: Clear Flatpak Cache
+        run: rm -rf ~/.cache/flatpak-builder
 
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
@@ -35,22 +32,11 @@ jobs:
           manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           verbose: true
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          body: |
-            Automatic release for ${{ github.ref_name }}.
-          draft: false
-          prerelease: false
-          generate_release_notes: true
+      - name: Debug File Checksum Inside Build
+        run: sha256sum /path/to/packaging-25.0-py3-none-any.whl
 
-      - name: Upload to Release
-        uses: Shopify/upload-to-release@v2.0.0
-        with:
-          name: amulet-x86_64.flatpak
-          path: ${{ github.workspace }}/amulet-x86_64.flatpak
-          content-type: application/vnd.flatpak
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy WHL File for Debugging
+        run: cp /path/to/packaging-25.0-py3-none-any.whl ${{ github.workspace }}/debug-packaging-25.0-py3-none-any.whl
+
+      - name: Verify Debug File Checksum
+        run: sha256sum ${{ github.workspace }}/debug-packaging-25.0-py3-none-any.whl
