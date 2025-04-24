@@ -40,7 +40,7 @@ modules:
   #- pdm.yaml
   #- pyinstaller.yaml
   #- pip-gen.yaml
-  - sources/python3-modules.yaml
+  #- sources/python3-modules.yaml
   - sources/libjpeg8-runtime.yaml
   - sources/amulet_core.yaml
   - name: launcher-script
