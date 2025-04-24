@@ -1,4 +1,4 @@
-#v12
+#v13
 name: Main Branch Builds
 
 on:
@@ -22,15 +22,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
 
-      # Step 2: Debug file structure and checksum after checkout
-      - name: Log Environment Details
-        run: |
-          echo "Flatpak Builder Version:"
-          flatpak-builder --version
-          echo "Python Version:"
-          python3 --version
-          echo "File System Details:"
-          df -h
+      # Step 2: Verify file structure and checksum after checkout
       - name: Debug File Structure After Checkout
         run: |
           echo "Listing files in sources directory inside the container:"
@@ -48,21 +40,18 @@ jobs:
       - name: Verify File Checksum After Checkout
         run: sha256sum /__w/Amulet-Flatpak/Amulet-Flatpak/sources/meson_python-0.17.1-py3-none-any.whl
 
-      # Step 3: Run the Flatpak Build with Interactive Debugging
-      - name: Run Flatpak Build (Interactive)
+      # Step 3: Run the Flatpak Build with Logs
+      - name: Run Flatpak Build
         run: |
-          mkdir -p /debug-container
-          flatpak-builder --repo=repo --disable-rofiles-fuse --install-deps-from=flathub --force-clean --default-branch=master --arch=x86_64 --ccache --verbose flatpak_app flatpak-github-action-modified-io.github.evilsupahfly.amulet_flatpak.yaml || true
+          mkdir -p /debug-container/logs
+          flatpak-builder --repo=repo --disable-rofiles-fuse --log-file=/debug-container/logs/flatpak-log.txt --install-deps-from=flathub --force-clean --default-branch=master --arch=x86_64 --ccache --verbose flatpak_app io.github.evilsupahfly.amulet_flatpak.yaml || true
           echo "Flatpak build failed, but preserving container for debugging."
-          echo "Copying build logs and environment for inspection."
-          cp -r ~/.cache/flatpak-builder/logs/* /debug-container/logs || true
-          cp -r /__w/Amulet-Flatpak/Amulet-Flatpak/sources /debug-container/sources || true
-        continue-on-error: true
+          cp -r ~/.cache/flatpak-builder /debug-container/cache || true
 
       # Step 4: Output Debug Information
       - name: Output Debug Information
         run: |
           echo "Capturing logs and environment details."
           ls -R /debug-container
-          cat /debug-container/logs/* || echo "No logs available."
+          cat /debug-container/logs/flatpak-log.txt || echo "No logs available."
           sha256sum /debug-container/sources/meson_python-0.17.1-py3-none-any.whl || echo "No file available."
