@@ -17,26 +17,57 @@ jobs:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-24.08
       options: --privileged
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
+
+      # Step 2: Verify file structure and checksum after checkout
+      - name: Debug File Structure After Checkout
+        run: |
+          echo "Listing files in sources directory:"
+          ls -R ${{ github.workspace }}/sources
+
+      - name: Verify File Exists After Checkout
+        run: |
+          if [ -f ${{ github.workspace }}/sources/packaging-25.0-py3-none-any.whl ]; then
+            echo "File exists: packaging-25.0-py3-none-any.whl"
+          else
+            echo "File not found: packaging-25.0-py3-none-any.whl"
+            exit 1
+          fi
 
       - name: Verify File Checksum After Checkout
         run: sha256sum ${{ github.workspace }}/sources/packaging-25.0-py3-none-any.whl
 
+      # Step 3: Clear Flatpak Cache
       - name: Clear Flatpak Cache
         run: rm -rf ~/.cache/flatpak-builder
 
+      # Step 4: Debug Flatpak Build Environment Before Build
+      - name: Debug Flatpak Build Environment
+        run: |
+          echo "Listing files in the build directory:"
+          ls -R ${{ github.workspace }}
+
+      # Step 5: Run the Flatpak build
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
           manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           verbose: true
 
-      - name: Debug File Checksum Inside Build
-        run: sha256sum /path/to/packaging-25.0-py3-none-any.whl
+      # Step 6: Debug the Flatpak Logs if Build Fails
+      - name: Debug Build Logs
+        if: failure()
+        run: |
+          echo "Build failed. Capturing logs..."
+          cat ~/.cache/flatpak-builder/logs/*
 
-      - name: Copy WHL File for Debugging
-        run: cp /path/to/packaging-25.0-py3-none-any.whl ${{ github.workspace }}/debug-packaging-25.0-py3-none-any.whl
-
-      - name: Verify Debug File Checksum
-        run: sha256sum ${{ github.workspace }}/debug-packaging-25.0-py3-none-any.whl
+      # Step 7: Verify File Checksum Inside Flatpak Build Directory
+      - name: Verify File Checksum During Build
+        run: |
+          if [ -f build-dir/sources/packaging-25.0-py3-none-any.whl ]; then
+            sha256sum build-dir/sources/packaging-25.0-py3-none-any.whl
+          else
+            echo "File not found in build directory: packaging-25.0-py3-none-any.whl"
+          fi
