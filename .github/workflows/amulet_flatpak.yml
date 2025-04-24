@@ -21,53 +21,40 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
 
-      # Step 2: Verify file structure and checksum after checkout
+      # Step 2: Debug file structure inside the Docker container
       - name: Debug File Structure After Checkout
         run: |
-          echo "Listing files in sources directory:"
-          ls -R ${{ github.workspace }}/sources
+          echo "Listing files in sources directory inside the container:"
+          ls -R /__w/Amulet-Flatpak/Amulet-Flatpak/sources
 
+      # Step 3: Verify the file exists inside the Docker container
       - name: Verify File Exists After Checkout
         run: |
-          if [ -f ${{ github.workspace }}/sources/packaging-25.0-py3-none-any.whl ]; then
+          if [ -f /__w/Amulet-Flatpak/Amulet-Flatpak/sources/packaging-25.0-py3-none-any.whl ]; then
             echo "File exists: packaging-25.0-py3-none-any.whl"
           else
             echo "File not found: packaging-25.0-py3-none-any.whl"
             exit 1
           fi
 
+      # Step 4: Verify the checksum of the file inside the Docker container
       - name: Verify File Checksum After Checkout
-        run: sha256sum ${{ github.workspace }}/sources/packaging-25.0-py3-none-any.whl
+        run: sha256sum /__w/Amulet-Flatpak/Amulet-Flatpak/sources/packaging-25.0-py3-none-any.whl
 
-      # Step 3: Clear Flatpak Cache
+      # Step 5: Clear Flatpak Cache
       - name: Clear Flatpak Cache
         run: rm -rf ~/.cache/flatpak-builder
 
-      # Step 4: Debug Flatpak Build Environment Before Build
-      - name: Debug Flatpak Build Environment
-        run: |
-          echo "Listing files in the build directory:"
-          ls -R ${{ github.workspace }}
-
-      # Step 5: Run the Flatpak build
+      # Step 6: Run the Flatpak Build
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
           manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
           verbose: true
 
-      # Step 6: Debug the Flatpak Logs if Build Fails
+      # Step 7: Debug Flatpak Logs if Build Fails
       - name: Debug Build Logs
         if: failure()
         run: |
           echo "Build failed. Capturing logs..."
           cat ~/.cache/flatpak-builder/logs/*
-
-      # Step 7: Verify File Checksum Inside Flatpak Build Directory
-      - name: Verify File Checksum During Build
-        run: |
-          if [ -f build-dir/sources/packaging-25.0-py3-none-any.whl ]; then
-            sha256sum build-dir/sources/packaging-25.0-py3-none-any.whl
-          else
-            echo "File not found in build directory: packaging-25.0-py3-none-any.whl"
-          fi
