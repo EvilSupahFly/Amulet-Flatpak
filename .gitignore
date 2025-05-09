@@ -38,3 +38,8 @@ flat-test.sh
 get-pip-gen.sh
 temp
 sources/packaging-25.0-py3-none-any (1).whl
+big-requirements.txt
+big_amulet_core.yaml
+python3-modules.yaml
+revised_amulet_core.yaml
+/sources

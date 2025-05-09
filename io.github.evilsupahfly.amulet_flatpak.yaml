@@ -10,7 +10,7 @@ command: amulet
 finish-args:
   - --device=all
   - --device=dri
-  - --add-policy=org.freedesktop.Platform.GL.nvidia.version=550-120
+  #- --add-policy=org.freedesktop.Platform.GL.nvidia.version=550-120
   - --allow=devel
   - --allow=per-app-dev-shm
   - --share=network
@@ -41,8 +41,8 @@ modules:
   #- pyinstaller.yaml
   #- pip-gen.yaml
   #- sources/python3-modules.yaml
-  - sources/libjpeg8-runtime.yaml
-  - sources/amulet_core.yaml
+  - libjpeg8-runtime.yaml
+  - amulet_core.yaml
   - name: launcher-script
     buildsystem: simple
     build-commands:
@@ -73,13 +73,13 @@ modules:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.png
 
-add-extensions:
-  org.freedesktop.Platform.GL:
-    version: '1.4'
-    subdirectories: true
+#add-extensions:
+#  org.freedesktop.Platform.GL:
+#    version: '1.4'
+#    subdirectories: true
     #directory: lib/GL
 
-  org.freedesktop.Platform.GL.nvidia:
-    version: '550-120'
-    subdirectories: true
+#  org.freedesktop.Platform.GL.nvidia:
+#    version: '550-120'
+#    subdirectories: true
     #directory: lib/GL

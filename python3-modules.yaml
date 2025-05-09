@@ -9,8 +9,8 @@ modules:
         "requirements-parser" --report=pip_report.json --no-build-isolation
     sources:
       - type: file
-        path: packaging-24.2-py3-none-any.whl
-        sha256: 09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759
+        path: packaging-25.0-py3-none-any.whl
+        sha256: 29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484
       - type: file
         path: requirements_parser-0.11.0-py3-none-any.whl
         sha256: 50379eb50311834386c2568263ae5225d7b9d0867fb55cf4ecc93959de2c2684
