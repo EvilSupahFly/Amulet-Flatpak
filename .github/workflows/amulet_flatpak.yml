@@ -20,8 +20,12 @@ jobs:
         --privileged
     steps:
       - uses: actions/checkout@v4.2.2
+      - name: Debug: Check Git Repo
+        run: |
+          cd /__w/Amulet-Flatpak/Amulet-Flatpak
+          git status
       - name: Pull Git LFS files
-        working-directory: ${{ github.workspace }}
+        working-directory: /__w/Amulet-Flatpak/Amulet-Flatpak/
         run: |
           git lfs install
           git lfs pull
