@@ -97,8 +97,8 @@ modules:
     sources:
       - &id002
         type: file
-        url: https://files.pythonhosted.org/packages/c6/5a/945f5086326d569f14c84ac6f7fcc3229f0b9b1e8cc536b951fd53dfb9e1/lz4-4.4.4.tar.gz
-        sha256: 070fd0627ec4393011251a094e08ed9fdcc78cb4e7ab28f507638eee4e39abda
+        path: lz4-4.4.3.tar.gz
+        sha256: 0db6dad6e88e04633b988ac601636cb3143d843f8c5fff6985250fc252b37cfa
     cleanup:
       - '*'
   - name: python3-Pillow
@@ -180,7 +180,7 @@ modules:
       - *id007
       - type: file
         path: amulet_map_editor-0.10.42+0.g679d4236.dirty.tar.gz
-        sha256: ee3e5dab69f323075349b136d06ea994b4cf2b554ec0bb7727d740c4f895f9ac
+        sha256: e07381aacda83fb5b40d36070679be57ab0963ede4f472ba10b19d5321f390f9
       - *id008
       - *id002
       - &id014

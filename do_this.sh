@@ -34,27 +34,30 @@ report() {
     local message=$2  # F = failure, P = pass, N = notice (neutral), B = Blank
     local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
     local ERR_MSG="[$timestamp] ERROR: "
+    local WARNMSG="[$timestamp] WARNING: "
     local PASSMSG="[$timestamp] SUCCESS: "
     local NOTEMSG="[$timestamp] NOTICE: "
 
     # Ensure color variables are defined
     local output_message
-    local log_message  # New variable for logging
+    #local log_message  # New variable for logging
     if [[ -z "$RED" ]]; then
         output_message="[$timestamp] $message"
-        log_message="[$timestamp] $message"  # Plain message for log
+        #log_message="[$timestamp] $message"  # Plain message for log
     else
         case "$status" in
-            F) output_message="${RED}$ERR_MSG ${WHITE}$message${RESET}"
-               log_message="$ERR_MSG $message" ;;  # Plain message for log
-            P) output_message="${GREEN}$PASSMSG ${WHITE}$message${RESET}"
-               log_message="$PASSMSG $message" ;;  # Plain message for log
-            N) output_message="${YELLOW}$NOTEMSG ${WHITE}$message${RESET}"
-               log_message="$NOTEMSG $message" ;;  # Plain message for log
-            B) output_message="${WHITE}$message${RESET}"
-               log_message="$message" ;;  # Plain message for log
-            *) output_message="${RED}$ERR_MSG ${WHITE}$status is an unsupported status flag.${RESET}"
-               log_message="$ERR_MSG $status is an unsupported status flag." ;;  # Plain message for log
+            F) output_message="${RED}$ERR_MSG ${WHITE}$message${RESET}";;
+               #log_message="$ERR_MSG $message" ;;  # Plain message for log
+            P) output_message="${GREEN}$PASSMSG ${WHITE}$message${RESET}";;
+               #log_message="$PASSMSG $message" ;;  # Plain message for log
+            N) output_message="${YELLOW}$NOTEMSG ${WHITE}$message${RESET}";;
+               #log_message="$NOTEMSG $message" ;;  # Plain message for log
+            W) output_message="${YELLOW}$WARNMSG ${WHITE}$message${RESET}";;
+               #log_message="$NOTEMSG $message" ;;  # Plain message for log
+            B) output_message="${WHITE}$message${RESET}";;
+               #log_message="$message" ;;  # Plain message for log
+            *) output_message="${RED}$ERR_MSG ${WHITE}$status is an unsupported status flag.${RESET}";;
+               #log_message="$ERR_MSG $status is an unsupported status flag." ;;  # Plain message for log
         esac
     fi
 
@@ -176,7 +179,7 @@ function doInstall {
     # Determine the distribution
     if [ -f /etc/os-release ]; then
         . /etc/os-release
-        DISTRO=$ID
+        DISTRO="$(echo "$ID" | tr '[:upper:]' '[:lower:]')"
         report P "\n${WHITE}Distro determined as ${YELLOW}$DISTRO${WHITE}..." #; sleep 2
         report N "\n${WHITE}Attempting to install \"$1\" for ${YELLOW}$DISTRO${WHITE}..." #; sleep 2
     fi
@@ -192,24 +195,37 @@ function doInstall {
         centos|rhel)
             sudo yum install -y "$1"
             ;;
-        arch|endeavouros)
-            sudo pacman -Syu "$1"
+        arch|endeavouros|manjaro)
+            sudo pacman -Sy --noconfirm --needed "$1"
+            ;;
+        alpine)
+            sudo apk add "$1"
             ;;
         opensuse)
-            sudo zypper install -y "$1"
+            sudo zypper --non-interactive install "$1"
+            ;;
+        void)
+            sudo xbps-install -Sy "$1"
+            ;;
+        nixos)
+            report F "${YELLOW}Detected NixOS. Please install \"$1\" using the Nix package manager or add it to your configuration.nix."
             ;;
         *)
             # Fallback to package manager detection if distro detection fails
             if command -v apt &> /dev/null; then
                 sudo apt update && sudo apt install -y "$1"
+            elif command -v apk &> /dev/null; then
+                sudo apk add "$1"
             elif command -v dnf &> /dev/null; then
                 sudo dnf install -y "$1"
             elif command -v yum &> /dev/null; then
                 sudo yum install -y "$1"
             elif command -v pacman &> /dev/null; then
-                sudo pacman -Syu "$1"
+                sudo pacman -Sy --noconfirm --needed "$1"
+            elif command -v xbps-install &> /dev/null; then
+                sudo xbps-install -Sy "$1"
             elif command -v zypper &> /dev/null; then
-                sudo zypper install -y "$1"
+                sudo zypper --non-interactive install "$1"
             else
                 report F "${RED}Unsupported distribution: $DISTRO. \n${WHITE}No known package manager found. Please manually install \"$1\" using your graphical package manager, or contact the author to have $DISTRO support added."
                 bye $LINENO
@@ -224,7 +240,7 @@ function doFlatpakPIP {
         report F "flatpak-pip-generator failed."
         bye $LINENO
     fi
-    if [ $DO_YHIS_YAML = "" ]; then
+    if [ "$DO_THIS_YAML" = "" ]; then
         DO_THIS_YAML="pip-gen.yaml"
     fi
     # Create the initial header for our primary manifest
@@ -315,14 +331,17 @@ EOL
 
 check_version() {
     local version="$1"
-    report N "${WHITE}Checking for version number..." #; sleep 2
-    if [[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+    report N "${WHITE}Checking for version number..."
+
+    # Match version strings like:
+    # v1.2.3, 1.2.3-alpha, 1.2.3-a1, 1.2.3+dirty, v1.2.3-b2+build.5.dirty, etc.
+    if [[ "$version" =~ ^v?[0-9]+(\.[0-9]+)*([-._]?(alpha|a|beta|b|rc)[0-9]*)?([+.-]?[a-zA-Z0-9]*dirty[a-zA-Z0-9.-]*)?$ ]]; then
         report P "Using version ${GREEN}$version${WHITE}."
         AFP_VER=$version
     else
-        report F "Error on line $2 - '${RED}$version${WHITE}' must be a dotted decimal number."
+        report F "Error on line $2 - '${RED}$version${WHITE}' is not a valid version string."
         read -p "Please enter a valid version number (x to quit): " AFP_VER
-        if [ $AFP_VER == "x" ]; then
+        if [[ "$AFP_VER" == "x" ]]; then
             echo "Terminating script."
             bye
         fi
@@ -362,6 +381,7 @@ FPBDIR=".flatpak-builder"
 DO_THIS_YAML=""
 I_AM="$0 $@"
 PCOUNT=$#
+whoami="$(whoami)"
 if [ $PCOUNT -eq 0 ]; then
     doHelp
 fi
@@ -519,7 +539,7 @@ if [ "$AUTO" = "true" ]; then
     if flatpak list | grep -q "$AFPBASE"; then
         report N "${WHITE}Previous version found. Removing..."
         flatpak --user uninstall -y "$AFPBASE"
-        rm -fR /home/$(whoami)/.var/app/$AFPBASE
+        rm -fR /home/$whoami/.var/app/$AFPBASE
         report N "${WHITE}Installing new version."
     else
         report N "${RED}Previous version not found. ${WHITE}Installing new version."
@@ -538,7 +558,7 @@ if [ "$DEBUG" = "true" ]; then
     else
         report P "Amulet Flatpak install succeeded."
         report N "${WHITE}Configuring Debug extension ($AFP_DBG)" #; sleep 2
-        if ! if ! flatpak install --include-sdk --user -y ./$AFPREPO $AFP_DBG; then
+        if ! flatpak install --include-sdk --user -y ./$AFPREPO $AFP_DBG; then
             report F "$AFP_DBG failed"; echo -e "${WHITE}"
             read -p "Try to continue without $AFP_DBG (y/n)? " tryCont
             case $tryCont in
@@ -560,7 +580,7 @@ if [ "$DEBUG" = "true" ]; then
 else
     report N "${WHITE}Auto-Mode is active. Starting install." #; sleep 2
     echo -e "${WHITE}if ! flatpak install --include-sdk -y --user amulet-x86_64.flatpak\n"
-    if ! if ! flatpak install --include-sdk -y --user amulet-x86_64.flatpak; then
+    if ! flatpak install --include-sdk -y --user amulet-x86_64.flatpak; then
         report F "${RED}flatpak intallation failed."; bye $LINENO
     else
         report P "flatpak installation succeeded."
