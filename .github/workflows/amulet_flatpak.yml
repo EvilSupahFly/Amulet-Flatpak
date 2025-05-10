@@ -30,7 +30,7 @@ jobs:
         run: |
           git lfs install
           git lfs pull
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@10a3c29
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.5
         with:
           bundle: amulet-x86_64.flatpak
           build-bundle: true
