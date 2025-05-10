@@ -22,6 +22,7 @@ jobs:
       - uses: actions/checkout@v4.2.2
       - name: Debug - Check Git Repo
         run: |
+          git config --global --add safe.directory /__w/Amulet-Flatpak/Amulet-Flatpak
           cd /__w/Amulet-Flatpak/Amulet-Flatpak
           git status
       - name: Pull Git LFS files
