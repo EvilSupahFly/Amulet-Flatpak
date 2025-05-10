@@ -179,8 +179,8 @@ modules:
       - *id006
       - *id007
       - type: file
-        path: amulet_map_editor-0.10.42+0.g679d4236.dirty.tar.gz
-        sha256: e07381aacda83fb5b40d36070679be57ab0963ede4f472ba10b19d5321f390f9
+        path: amulet_map_editor-0.10.42+0.g679d4236.dirty-cp312-cp312-linux_x86_64.whl
+        sha256: 72438aab87ca94f5ce31ce3ca87a7cabaecb1b2e6db81ff94a06de642e749f9f
       - *id008
       - *id002
       - &id014
