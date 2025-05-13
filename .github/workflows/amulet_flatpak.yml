@@ -34,16 +34,10 @@ jobs:
           flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           flatpak install -y --user org.freedesktop.Platform/x86_64/24.08
           flatpak install -y --user org.freedesktop.Sdk/x86_64/24.08
-      - name: Build Flatpak Package
+      - name: Build Flatpak Package And Bundle
         run: |
           flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose build-dir io.github.evilsupahfly.amulet_flatpak.yaml
-      - name: Create Flatpak bundle
-        run: |
-          flatpak build-bundle build-dir amulet.flatpak io.github.evilsupahfly.amulet_flatpak \
-            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \
-            --arch=x86_64 \
-            --gpg-sign= \
-            --verbose
+          flatpak build-bundle build-dir amulet.flatpak io.github.evilsupahfly.amulet_flatpak --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo --arch=x86_64 --verbose
       - name: Generate SHA256 checksums
         run: |
           sha256sum amulet.pex amulet.flatpak > checksums.txt
