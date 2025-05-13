@@ -1,8 +1,8 @@
-lz4
 amulet-core
 amulet-leveldb
 amulet-map-editor
 amulet-nbt
+lz4
 minecraft-resource-pack
 mutf8
 numpy==1.26.4

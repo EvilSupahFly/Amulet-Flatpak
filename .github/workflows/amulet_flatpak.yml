@@ -20,9 +20,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pex
+      - name: Download wxPython wheel
+        run: |
+          mkdir -p wheels
+          wget https://github.com/EvilSupahFly/ESF_Phoenix/releases/download/wxpython-4.2.3-cp312-cp312-linux_x86_64.whl/wxpython-4.2.3-cp312-cp312-linux_x86_64.whl -O wheels/wxpython-4.2.3-cp312-cp312-linux_x86_64.whl
       - name: Build PEX File
         run: |
-          pex -o amulet.pex -r amulet_pex.txt -e amulet_map_editor --sh-boot --compress -vv
+          pex -o amulet.pex -r amulet_pex.txt -e amulet_map_editor --sh-boot --compress --find-links=./wheels -vv
       - name: Install Flatpak and flatpak-builder
         run: |
           sudo apt update
@@ -30,3 +34,36 @@ jobs:
       - name: Build Flatpak Package
         run: |
           flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose build-dir io.github.evilsupahfly.amulet_flatpak.yaml
+      - name: Create Flatpak bundle
+        run: |
+          flatpak build-bundle build-dir amulet.flatpak io.github.evilsupahfly.amulet_flatpak \
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \
+            --arch=x86_64 \
+            --gpg-sign= \
+            --verbose
+      - name: Generate SHA256 checksums
+        run: |
+          sha256sum amulet.pex amulet.flatpak > checksums.txt
+          cat checksums.txt
+
+      - name: Upload PEX Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: amulet.pex
+          path: amulet.pex
+      - name: Validate PEX Build
+        run: |
+          chmod +x amulet.pex
+          ./amulet.pex --help
+      - name: Upload PEX and Flatpak to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Latest Build"
+          tag_name: "latest"
+          files: |
+            amulet.pex
+            amulet.flatpak
+            checksums.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
