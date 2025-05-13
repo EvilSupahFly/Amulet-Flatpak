@@ -8,7 +8,7 @@ The `amulet-x86_64.flatpak` file, available from [Releases](https://github.com/E
 The initial Flatpak version was sourced from Amulet 0.10.34. With the update to 0.10.42, I have switched to using `PEX` to build the application rather than trying to build the Python sources and their respective dependencies into a bundle as a flatpak. Both the .PEX and the .flatpak are available from [Releases](https://github.com/EvilSupahFly/Amulet-Flatpak/releases) so you can either save the Flatpak file to a temp folder, install it in user mode, remove the temp folder, then run the Amulet Flatpak, or you can download the .PEX and run it directly (you may have make the .PEX executable after downloading).
 
 Currently the flatpak release suffers from ~~three~~ ~~two~~ one minor issue: 
-  - flickering UI, which plagues upstream Amulet (Linux users only - see [here](https://github.com/Amulet-Team/Amulet-Map-Editor/issues)) - This issue seems to be partially resolved
+  - flickering UI, which plagues upstream Amulet (Linux users only - see [here](https://github.com/Amulet-Team/Amulet-Map-Editor/issues))
   - ~~missing water and lava textures, which is unique to the flatpak version [issue #7](https://github.com/EvilSupahFly/Amulet-Flatpak/issues/7) and still being investigated.~~
   - ~~Trying to run on Wayland, unless you have installed Xwayland, is mostly pointless because of some twenty-year-old code in wxPython - expect the error "Unable to access the X Display, is $DISPLAY set properly?"~~
 
