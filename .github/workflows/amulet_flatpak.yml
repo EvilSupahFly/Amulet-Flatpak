@@ -36,8 +36,8 @@ jobs:
           flatpak install -y --user org.freedesktop.Sdk/x86_64/24.08
       - name: Build Flatpak Package And Bundle
         run: |
-          flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose build-dir io.github.evilsupahfly.amulet_flatpak.yaml
-          flatpak build-bundle build-dir amulet.flatpak io.github.evilsupahfly.amulet_flatpak --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo --arch=x86_64 --verbose
+          flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose --bundle-sources --repo="io.github.evilsupahfly.amulet_flatpak-repo" "io.github.evilsupahfly.amulet_flatpak-build-dir" "io.github.evilsupahfly.amulet_flatpak.yaml"
+          flatpak build-bundle -vvv "io.github.evilsupahfly.amulet_flatpak-repo" amulet-x86_64.flatpak "io.github.evilsupahfly.amulet_flatpak"
       - name: Generate SHA256 checksums
         run: |
           sha256sum amulet.pex amulet.flatpak > checksums.txt
