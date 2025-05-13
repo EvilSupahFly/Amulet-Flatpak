@@ -30,7 +30,7 @@ modules:
   - name: amulet-app-pex
     buildsystem: simple
     build-commands:
-      - install -Dm755 amulet_app.pex /app/bin/amulet
+      - install -Dm755 amulet.pex /app/bin/amulet
     sources:
       - type: file
         path: amulet_app.pex
