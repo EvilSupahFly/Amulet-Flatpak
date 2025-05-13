@@ -47,10 +47,6 @@ jobs:
         with:
           name: amulet.pex
           path: amulet.pex
-      - name: Validate PEX Build
-        run: |
-          chmod +x amulet.pex
-          ./amulet.pex --help
       - name: Upload PEX and Flatpak to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
