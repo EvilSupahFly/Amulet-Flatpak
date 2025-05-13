@@ -36,7 +36,7 @@ jobs:
           flatpak install -y --user org.freedesktop.Sdk/x86_64/24.08
       - name: Build Flatpak Package
         run: |
-          flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose io.github.evilsupahfly.amulet_flatpak.yaml
+          flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose build-dir io.github.evilsupahfly.amulet_flatpak.yaml
       - name: Create Flatpak bundle
         run: |
           flatpak build-bundle build-dir amulet.flatpak io.github.evilsupahfly.amulet_flatpak \
