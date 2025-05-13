@@ -33,7 +33,7 @@ modules:
       - install -Dm755 amulet.pex /app/bin/amulet
     sources:
       - type: file
-        path: amulet_app.pex
+        path: amulet.pex
   - name: metainfo-xml
     buildsystem: simple
     build-commands:
