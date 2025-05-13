@@ -16,23 +16,17 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pex
-
       - name: Build PEX File
         run: |
           pex -o amulet.pex -r amulet_pex.txt -e amulet_map_editor --sh-boot --compress -vv
-
       - name: Install Flatpak and flatpak-builder
         run: |
           sudo apt update
           sudo apt install -y flatpak flatpak-builder
-
       - name: Build Flatpak Package
         run: |
-#          flatpak-builder --force-clean build-dir io.github.evilsupahfly.amulet_flatpak.yaml
           flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose build-dir io.github.evilsupahfly.amulet_flatpak.yaml
-
