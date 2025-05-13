@@ -10,7 +10,6 @@ command: amulet
 finish-args:
   - --device=all
   - --device=dri
-  #- --add-policy=org.freedesktop.Platform.GL.nvidia.version=550-120
   - --allow=devel
   - --allow=per-app-dev-shm
   - --share=network
@@ -24,34 +23,17 @@ finish-args:
   - --env=LIBGL_ALWAYS_SOFTWARE=0
   - --env=LIBGL_ALWAYS_INDIRECT=0
   - --env=LIBGL_DEBUG=verbose
-  #- --env=LIBGL_DRIVERS_PATH=/app/lib/GL/lib/dri
   - --env=OPENGL_VERSION=4.5
   - --env=PS1=[ AMULET_FLATPAK > \w ] >
 
-# Uncomment the following options to increase debug output verbosity in the terminal
-#  - --env=PYTHONDEBUG=3
-#  - --env=PYTHONVERBOSE=3
-#  - --env=PYTHONTRACEMALLOC=10
-#  - --env=G_MESSAGES_DEBUG=all
-
 modules:
-  - shared-modules/glew/glew.json
-  - shared-modules/glu/glu-9.json
-  #- pdm.yaml
-  #- pyinstaller.yaml
-  #- pip-gen.yaml
-  #- sources/python3-modules.yaml
-  - libjpeg8-runtime.yaml
-  - requests.yaml
-  - amulet_core.yaml
-  - name: launcher-script
+  - name: amulet-app-pex
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/bin
-      - echo '#!/bin/sh' > /app/bin/amulet
-      #- echo 'export LIBGL_DRIVERS_PATH="/app/lib/GL/lib/dri"' >> /app/bin/amulet
-      - echo 'cd /app && python -vv -m amulet_map_editor \$1' >> /app/bin/amulet
-      - chmod +x /app/bin/amulet
+      - install -Dm755 amulet_app.pex /app/bin/amulet
+    sources:
+      - type: file
+        path: amulet_app.pex
   - name: metainfo-xml
     buildsystem: simple
     build-commands:
@@ -73,14 +55,3 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.png
-
-#add-extensions:
-#  org.freedesktop.Platform.GL:
-#    version: '1.4'
-#    subdirectories: true
-    #directory: lib/GL
-
-#  org.freedesktop.Platform.GL.nvidia:
-#    version: '550-120'
-#    subdirectories: true
-    #directory: lib/GL

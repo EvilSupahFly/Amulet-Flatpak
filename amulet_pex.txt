@@ -1,0 +1,15 @@
+amulet-core==1.9.29
+amulet-leveldb==1.0.2
+amulet-map-editor==0.10.42
+amulet-nbt==2.1.4
+lz4==4.4.4
+minecraft-resource-pack==1.4.6
+mutf8==1.0.6
+numpy==1.26.4
+packaging==25.0
+pillow==11.2.1
+platformdirs==3.11.0
+portalocker==2.10.1
+PyMCTranslate==1.2.33
+PyOpenGL==3.1.9
+wxPython==4.2.3

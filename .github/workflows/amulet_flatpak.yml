@@ -1,87 +1,38 @@
-#v13
-name: Main Branch Builds
+name: Build PEX and Flatpak
 
 on:
   push:
     branches:
       - main
-    tags: "*"
-  pull_request: null
+  workflow_dispatch:
 
 jobs:
-  flatpak:
-    name: Make Amulet Flatpak
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-24.08
-      options:
-        --privileged
     steps:
-      - uses: actions/checkout@v4.2.2
-      - name: Debug - Check Git Repo
-        run: |
-          git config --global --add safe.directory /__w/Amulet-Flatpak/Amulet-Flatpak
-          cd /__w/Amulet-Flatpak/Amulet-Flatpak
-          git status
-      - name: Pull Git LFS files
-        working-directory: /__w/Amulet-Flatpak/Amulet-Flatpak/
-        run: |
-          git lfs install
-          git lfs pull
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.5
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          bundle: amulet-x86_64.flatpak
-          build-bundle: true
-          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
-          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
-          cache-key: flatpak-builder-${{ github.sha }}
-          verbose: true
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.4.3
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          name: amulet-x86_64.flatpak
-          path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
-          overwrite: true
-          compression-level: 0 # no compression
-      # Step 1: Checkout the repository
-      #- name: Checkout Repository
-      #  uses: actions/checkout@v4.2.2
+          python-version: '3.12'
 
-      # Step 2: Verify file structure and checksum after checkout
-      #- name: Debug File Structure After Checkout
-      #  run: |
-      #    echo "Listing files in sources directory inside the container:"
-      #    ls -R /__w/Amulet-Flatpak/Amulet-Flatpak/sources
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pex
 
-      #- name: Verify File Exists After Checkout
-      #  run: |
-      #    if [ -f /__w/Amulet-Flatpak/Amulet-Flatpak/sources/meson_python-0.17.1-py3-none-any.whl ]; then
-      #      echo "File exists: meson_python-0.17.1-py3-none-any.whl"
-      #    else
-      #      echo "File not found: meson_python-0.17.1-py3-none-any.whl"
-      #      exit 1
-      #    fi
+      - name: Build PEX File
+        run: |
+          pex -o amulet.pex -r amulet_pex.txt -e amulet_map_editor --sh-boot --compress -vv
 
-      #- name: Verify File Checksum After Checkout
-      #  run: sha256sum /__w/Amulet-Flatpak/Amulet-Flatpak/sources/meson_python-0.17.1-py3-none-any.whl
+      - name: Install Flatpak and flatpak-builder
+        run: |
+          sudo apt update
+          sudo apt install -y flatpak flatpak-builder
 
-      # Step 3: Run the Flatpak Build with Logs
+      - name: Build Flatpak Package
+        run: |
+#          flatpak-builder --force-clean build-dir io.github.evilsupahfly.amulet_flatpak.yaml
+          flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose build-dir io.github.evilsupahfly.amulet_flatpak.yaml
 
-      #- name: Run Flatpak Build
-      #  run: |
-      #    mkdir -p /debug-container/logs
-      #    flatpak-builder --repo=repo --disable-rofiles-fuse --log-file=/debug-container/logs/flatpak-log.txt --install-deps-from=flathub --force-clean --default-branch=master --arch=x86_64 --ccache --verbose flatpak_app io.github.evilsupahfly.amulet_flatpak.yaml || true
-      #    echo "Flatpak build failed, but preserving container for debugging."
-      #    cp -r ~/.cache/flatpak-builder /debug-container/cache || true
-
-      # Step 4: Output Debug Information
-      #- name: Output Debug Information
-      #  run: |
-      #    echo "Capturing logs and environment details."
-      #    ls -R /debug-container
-      #    cat /debug-container/logs/flatpak-log.txt || echo "No logs available."
-      #    sha256sum /debug-container/sources/meson_python-0.17.1-py3-none-any.whl || echo "No file available."

@@ -370,7 +370,7 @@ DONE_PIP=false
 PIP_GEN=false
 AUTO=false
 WRITING_LOG=false
-DO_CMD="amulet"
+DO_CMD="amulet_map_editor"
 AFPBASE="io.github.evilsupahfly.amulet_flatpak"
 AFPREPO="${AFPBASE}-repo"
 AFP_YML="${AFPBASE}.yaml"
@@ -511,8 +511,9 @@ elif [[ "$PIP_GEN" == "true" ]]; then
 fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-report N "${WHITE}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML --force-clean\n${GREEN}"
-if ! flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag="$AFP_VER" --bundle-sources --repo="$AFPREPO" "$BLD_DIR" "$AFP_YML" --force-clean; then
+report N "${WHITE}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak --force-clean --default-branch=master --arch=x86_64 --ccache --verbose --add-tag=v$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML\n${GREEN}"
+# flatpak-builder --repo=repo --disable-rofiles-fuse --install-deps-from=https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak --force-clean --default-branch=master --arch=x86_64 --ccache --verbose flatpak_app flatpak-github-action-modified-io.github.evilsupahfly.amulet_flatpak.yaml
+if ! flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose --add-tag="$AFP_VER" --bundle-sources --repo="$AFPREPO" "$BLD_DIR" "$AFP_YML"; then
     report F "flatpak-builder failed."; bye $LINENO
 fi
 

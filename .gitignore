@@ -44,3 +44,8 @@ python3-modules.yaml
 revised_amulet_core.yaml
 /sources
 not.gitattributes
+.github/workflows/old_amulet_flatpak.yml
+amulet_pex_no_vers.txt
+do_this.sh
+make-req.sh
+old_amulet_pex.txt
