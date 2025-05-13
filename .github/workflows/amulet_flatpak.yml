@@ -31,8 +31,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y flatpak flatpak-builder
-          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak install -y org.freedesktop.Sdk/x86_64/24.08
+          flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak install -y --user org.freedesktop.Sdk/x86_64/24.08
       - name: Build Flatpak Package
         run: |
           flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose build-dir io.github.evilsupahfly.amulet_flatpak.yaml
