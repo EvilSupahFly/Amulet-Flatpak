@@ -31,6 +31,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y flatpak flatpak-builder
+          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           flatpak install -y org.freedesktop.Sdk/x86_64/24.08
       - name: Build Flatpak Package
         run: |
