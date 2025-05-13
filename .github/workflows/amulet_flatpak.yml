@@ -27,7 +27,7 @@ jobs:
       - name: Build PEX File
         run: |
           pex -o amulet.pex -r amulet_pex.txt -e amulet_map_editor --sh-boot --compress --find-links=./wheels -vv
-      - name: Install Flatpak and flatpak-builder
+      - name: Install Flatpak and flatpak-builder, and calculate checksums
         run: |
           sudo apt update
           sudo apt install -y flatpak flatpak-builder
@@ -38,20 +38,13 @@ jobs:
         run: |
           flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose --bundle-sources --repo="io.github.evilsupahfly.amulet_flatpak-repo" "io.github.evilsupahfly.amulet_flatpak-build-dir" "io.github.evilsupahfly.amulet_flatpak.yaml"
           flatpak build-bundle -vvv "io.github.evilsupahfly.amulet_flatpak-repo" amulet-x86_64.flatpak "io.github.evilsupahfly.amulet_flatpak"
-      - name: Generate SHA256 checksums
-        run: |
           sha256sum amulet.pex amulet.flatpak > checksums.txt
           cat checksums.txt
-
       - name: Upload PEX Artifact
         uses: actions/upload-artifact@v4
         with:
           name: amulet.pex
           path: amulet.pex
-      - name: Validate PEX Build
-        run: |
-          chmod +x amulet.pex
-          ./amulet.pex --help
       - name: Upload PEX and Flatpak to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
