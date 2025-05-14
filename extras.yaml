@@ -56,4 +56,27 @@ modules:
         url: https://github.com/KhronosGroup/OpenCL-Headers/archive/v2023.04.17/OpenCL-Headers-v2023.04.17.tar.gz
         sha256: 0ce992f4167f958f68a37918dec6325be18f848dee29a4521c633aae3304915d
 
+  - name: libjpeg # with libjpeg.so.8
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_SKIP_RPATH:BOOL=YES
+      - -DENABLE_STATIC:BOOL=NO
+      - -DWITH_JPEG8:BOOL=YES
+      - -DCMAKE_INSTALL_LIBDIR=/app/lib # uses lib64 by default
+    sources: &libjpeg_sources
+      - type: archive
+        url: https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/2.1.3.tar.gz
+        sha256: dbda0c685942aa3ea908496592491e5ec8160d2cf1ec9d5fd5470e50768e7859
+
+  - name: libjpeg-32bit # with libjpeg.so.8
+    buildsystem: cmake-ninja
+    build-options:
+      arch:
+        x86_64: *compat_i386_opts
+    config-opts:
+      - -DCMAKE_SKIP_RPATH:BOOL=YES
+      - -DENABLE_STATIC:BOOL=NO
+      - -DWITH_JPEG8:BOOL=YES
+    sources: *libjpeg_sources
+
 name: extras
