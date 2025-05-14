@@ -26,7 +26,21 @@ finish-args:
   - --env=OPENGL_VERSION=4.5
   - --env=PS1=[ AMULET_FLATPAK > \w ] >
 
+inherit-extensions:
+  - org.freedesktop.Platform.GL32
+
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.openjdk17
+
 modules:
+  - shared-modules/glew/glew.json
+  - shared-modules/glu/glu-9.json
+  - shared-modules/gtk2/gtk2.json
+  - shared-modules/gudev/gudev.json
+  - shared-modules/libdecor/libdecor.json
+  - shared-modules/pygame/pygame-1.9.6.json
+  - shared-modules/pygtk/pygtk.json
+  - libjpeg8-runtime.yaml
   - name: amulet-app-pex
     buildsystem: simple
     build-commands:
