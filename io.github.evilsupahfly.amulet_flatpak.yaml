@@ -32,6 +32,11 @@ inherit-extensions:
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk17
 
+add-extensions:
+  org.gnome.Platform.Compat.i386:
+    directory: lib/i386-linux-gnu
+    version: "48"
+
 modules:
   - extras.yaml
   - shared-modules/glew/glew.json

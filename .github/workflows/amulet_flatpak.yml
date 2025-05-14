@@ -35,6 +35,8 @@ jobs:
           flatpak install -y --user org.freedesktop.Platform/x86_64/24.08
           flatpak install -y --user org.freedesktop.Sdk/x86_64/24.08
           flatpak install -y --user org.freedesktop.Sdk.Extension.openjdk17/x86_64/24.08
+          flatpak install -y --user org.freedesktop.Sdk.Extension.toolchain-i386/x86_64/24.08
+          flatpak install -y --user org.gnome.Platform.Compat.i386/x86_64/48
       - name: Build Flatpak Package And Bundle
         run: |
           flatpak-builder -vvv --user --rebuild-on-sdk-change --force-clean --default-branch=master --arch=x86_64 --ccache --verbose --bundle-sources --repo="io.github.evilsupahfly.amulet_flatpak-repo" "io.github.evilsupahfly.amulet_flatpak-build-dir" "io.github.evilsupahfly.amulet_flatpak.yaml"
