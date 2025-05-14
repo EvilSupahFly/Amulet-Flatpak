@@ -1,0 +1,22 @@
+{
+  "name": "SDL2",
+  "buildsystem": "autotools",
+  "config-opts": ["--disable-static"],
+  "sources": [
+    {
+      "type": "archive",
+      "url": "https://github.com/libsdl-org/SDL/releases/download/release-2.30.3/SDL2-2.30.3.tar.gz",
+      "sha256": "820440072f8f5b50188c1dae104f2ad25984de268785be40c41a099a510f0aec"
+    }
+  ],
+  "cleanup": [ "/bin/sdl2-config",
+               "/include",
+               "/lib/libSDL2.la",
+               "/lib/libSDL2main.a",
+               "/lib/libSDL2main.la",
+               "/lib/libSDL2_test.a",
+               "/lib/libSDL2_test.la",
+               "/lib/cmake",
+               "/share/aclocal",
+               "/lib/pkgconfig"]
+}
