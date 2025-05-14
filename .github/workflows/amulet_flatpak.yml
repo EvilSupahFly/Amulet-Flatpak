@@ -43,9 +43,11 @@ jobs:
           cat amulet-x86_64.flatpak.sha256
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
-        files: |
-          amulet.pex
-          amulet-x86_64.flatpak
+        with:
+          name: "Upload Artifacts"
+          files: |
+            amulet.pex
+            amulet-x86_64.flatpak
       - name: Upload Flatpak to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
