@@ -12,7 +12,7 @@ finish-args:
   - --device=dri
   - --allow=devel
   - --allow=per-app-dev-shm
-  - --share=network
+  - --allow=multiarch  - --share=network
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
