@@ -12,7 +12,8 @@ finish-args:
   - --device=dri
   - --allow=devel
   - --allow=per-app-dev-shm
-  - --allow=multiarch  - --share=network
+  - --allow=multiarch
+  - --share=network
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
@@ -26,8 +27,8 @@ finish-args:
   - --env=OPENGL_VERSION=4.5
   - --env=PS1=[ AMULET_FLATPAK > \w ] >
 
-inherit-extensions:
-  - org.freedesktop.Platform.GL32
+#inherit-extensions:
+#  - org.freedesktop.Platform.GL32
 
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk17
@@ -38,14 +39,27 @@ add-extensions:
     version: "48"
 
 modules:
-  - extras.yaml
+  #- extras.yaml
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
-  - shared-modules/gtk2/gtk2.json
-  - shared-modules/gudev/gudev.json
-  - shared-modules/libdecor/libdecor.json
-  - shared-modules/pygame/pygame-1.9.6.json
-  - shared-modules/pygtk/pygtk.json
+  #- shared-modules/gtk2/gtk2.json
+  #- shared-modules/gudev/gudev.json
+  #- shared-modules/libdecor/libdecor.json
+  #- shared-modules/pygame/pygame-1.9.6.json
+  #- shared-modules/pygtk/pygtk.json
+  - name: libjpeg # with libjpeg.so.8
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DWITH_JPEG8=1
+      - -DCMAKE_SKIP_RPATH:BOOL=YES
+      - -DENABLE_STATIC:BOOL=NO
+      - -DWITH_JPEG8:BOOL=YES
+      # - -DCMAKE_INSTALL_LIBDIR=/app/lib # uses lib64 by default
+    sources: &libjpeg_sources
+      - type: archive
+        path: libjpeg-turbo-3.1.0.tar.gz
+        sha256: 35fec2e1ddfb05ecf6d93e50bc57c1e54bc81c16d611ddf6eff73fff266d8285
   - name: amulet-app-pex
     buildsystem: simple
     build-commands:

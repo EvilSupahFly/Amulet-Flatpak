@@ -48,3 +48,6 @@ amulet_pex_no_vers.txt
 do_this.sh
 make-req.sh
 old_amulet_pex.txt
+amulet-x86_64.pex
+wheels/wxpython-4.2.3-cp312-cp312-linux_x86_64.whl
+/io.github.evilsupahfly.amulet_flatpak-repo
