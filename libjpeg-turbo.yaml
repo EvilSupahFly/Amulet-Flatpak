@@ -1,0 +1,10 @@
+modules:
+  - name: libjpeg-turbo
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DWITH_JPEG8:BOOL=YES
+      - -DCMAKE_INSTALL_PREFIX=/app
+    sources:
+      - type: archive
+        url: https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.1.5.1.tar.gz
+        sha256: 2fdc3feb6e9deb17adec9bafa3321419aa19f8f4e5dea7bf8486844ca22207bf

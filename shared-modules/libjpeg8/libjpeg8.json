@@ -1,0 +1,21 @@
+{
+  "name": "libjpeg-turbo",
+  "buildsystem": "cmake-ninja",
+  "config-opts": [
+    "-DCMAKE_INSTALL_PREFIX=/app",
+    "-DWITH_JPEG8=1",
+    "-Wno-dev"
+  ],
+  "sources": [
+    {
+      "type": "archive",
+      "url": "https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.1.5.1.tar.gz",
+      "sha256": "2fdc3feb6e9deb17adec9bafa3321419aa19f8f4e5dea7bf8486844ca22207bf"
+    }
+  ],
+  "post-install": [
+    "mkdir -p /app/lib",
+    "if [ -e /app/lib64/libjpeg.so.8 ]; then ln -sf ../lib64/libjpeg.so.8 /app/lib/libjpeg.so.8; fi",
+    "find /app -name '*jpeg*' > jpeg_files.txt && cat jpeg_files.txt"
+  ]
+}
