@@ -1,87 +1,62 @@
-#v13
-name: Main Branch Builds
+name: Build and Release Flatpak
 
 on:
-  push:
-    branches:
-      - main
-    tags: "*"
-  pull_request: null
+  workflow_dispatch: {}
 
 jobs:
-  flatpak:
-    name: Make Amulet Flatpak
+  build-flatpak:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-24.08
-      options:
-        --privileged
     steps:
-      - uses: actions/checkout@v4.2.2
-      - name: Debug - Check Git Repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from manifest
+        id: get_version
         run: |
-          git config --global --add safe.directory /__w/Amulet-Flatpak/Amulet-Flatpak
-          cd /__w/Amulet-Flatpak/Amulet-Flatpak
-          git status
-      - name: Pull Git LFS files
-        working-directory: /__w/Amulet-Flatpak/Amulet-Flatpak/
+          version=$(grep -E '^#version:' io.github.evilsupahfly.amulet_flatpak.yaml | sed 's/#version:[[:space:]]*//')
+          if [ -z "$version" ]; then
+            echo "No version found in manifest"
+            exit 1
+          fi
+          echo "version=$version" >> $GITHUB_ENV
+          echo "Version detected: $version"
+
+      - name: Set up Flatpak
         run: |
-          git lfs install
-          git lfs pull
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.5
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder xz-utils
+
+      - name: Add Flathub remote
+        run: |
+          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Build Flatpak
+        run: |
+          mkdir -p build-dir
+          flatpak-builder --force-clean --repo=repo build-dir io.github.evilsupahfly.amulet_flatpak.yaml
+
+      - name: Create Flatpak bundle
+        run: |
+          flatpak build-bundle repo amulet_flatpak_${version}.flatpak io.github.evilsupahfly.amulet_flatpak
+
+      - name: Upload Flatpak as Artifact
+        uses: actions/upload-artifact@v4
         with:
-          bundle: amulet-x86_64.flatpak
-          build-bundle: true
-          repository-name: https://github.com/EvilSupahFly/Amulet-Flatpak/tree/main/io.github.evilsupahfly.amulet-flatpak
-          manifest-path: io.github.evilsupahfly.amulet_flatpak.yaml
-          cache-key: flatpak-builder-${{ github.sha }}
-          verbose: true
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.4.3
+          name: amulet-flatpak
+          path: amulet_flatpak_${{ env.version }}.flatpak
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag -a "v${version}" -m "Release v${version}"
+          git push origin "v${version}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.version }}
+          name: Amulet Flatpak ${{ env.version }}
+          files: amulet_flatpak_${{ env.version }}.flatpak
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          name: amulet-x86_64.flatpak
-          path: /__w/Amulet-Flatpak/Amulet-Flatpak/amulet-x86_64.flatpak
-          overwrite: true
-          compression-level: 0 # no compression
-      # Step 1: Checkout the repository
-      #- name: Checkout Repository
-      #  uses: actions/checkout@v4.2.2
-
-      # Step 2: Verify file structure and checksum after checkout
-      #- name: Debug File Structure After Checkout
-      #  run: |
-      #    echo "Listing files in sources directory inside the container:"
-      #    ls -R /__w/Amulet-Flatpak/Amulet-Flatpak/sources
-
-      #- name: Verify File Exists After Checkout
-      #  run: |
-      #    if [ -f /__w/Amulet-Flatpak/Amulet-Flatpak/sources/meson_python-0.17.1-py3-none-any.whl ]; then
-      #      echo "File exists: meson_python-0.17.1-py3-none-any.whl"
-      #    else
-      #      echo "File not found: meson_python-0.17.1-py3-none-any.whl"
-      #      exit 1
-      #    fi
-
-      #- name: Verify File Checksum After Checkout
-      #  run: sha256sum /__w/Amulet-Flatpak/Amulet-Flatpak/sources/meson_python-0.17.1-py3-none-any.whl
-
-      # Step 3: Run the Flatpak Build with Logs
-
-      #- name: Run Flatpak Build
-      #  run: |
-      #    mkdir -p /debug-container/logs
-      #    flatpak-builder --repo=repo --disable-rofiles-fuse --log-file=/debug-container/logs/flatpak-log.txt --install-deps-from=flathub --force-clean --default-branch=master --arch=x86_64 --ccache --verbose flatpak_app io.github.evilsupahfly.amulet_flatpak.yaml || true
-      #    echo "Flatpak build failed, but preserving container for debugging."
-      #    cp -r ~/.cache/flatpak-builder /debug-container/cache || true
-
-      # Step 4: Output Debug Information
-      #- name: Output Debug Information
-      #  run: |
-      #    echo "Capturing logs and environment details."
-      #    ls -R /debug-container
-      #    cat /debug-container/logs/flatpak-log.txt || echo "No logs available."
-      #    sha256sum /debug-container/sources/meson_python-0.17.1-py3-none-any.whl || echo "No file available."
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

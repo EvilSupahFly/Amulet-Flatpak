@@ -1,6 +1,6 @@
 id: io.github.evilsupahfly.amulet_flatpak
 #name: Amulet Map Editor
-#version: 0.10.44
+#version: 0.10.44.1
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
