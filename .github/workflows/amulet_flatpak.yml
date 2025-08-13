@@ -10,7 +10,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed so git tag checks work
+          fetch-depth: 0  # needed so git tag & history checks work
 
       - name: Extract version from manifest
         id: get_version
@@ -29,6 +29,29 @@ jobs:
             echo "Git tag v${version} already exists. Please bump the version in the manifest."
             exit 1
           fi
+
+      - name: Check if manifest version changed
+        id: check_version_change
+        run: |
+          # Find the most recent commit that touched the manifest
+          last_commit_with_manifest=$(git log -n 1 --pretty=format:%H -- io.github.evilsupahfly.amulet_flatpak.yaml)
+          last_commit_msg=$(git log -n 1 --pretty=format:%s $last_commit_with_manifest)
+
+          # Extract the old version from the previous commit
+          old_version=$(git show "${last_commit_with_manifest}^":io.github.evilsupahfly.amulet_flatpak.yaml \
+            | grep -E '^#version:' | sed 's/#version:[[:space:]]*//')
+
+          if [ "$old_version" = "$version" ]; then
+            echo "Version unchanged ($version) — skipping build."
+            echo "skip_build=true" >> $GITHUB_ENV
+          else
+            echo "Version changed from $old_version to $version — proceeding with build."
+            echo "skip_build=false" >> $GITHUB_ENV
+          fi
+
+      - name: Stop if build should be skipped
+        if: env.skip_build == 'true'
+        run: exit 0
 
       - name: Set up Flatpak
         run: |
