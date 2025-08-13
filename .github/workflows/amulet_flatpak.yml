@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed so git tag checks work
 
       - name: Extract version from manifest
         id: get_version
@@ -20,6 +22,13 @@ jobs:
           fi
           echo "version=$version" >> $GITHUB_ENV
           echo "Version detected: $version"
+
+      - name: Check for existing Git tag
+        run: |
+          if git rev-parse "v${version}" >/dev/null 2>&1; then
+            echo "Git tag v${version} already exists. Please bump the version in the manifest."
+            exit 1
+          fi
 
       - name: Set up Flatpak
         run: |
