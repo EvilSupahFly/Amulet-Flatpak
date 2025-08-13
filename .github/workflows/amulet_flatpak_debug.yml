@@ -1,0 +1,70 @@
+name: Build Flatpak (Debug)
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build-flatpak-debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from manifest
+        id: get_version
+        run: |
+          version=$(grep -E '^#version:' io.github.evilsupahfly.amulet_flatpak.yaml | sed 's/#version:[[:space:]]*//')
+          if [ -z "$version" ]; then
+            echo "No version found in manifest"
+            exit 1
+          fi
+          echo "version=$version" >> $GITHUB_ENV
+          echo "Version detected: $version"
+
+      - name: Set up Flatpak
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder xz-utils
+
+      - name: Add Flathub remote
+        run: |
+          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Build Flatpak (Debug mode)
+        run: |
+          mkdir -p build-dir
+          # Build with debug symbols and keep logs
+          flatpak-builder --force-clean \
+                          --disable-strip \
+                          --stop-at=io.github.evilsupahfly.amulet_flatpak \
+                          --repo=repo \
+                          build-dir \
+                          io.github.evilsupahfly.amulet_flatpak.yaml \
+                          2>&1 | tee build.log
+
+      - name: Complete build (finish step)
+        run: |
+          flatpak-builder --finish-only build-dir io.github.evilsupahfly.amulet_flatpak.yaml \
+            2>&1 | tee -a build.log
+
+      - name: Create Flatpak bundle
+        run: |
+          flatpak build-bundle repo amulet_flatpak_debug_${version}.flatpak io.github.evilsupahfly.amulet_flatpak
+
+      - name: Upload Flatpak bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: amulet-flatpak-debug
+          path: amulet_flatpak_debug_${{ env.version }}.flatpak
+
+      - name: Upload build directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: amulet-flatpak-build-dir
+          path: build-dir
+
+      - name: Upload build logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: amulet-flatpak-build-logs
+          path: build.log
