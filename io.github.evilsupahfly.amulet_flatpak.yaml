@@ -18,6 +18,8 @@ finish-args:
   - --filesystem=host
   - --filesystem=host-os
   - --filesystem=home
+  - --talk-name=org.freedesktop.Notifications
+
   #- --filesystem=home/.cache/AmuletMapEditor:rw
   #- --filesystem=home/.config/state/AmuletMapEditor:rw
   #- --filesystem=home/.local/share/AmuletMapEditor:rw
@@ -47,6 +49,7 @@ modules:
   #- updates.yaml
   #- testing-0.10.44.yaml
   - pip-gen.yaml
+  - flatpak-debug-build.yaml
   - name: metainfo-xml
     buildsystem: simple
     build-commands:

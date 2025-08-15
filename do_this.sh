@@ -427,8 +427,8 @@ elif [[ "$PIP_GEN" == "TRUE" ]]; then
 fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-report N "${WHT}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML --force-clean\n${GRN}"
-if ! flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML --force-clean; then
+report N "${WHT}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML --force-clean 2>&1 | tee build.log\n${GRN}"
+if ! flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML --force-clean 2>&1 | tee build.log; then
     report F "flatpak-builder failed with error ${RED}$?${WHT}."
     bye $LINENO
 fi
@@ -441,8 +441,13 @@ if ! flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64
     report F "flatpak build-bundle failed."
     bye $LINENO
 fi
-
-report P "flatpak build-bundle succeeded!"
+if [[ "$DEBUG" == "TRUE" ]]; then
+    report N "${WHT}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFP_DBG\n${GRN}"
+    if ! flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFP_DBG; then
+        report F "debug build-bundle build failed."
+    fi
+fi
+report P "standard build-bundle succeeded"
 # Install bundle
 report N "${YLW}Installing bundle..."
 
@@ -473,7 +478,7 @@ if [ "$DEBUG" = "TRUE" ]; then
         bye $LINENO
     else
         report P "Amulet Flatpak install succeeded."
-        report N "${WHT}Configuring Debug extension ($AFP_DBG)" #; sleep 2
+        report N "${WHT}Configuring Debug extension ($AFP_DBG)"; sleep 2
         if ! flatpak install --user -y ./$AFPREPO $AFP_DBG; then
             report F "$AFP_DBG failed"; echo -e "${WHT}"
             read -p "Try to continue without $AFP_DBG (y/n)? " tryCont

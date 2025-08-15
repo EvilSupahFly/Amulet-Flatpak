@@ -113,13 +113,13 @@ modules:
       - *id005
       - type: file
         path: amulet_map_editor-0.10.44.1.tar.gz
-        sha256: ce9d8e3671e0327928c8fe364d52b3d0cfe7bac293e7e66152ef753dacecedf0
+        sha256: 10e6f912f62210b5bb796d0b36defcc5866e8642bbfcdb81c4be2e6e4f2a097f
       - *id006
       - *id001
       - &id012
         type: file
         path: minecraft_resource_pack-1.4.6.1.tar.gz
-        sha256: 9a45e14095557ab4cd678f41f901b64db144bac484e53366bc94257c8d22d1a2
+        sha256: ede4108e9d031019579b875935d67445fff727ef50a4e515b81945c21cbd7a37
       - *id007
       - *id002
       - *id008

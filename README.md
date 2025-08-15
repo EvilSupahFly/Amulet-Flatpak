@@ -20,6 +20,201 @@ If you're feeling ambitious, you can fork or clone this project and try tweaking
 
 The flatpak version has so far been tested on Manjaro, Ubuntu, Kubuntu and Mint. Feedback is most welcome!
 
-~~Fix for textures: I modified [`download_resources.py`](https://github.com/EvilSupahFly/Minecraft-Model-Reader/blob/master/minecraft_model_reader/api/resource_pack/java/download_resources.py#L85) by adding a small `if` loop that examines the path requested, and modifies it if it doesn't match the Flatpak sandbox layout.~~
+~~Fix for textures: I modified [`download_resources.py`](https://github.com/EvilSupahFly/Minecraft-Model-Reader/blob/master/minecraft_model_reader/api/resource_pack/java/download_resources.py#L85) by adding a small `if` loop that examines the path requested, and modifies it if it doesn't match the Flatpak sandbox layout.~~ This broke on the update from 0.10.38 to 0.10.39
 
-README Last updated 12 August, 2025
+# Amulet Flatpak Debug Testing Guide
+
+This guide covers how to install and run the debug build of the Amulet Flatpak and includes instructions for inspecting Python modules, environment variables, and native debug symbols.
+
+---
+
+## 1. Install the Debug Flatpak Bundle
+
+After downloading the debug Flatpak artifact from the CI workflow:
+
+```bash
+flatpak install --user --bundle amulet_flatpak_debug_{version}.flatpak
+```
+
+---
+
+## 2. Install SDK & Platform Debug Extensions
+
+To access native debug symbols (`strace`, `gdb`, etc.):
+
+```bash
+# Install SDK debug symbols
+flatpak install flathub org.freedesktop.Sdk.Debug//24.08
+```
+
+> These extensions provide symbols for both the runtime libraries and the Python interpreter inside the Flatpak.
+
+---
+
+## 3. Run the Debug Flatpak
+
+You have a few options:
+
+### Normal Run with Python Debug Tools
+
+```bash
+flatpak run --devel io.github.evilsupahfly.amulet_flatpak
+```
+
+### Run a Shell Inside the Sandbox
+
+```bash
+flatpak run --devel --command=bash io.github.evilsupahfly.amulet_flatpak
+```
+
+Inside the sandbox shell, you can:
+
+* Access Python via `python3` or `ipython`.
+* Inspect environment variables:
+
+```bash
+env > sandbox-env.txt
+python3 -m site > sandbox-python-site.txt
+python3 -m sysconfig > sandbox-sysconfig.txt
+```
+
+* Inspect shared libraries:
+
+```bash
+ldd $(which python3) > python-ldd.txt
+```
+
+* Use `gdb` or `strace` on your app:
+
+```bash
+strace -f flatpak run io.github.evilsupahfly.amulet_flatpak
+gdb --args flatpak run io.github.evilsupahfly.amulet_flatpak
+```
+
+---
+
+## 4. Debug Tips
+
+### 1. Check installed Python Packages
+
+```bash
+flatpak run --devel io.github.evilsupahfly.amulet_flatpak python3 -m pip list
+```
+
+* Lists all packages installed in the sandbox’s Python environment.
+* Confirms that `ipython`, `debugpy`, or any other debug packages are present.
+
+---
+
+### 2. Verify Python Module Import
+
+```bash
+flatpak run --devel io.github.evilsupahfly.amulet_flatpak python3 -c "import ipython; print(ipython.__version__)"
+```
+
+* Ensures the module can actually be imported.
+* Prints the version to verify it matches expectations.
+
+---
+
+### 3. Inspect Python Paths
+
+```bash
+flatpak run --devel io.github.evilsupahfly.amulet_flatpak python3 -c "import sys; print('\n'.join(sys.path))"
+```
+
+* Shows the directories Python is searching for modules inside the sandbox.
+* Useful to spot missing or misrouted site-packages.
+
+---
+
+### 4. Check Python Executable and Sysconfig
+
+```bash
+flatpak run --devel io.github.evilsupahfly.amulet_flatpak python3 -m sysconfig
+```
+
+* Dumps the Python build configuration and install paths.
+* Lets you compare sandbox paths to local VENV paths.
+
+---
+
+### 5. Start an Interactive Debug Shell
+
+```bash
+flatpak run --devel --command=ipython io.github.evilsupahfly.amulet_flatpak
+```
+
+* Opens an interactive IPython shell with all installed debug packages.
+* Handy for live testing and inspecting runtime state.
+
+---
+
+### 6. Full Debug Testing
+This section explains how to dump environment variables, Python paths, installed packages, and performs native library inspection for the Python interpreter and key shared objects (.so files). into files:
+
+```bash
+# 1. Run the Flatpak in interactive shell mode
+flatpak run --devel --command=bash io.github.evilsupahfly.amulet_flatpak
+
+# Once inside the sandbox shell:
+
+# 2. Dump environment variables
+env > ~/amulet_debug/sandbox-env.txt
+
+# 3. Dump Python sys.path
+python3 -c 'import sys; print("\n".join(sys.path))' > ~/amulet_debug/sandbox-python-path.txt
+
+# 4. Dump Python site-packages directories
+python3 -m site > ~/amulet_debug/sandbox-python-site.txt
+
+# 5. List all installed Python packages
+python3 -m pip list > ~/amulet_debug/sandbox-pip-list.txt
+
+# 6. Dump Python sysconfig info
+python3 -m sysconfig > ~/amulet_debug/sandbox-sysconfig.txt
+
+# 7. Inspect native libraries linked to Python interpreter
+ldd $(which python3) > ~/amulet_debug/sandbox-ldd-python.txt
+
+# 8. Inspect native libraries linked to Python extension modules
+mkdir -p ~/amulet_debug
+echo '--- Checking extension modules ---' > ~/amulet_debug/sandbox-ldd-extensions.txt
+for so in $(find $(python3 -c "import site; print(site.getsitepackages()[0])") -name "*.so"); do
+  echo "--- $so ---" >> ~/amulet_debug/sandbox-ldd-extensions.txt
+  ldd $so >> ~/amulet_debug/sandbox-ldd-extensions.txt
+done
+
+# 9. Optional: launch interactive Python shell with debug packages
+ipython
+```
+
+1. **`sandbox-env.txt`** → captures all environment variables inside the sandbox.
+2. **`sandbox-python-path.txt`** → shows `sys.path` so you know where Python looks for modules.
+3. **`sandbox-python-site.txt`** → site directories, including where pip-installed modules live.
+4. **`sandbox-pip-list.txt`** → lists all Python packages installed in the sandbox.
+5. **`sandbox-sysconfig.txt`** → detailed Python configuration info, including library paths and compiler options.
+6. **`sandbox-ldd-python.txt`** → lists all native libraries linked to the Python interpreter.
+7. **`sandbox-ldd-extensions.txt`** → lists all .so Python extension modules in your site-packages and their linked libraries.
+
+This is basically a **full snapshot of the Python environment inside the Flatpak**, making it easy to compare to a local VENV or spot missing packages.
+
+---
+
+## 5. Cleaning Up
+
+To uninstall the debug Flatpak:
+
+```bash
+flatpak uninstall io.github.evilsupahfly.amulet_flatpak
+```
+
+To remove debug SDK extensions:
+
+```bash
+flatpak uninstall org.freedesktop.Platform.Debug//24.08
+flatpak uninstall org.freedesktop.Sdk.Debug//24.08
+```
+
+---
+README Last updated 13 August, 2025

@@ -30,10 +30,18 @@ jobs:
         run: |
           flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
+      - name: Install runtime + SDK debug extensions
+        run: |
+          runtime=$(grep -E '^runtime:' io.github.evilsupahfly.amulet_flatpak.yaml | awk '{print $2}')
+          sdk=$(grep -E '^sdk:' io.github.evilsupahfly.amulet_flatpak.yaml | awk '{print $2}')
+          runtime_version=$(grep -E '^runtime-version:' io.github.evilsupahfly.amulet_flatpak.yaml | awk '{print $2}')
+          echo "Installing debug extensions for $runtime/$sdk $runtime_version"
+          flatpak install -y flathub ${runtime//Platform/Platform.Debug}//${runtime_version}
+          flatpak install -y flathub ${sdk//Sdk/Sdk.Debug}//${runtime_version}
+
       - name: Build Flatpak (Debug mode)
         run: |
           mkdir -p build-dir
-          # Build with debug symbols and keep logs
           flatpak-builder --force-clean \
                           --disable-strip \
                           --stop-at=io.github.evilsupahfly.amulet_flatpak \
@@ -50,6 +58,14 @@ jobs:
       - name: Create Flatpak bundle
         run: |
           flatpak build-bundle repo amulet_flatpak_debug_${version}.flatpak io.github.evilsupahfly.amulet_flatpak
+
+      - name: Dump environment from inside Flatpak sandbox
+        run: |
+          echo "=== Capturing environment variables inside sandbox ==="
+          flatpak --devel run io.github.evilsupahfly.amulet_flatpak env > sandbox-env.txt
+          echo "=== Capturing Python environment info inside sandbox ==="
+          flatpak --devel run io.github.evilsupahfly.amulet_flatpak python3 -m site > sandbox-python-site.txt
+          flatpak --devel run io.github.evilsupahfly.amulet_flatpak python3 -m sysconfig > sandbox-sysconfig.txt
 
       - name: Upload Flatpak bundle
         uses: actions/upload-artifact@v4
@@ -68,3 +84,12 @@ jobs:
         with:
           name: amulet-flatpak-build-logs
           path: build.log
+
+      - name: Upload sandbox environment info
+        uses: actions/upload-artifact@v4
+        with:
+          name: amulet-flatpak-sandbox-env
+          path: |
+            sandbox-env.txt
+            sandbox-python-site.txt
+            sandbox-sysconfig.txt
