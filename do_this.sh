@@ -472,6 +472,7 @@ else
 fi
 
 if [ "$DEBUG" = "TRUE" ]; then
+    LAUNCHER="/app/bin/debug.sh"
     report N "${WHT}Running DEBUG install...\nflatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak\n"
     if ! flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak; then
         report F "Amulet Flatpak install failed."

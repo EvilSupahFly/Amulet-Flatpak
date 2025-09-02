@@ -13,13 +13,23 @@ finish-args:
   - --allow=per-app-dev-shm
   - --share=network
   - --share=ipc
-  - --socket=wayland
   - --socket=fallback-x11
+  - --socket=wayland
   - --filesystem=host
   - --filesystem=host-os
   - --filesystem=home
+  - --filesystem=/tmp
+  - --filesystem=xdg-config/AmuletMapEditor:create
+  - --filesystem=xdg-cache/AmuletMapEditor:create
+  - --filesystem=xdg-run/gvfs
+  - --filesystem=xdg-run/gvfsd
   - --talk-name=org.freedesktop.Notifications
-
+  - --env=LIBGL_ALWAYS_SOFTWARE="0"
+  - --env=OPENGL_VERSION=3.3
+  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+  - --env=PS1=[ AMULET_FLATPAK > \w ] >
+  - --env=PYTHONPATH=/app/lib/python3.12
+# Beta-testing options
   #- --filesystem=home/.cache/AmuletMapEditor:rw
   #- --filesystem=home/.config/state/AmuletMapEditor:rw
   #- --filesystem=home/.local/share/AmuletMapEditor:rw
@@ -30,11 +40,6 @@ finish-args:
   #- --persist=home/.local/share/AmuletMapEditor
   #- --persist=home/.local/state/AmuletMapEditor
   #- --persist=home/.local/sate/AmuletMapTeam
-  - --env=LIBGL_ALWAYS_SOFTWARE="0"
-  - --env=OPENGL_VERSION=3.3
-  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
-  - --env=PS1=[ AMULET_FLATPAK > \w ] >
-  - --env=PYTHONPATH=/app/lib/python3.12
 # Uncomment the following options to increase debug output verbosity in the terminal
 #  - --env=PYTHONDEBUG=3
 #  - --env=PYTHONVERBOSE=3
@@ -71,3 +76,10 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.png
+  - name: amulet-debug
+    buildsystem: simple
+    build-commands:
+      - install -Dm555 debug.sh -t ${FLATPAK_DEST}/bin/
+    sources:
+      - type: file
+        path: debug.sh
