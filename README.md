@@ -47,7 +47,7 @@ To access native debug symbols (`strace`, `gdb`, etc.):
 flatpak install flathub org.freedesktop.Sdk.Debug//24.08
 ```
 
-> These extensions provide symbols for both the runtime libraries and the Python interpreter inside the Flatpak.
+These extensions provide symbols for both the runtime libraries and the Python interpreter inside the Flatpak.
 
 ---
 
