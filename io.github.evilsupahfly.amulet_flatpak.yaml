@@ -54,7 +54,7 @@ modules:
   #- updates.yaml
   #- testing-0.10.44.yaml
   - pip-gen.yaml
-  - flatpak-debug-build.yaml
+  #- flatpak-debug-build.yaml
   - name: metainfo-xml
     buildsystem: simple
     build-commands:
