@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -o pipefail
 ## Colour Definitions
 GRN="\033[1m\033[1;92m" # Green
 NRM="\033[0m" # Normal
