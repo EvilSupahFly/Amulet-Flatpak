@@ -1,10 +1,8 @@
 id: io.github.evilsupahfly.amulet_flatpak
-#name: Amulet Map Editor
-#version: 0.10.44.1
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
-command: amulet_map_editor
+command: wrapper.sh
 
 finish-args:
   - --device=all
@@ -15,32 +13,15 @@ finish-args:
   - --share=ipc
   - --socket=fallback-x11
   - --socket=wayland
-  - --filesystem=host
-  - --filesystem=host-os
   - --filesystem=home
   - --filesystem=/tmp
-  - --filesystem=xdg-config/AmuletMapEditor:create
-  - --filesystem=xdg-cache/AmuletMapEditor:create
-  - --filesystem=xdg-run/gvfs
-  - --filesystem=xdg-run/gvfsd
   - --talk-name=org.freedesktop.Notifications
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
   - --env=OPENGL_VERSION=3.3
   - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
   - --env=PS1=[ AMULET_FLATPAK > \w ] >
   - --env=PYTHONPATH=/app/lib/python3.12
-# Beta-testing options
-  #- --filesystem=home/.cache/AmuletMapEditor:rw
-  #- --filesystem=home/.config/state/AmuletMapEditor:rw
-  #- --filesystem=home/.local/share/AmuletMapEditor:rw
-  #- --filesystem=home/.local/state/AmuletMapEditor:rw
-  #- --filesystem=home/.local/sate/AmuletMapTeam:rw
-  #- --persist=home/.cache/AmuletMapEditor
-  #- --persist=home/.config/state/AmuletMapEditor
-  #- --persist=home/.local/share/AmuletMapEditor
-  #- --persist=home/.local/state/AmuletMapEditor
-  #- --persist=home/.local/sate/AmuletMapTeam
-# Uncomment the following options to increase debug output verbosity in the terminal
+# Beta-testing options - Uncomment the following options to increase debug output verbosity in the terminal
 #  - --env=PYTHONDEBUG=3
 #  - --env=PYTHONVERBOSE=3
 #  - --env=PYTHONTRACEMALLOC=10
@@ -50,9 +31,7 @@ modules:
   - shared-modules/libjpeg8/libjpeg8.json
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
-  #- psutil.yaml
-  #- updates.yaml
-  #- testing-0.10.44.yaml
+  - psutil.yaml
   - pip-gen.yaml
   - flatpak-debug-build.yaml
   - name: metainfo-xml
@@ -69,6 +48,13 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.desktop
+  - name: metainfo-desktop-debug
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 io.github.evilsupahfly.amulet_flatpak-debug.desktop -t ${FLATPAK_DEST}/share/applications/
+    sources:
+      - type: file
+        path: io.github.evilsupahfly.amulet_flatpak-debug.desktop
   - name: metainfo-ico
     buildsystem: simple
     build-commands:
@@ -76,10 +62,17 @@ modules:
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.png
-  - name: amulet-debug
+  - name: amulet-wrapper
     buildsystem: simple
     build-commands:
-      - install -Dm555 debug.sh -t ${FLATPAK_DEST}/bin/
+      - install -Dm555 wrapper.sh -t ${FLATPAK_DEST}/bin/
     sources:
       - type: file
-        path: debug.sh
+        path: wrapper.sh
+  #- name: amulet-normal
+  #  buildsystem: simple
+  #  build-commands:
+  #    - install -Dm555 amulet-map-editor.sh -t ${FLATPAK_DEST}/bin/
+   # sources:
+   #   - type: file
+   #     path: amulet-map-editor.sh

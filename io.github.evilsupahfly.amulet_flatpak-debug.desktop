@@ -1,10 +1,10 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Amulet Minecraft Map Editor (Flatpak Edition)
+Name=Amulet Minecraft Map Editor (Flatpak Edition) - Debug Mode
 Comment=A powerful map editing tool for Minecraft worlds
 Categories=Game;KidsGame;
 Icon=io.github.evilsupahfly.amulet_flatpak
-Exec=amulet-wrapper.sh
+Exec=amulet-wrapper.sh amulet-debug
 Terminal=true
 GenericName=A powerful map editor for Minecraft worlds
