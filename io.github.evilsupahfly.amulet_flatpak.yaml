@@ -33,7 +33,7 @@ modules:
   - shared-modules/glu/glu-9.json
   - psutil.yaml
   - pip-gen.yaml
-  #- flatpak-debug-build.yaml
+  - flatpak-debug-build.yaml
   - name: metainfo-xml
     buildsystem: simple
     build-commands:
@@ -69,10 +69,3 @@ modules:
     sources:
       - type: file
         path: wrapper.sh
-  #- name: amulet-normal
-  #  buildsystem: simple
-  #  build-commands:
-  #    - install -Dm555 amulet-map-editor.sh -t ${FLATPAK_DEST}/bin/
-   # sources:
-   #   - type: file
-   #     path: amulet-map-editor.sh
