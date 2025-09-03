@@ -33,7 +33,7 @@ modules:
   - shared-modules/glu/glu-9.json
   - psutil.yaml
   - pip-gen.yaml
-  - flatpak-debug-build.yaml
+  #- flatpak-debug-build.yaml
   - name: metainfo-xml
     buildsystem: simple
     build-commands:
