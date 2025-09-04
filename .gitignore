@@ -20,3 +20,4 @@ psutil.yaml
 .nfs0000000000e43e9f000608e7
 do_this_og.sh
 build.log
+*.log

@@ -119,7 +119,7 @@ modules:
       - &id012
         type: file
         path: minecraft_resource_pack-1.4.6.1.tar.gz
-        sha256: 3aa5b7204d8567c9fe570690242766a9f4b602ce2b7adb29eda79ee41676c657
+        sha256: 4b11f53c2bf988f07fd252f184a6a79236fe7e26483229bb34bc82b99121527d
       - *id007
       - *id002
       - *id008
