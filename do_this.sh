@@ -483,13 +483,15 @@ if [ "$DEBUG" = "TRUE" ]; then
         report P "Amulet Flatpak install succeeded."
         report N "${WHT}Configuring Debug extension ($AFP_DBG)"; sleep 2
         if ! flatpak install --user -y $AFPREPO $AFP_DBG; then
-            report F "$AFP_DBG failed"; echo -e "${WHT}"
-            read -p "Try to continue without $AFP_DBG (y/n)? " tryCont
-            case $tryCont in
-                n) bye $LINENO
-                ;;
-            esac
-        fi
+            report F "$AFP_DBG failed."
+            if [ "$AUTO" = "FALSE" ]; then
+                read -p "Try to continue without $AFP_DBG (y/n)? " tryCont
+                case $tryCont in
+                    n) bye $LINENO
+                    ;;
+                esac
+            fi
+            report N "Continuing without debug build."
     fi
     clear
     report N "${WHT}Auto-Mode active. DEBUG mode active." #; sleep 2
