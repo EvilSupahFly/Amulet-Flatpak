@@ -474,7 +474,7 @@ else
 fi
 
 if [ "$DEBUG" = "TRUE" ]; then
-    LAUNCHER="/app/bin/wrapper.sh --debug"
+    LAUNCHER="/app/bin/wrapper.sh"
     report N "${WHT}Running DEBUG install...\nflatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak\n"
     if ! flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak; then
         report F "Amulet Flatpak install failed."
@@ -497,8 +497,8 @@ if [ "$DEBUG" = "TRUE" ]; then
     echo -e "1: Run amulet with the built-in Python Debugger like so: python -m pdb -m amulet_map_editor"
     echo -e "2. Run amulet as-is like so: python -m amulet_map_editor"
     echo -e "Amulet also has a ${YLW}--debug${WHT} switch you can pass for greater output in either of the above cases.\n"
-    echo -e "${GRN}flatpak run --command=${LAUNCHER} --devel --filesystem=$(pwd) $AFPBASE\n${NRM}"
-    if ! flatpak run --command=${LAUNCHER} --devel --filesystem=$(pwd) $AFPBASE; then
+    echo -e "${GRN}flatpak run --command=${LAUNCHER} --devel --filesystem=$(pwd) $AFPBASE --debug\n${NRM}"
+    if ! flatpak run --command=${LAUNCHER} --devel --filesystem=$(pwd) $AFPBASE --debug; then
         report F "Amulet Flatpak launch failed with error ${RED}$?${WHT}."
         bye $LINENO
     fi
