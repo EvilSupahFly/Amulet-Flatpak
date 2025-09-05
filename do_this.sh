@@ -492,6 +492,7 @@ if [ "$DEBUG" = "TRUE" ]; then
                 esac
             fi
             report N "Continuing without debug build."
+        fi
     fi
     clear
     report N "${WHT}Auto-Mode active. DEBUG mode active." #; sleep 2

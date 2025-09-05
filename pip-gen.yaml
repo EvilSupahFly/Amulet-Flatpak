@@ -113,7 +113,7 @@ modules:
       - *id005
       - type: file
         path: amulet_map_editor-0.10.44.1.tar.gz
-        sha256: 56507c51911d054f2c37ce7559e56e2f6196172c725951d4ed1505593bded86b
+        sha256: 564afdf80f4418d73f389e1782e0a759adb7a4a6feb5a9454b43a9b1f6607494
       - *id006
       - *id001
       - &id012
