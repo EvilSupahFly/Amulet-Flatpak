@@ -479,11 +479,11 @@ for dir in "${directories[@]}"; do
     fi
 done
 
-if [ -f "amulet-x86_64.flatpak" ]; then
+if [ -f "*.flatpak" ]; then
     CLEAN=TRUE
-    report N "${WHT}Found '${YLW}amulet-x86_64.flatpak${WHT}' - removing now..." ; sleep 1
-    rm -f "amulet-x86_64.flatpak"
-    report N "${WHT}'amulet-x86_64.flatpak' has been removed."
+    report N "${WHT}Found local flatpak - removing now..." ; sleep 1
+    rm -f "*.flatpak"
+    report N "${WHT}'Local flatpak' has been removed."
 fi
 
 if [[ "$CLEAN" == "FALSE" ]]; then
@@ -524,17 +524,17 @@ else
 fi
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
-report N "${WHT}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE $AFP_BRANCH"
-if ! flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE $AFP_BRANCH; then
-    report F "${RED}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE $AFP_BRANCH ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
+report N "${WHT}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64-${AFP_VER}.flatpak $AFPBASE $AFP_BRANCH"
+if ! flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64-${AFP_VER}.flatpak $AFPBASE $AFP_BRANCH; then
+    report F "${RED}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64-${AFP_VER}.flatpak $AFPBASE $AFP_BRANCH ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
 fi
 report P "${WHT}Initial build stage complete. Proceeding to bundle stage."
 
 # Install bundle
 report N "${YLW}Installing bundle..."
 
-if [ ! -f "amulet-x86_64.flatpak" ]; then
-    report F "${RED}FATAL ERROR: ${WHT}Installation file '${YLW}amulet-x86_64.flatpak${WHT}' has disappeared. Terminating script."; bye $((LINENO-1))
+if [ ! -f "amulet-x86_64-${AFP_VER}.flatpak" ]; then
+    report F "${RED}FATAL ERROR: ${WHT}Installation file '${YLW}amulet-x86_64-${AFP_VER}.flatpak${WHT}' has disappeared. Terminating script."; bye $((LINENO-1))
 fi
 
 if [ "$AUTO" = "TRUE" ]; then
@@ -554,9 +554,9 @@ fi
 
 if [ "$DEBUG" = "TRUE" ]; then
     LAUNCHER="/app/bin/wrapper.sh"
-    report N "${WHT}Running DEBUG install...\nflatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak\n"
-    if ! flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak; then
-        report F "${RED}flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
+    report N "${WHT}Running DEBUG install...\nflatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64-${AFP_VER}.flatpak\n"
+    if ! flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64-${AFP_VER}.flatpak; then
+        report F "${RED}flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64-${AFP_VER}.flatpak ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
     fi
     clear
     report N "${WHT}Auto-Mode active. DEBUG mode active."
@@ -570,9 +570,9 @@ if [ "$DEBUG" = "TRUE" ]; then
     fi
 else
     report N "${WHT}Auto-Mode active. Starting flatpak install.\n"
-    echo -e "${WHT}flatpak install -vvv -y --user amulet-x86_64.flatpak\n"
-    if ! flatpak install -vvv -y --user amulet-x86_64.flatpak; then
-        report F "${RED}flatpak install -vvv -y --user amulet-x86_64.flatpak ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
+    echo -e "${WHT}flatpak install -vvv -y --user amulet-x86_64-${AFP_VER}.flatpak\n"
+    if ! flatpak install -vvv -y --user amulet-x86_64-${AFP_VER}.flatpak; then
+        report F "${RED}flatpak install -vvv -y --user amulet-x86_64-${AFP_VER}.flatpak ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
     else
         report P "flatpak install succeeded."
     fi
