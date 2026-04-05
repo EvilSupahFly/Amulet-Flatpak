@@ -2,7 +2,6 @@
 /.flatpak-builder
 /.vscode
 amulet_2.log
-amulet.sh
 amulet-testing.yaml
 crash.log
 updates.yaml
