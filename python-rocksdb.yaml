@@ -1,0 +1,23 @@
+# Generated with flatpak-pip-generator -o python-rocksdb --yaml gil python-rocksdb
+build-commands: []
+buildsystem: simple
+modules:
+  - name: python3-gil
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "gil" --report=pip_report.json --use-pep517 --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/ab/ac/f2bfa3732bb09b0436cedc06e56f74aae268a16fa2c66f9ae6f7038a6f6c/gil-1.25.0.0-py3-none-any.whl
+        sha256: a1d599cc6ec003a01b4801b5e0f4ebd10eacfb5fb216fb8ddae3feecbaab48b7
+  - name: python3-python-rocksdb
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "python-rocksdb" --report=pip_report.json --use-pep517 --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/94/81/9a8e498a26ec34da9e1ae87e831468aedb4a6ba42aa9ea779b97896cfea7/python-rocksdb-0.7.0.tar.gz
+        sha256: aa692fbd06d8ed4ad641feee2970062fe01120e87b645a29403c71c628639e4f
+name: python-rocksdb

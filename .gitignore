@@ -22,3 +22,5 @@ do_this_og.sh
 build.log
 *.log
 .nfs0000000001a131820007a1c4
+/fixes
+/amulet_core-1.9.39

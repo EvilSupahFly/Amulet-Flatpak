@@ -14,21 +14,15 @@
     </p>
   </description>
   <developer id="io.github.evilsupahfly.amulet_flatpak">
-    <name>Amulet Developer: Team Amulet</name>
-    <name>Flatpak Developer: EvilSupahFly</name>
+    <name>Amulet Developer: Team Amulet / Flatpak Developer: EvilSupahFly</name>
   </developer>
   <url type="homepage">https://github.com/amulet-Team/Amulet-Map-Editor/</url>
   <url type="vcs-browser">https://github.com/EvilSupahFly/Amulet-Flatpak/</url>
   <releases>
-    <release version="0.10.44" date="2025-09-03">
-      <url type="details">https://github.com/EvilSupahFly/Amulet-Flatpak/releases/tag/0.10.44</url>
+    <release version="0.10.54" date="2025-04-04">
+      <url type="details">https://github.com/EvilSupahFly/Amulet-Flatpak/releases/tag/0.10.54</url>
     </release>
   </releases>
-  <launchable type="desktop-id">io.github.evilsupahfly.amulet_flatpak-debug.desktop</launchable>
-  <icon type="stock">io.github.evilsupahfly.amulet_flatpak</icon>
-  <content_rating type="oars-1.0">
-    <content_attribute id="social-chat">moderate</content_attribute>
-  </content_rating>
   <launchable type="desktop-id">io.github.evilsupahfly.amulet_flatpak.desktop</launchable>
   <icon type="stock">io.github.evilsupahfly.amulet_flatpak</icon>
   <content_rating type="oars-1.0">

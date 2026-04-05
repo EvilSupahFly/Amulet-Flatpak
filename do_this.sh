@@ -4,31 +4,31 @@ set -o pipefail
 ## Colour Definitions
 GRN="\033[1m\033[1;92m" # Green
 NRM="\033[0m" # Normal
-PRP="\033[1m\033[35m" # Magenta (Purple)
+#PRP="\033[1m\033[35m" # Magenta (Purple)
 RED="\033[1m\033[1;91m" # Red
 WHT="\033[1m\033[1;97m" # White
 YLW="\033[1m\033[1;33m" # Yellow
 
 ## Variable definitions
 AFPBASE="io.github.evilsupahfly.amulet_flatpak"
-AFP_DBG="${AFPBASE}.Debug"
 AFPREPO="${AFPBASE}-repo"
+AFP_BRANCH=""
 AFP_VER=""
+SDK_VER=""
+EXTRA_FLAGS=""
 AFP_XML="${AFPBASE}.metainfo.xml"
 AFP_YML="${AFPBASE}.yaml"
 APP_DIR="/home/$(whoami)/.var/app/io.github.evilsupahfly.amulet_flatpak"
 AUTO=FALSE
 BLD_DIR="amulet_flatpak.build_dir"
 CLEAN=FALSE
-CUSTOM=FALSE
 DEBUG=FALSE
 DO_AFP=FALSE
 DO_CMD=FALSE
 DONE_PIP=FALSE
-I_AM="$0 $@"
+I_AM="$0 $@" #SC2124
 LAUNCHER="/app/bin/wrapper.sh"
 PIP_GEN=FALSE
-SETVER=FALSE
 
 bye() {
     if [ "$1" -ne "0" ]; then
@@ -96,14 +96,14 @@ report() {
     fi
 }
 
-function doInstall {
+doInstall() {
     report F "${RED}$1 not found.\n${WHT}Checking distribution..."
     # Determine the distribution
     if [ -f /etc/os-release ]; then
         . /etc/os-release
         DISTRO=$ID
-        report P "\n${WHT}Distro determined as ${YLW}$DISTRO${WHT}..." #; sleep 2
-        report N "\n${WHT}Attempting to install $1 for ${YLW}$DISTRO${WHT}..." #; sleep 2
+        report P "\n${WHT}Distro determined as ${YLW}$DISTRO${WHT}..."
+        report N "\n${WHT}Attempting to install $1 for ${YLW}$DISTRO${WHT}..."
     fi
 
     # Determine the package manager and install the package
@@ -124,7 +124,7 @@ function doInstall {
             sudo zypper install -y $1
             ;;
         *)
-            # Fallback to package manager detection if distro detection fails
+            # Fallback to package manager detection if distro detection fails (SC2086)
             if command -v apt &> /dev/null; then
                 sudo apt update && sudo apt install -y $1
             elif command -v dnf &> /dev/null; then
@@ -137,27 +137,33 @@ function doInstall {
                 sudo zypper install -y $1
             else
                 report F "${RED}Unsupported distribution: $DISTRO. \n${WHT}No known package manager found. Please manually install $1 using your graphical package manager, or contact the author to have $DISTRO support added."
-                bye $LINENO
+                bye $((LINENO-1))
             fi
             ;;
     esac
 }
 
-function doFlatpakPIP {
+doFlatpakPIP() {
     # Check if the script is running in a Python 3 virtual environment
+    report N "${WHT}Ensuring Python build dependencies..."
+    sleep 1
     if [[ -z "$VIRTUAL_ENV" ]]; then
         report F "${RED}Error: ${WHITE}This script must be run inside a Python 3 virtual environment."
-        bye $LINENO
+        bye $((LINENO-2))
     fi
-    if ! pip install -U pip pyyaml requirements-parser; then
+    report P "${GRN}Virtual Environment active. Checking PIP dependencies..."
+    sleep 1
+    if ! python3 -m pip install --upgrade PyYAML requirements-parser; then
         report F "${RED}Error: ${WHITE}Failed to install required PIP packages."
-        bye $LINENO
+        bye $((LINENO-2))
     fi
+    report P "${GRN}PIP dependencies found. Proceeding with ${WGT}./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=pip-gen${GRN}..."
+    sleep 1
 
     # Generate everything we need to build Amulet in the Flatpak sandbox
     if ! ./flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=pip-gen; then
-        report F "flatpak-pip-generator failed."
-        bye $LINENO
+        report F "flatpak-pip-generator ${WHT}failed with error ${RED}$?${WHT}."
+        bye $((LINENO-2))
     fi
 
     # Create the initial header for our primary manifest
@@ -166,10 +172,15 @@ cat << EOL > "$AFP_YML"
 id: $AFPBASE
 #version: $AFP_VER
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
+runtime-version: '$SDK_VER'
 sdk: org.freedesktop.Sdk
+build-options:
+  strip: false
+  append-path: /usr/bin
+  prepend-path: \${FLATPAK_DEST}/bin
+  build-args:
+    - --share=network
 command: wrapper.sh
-
 finish-args:
   - --device=all
   - --device=dri
@@ -177,80 +188,116 @@ finish-args:
   - --allow=per-app-dev-shm
   - --share=network
   - --share=ipc
-  - --socket=fallback-x11
+  - --socket=x11 # Not fallback-x11, because Wayland isn't yet universally adopted
   - --socket=wayland
   - --filesystem=home
   - --filesystem=/tmp
+  - --filesystem=/mnt
+  - --filesystem=/media
+  - --filesystem=/run/media
   - --talk-name=org.freedesktop.Notifications
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
-  - --env=OPENGL_VERSION=3.3
-  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+  - --env=OPENGL_VERSION=2.1
+#  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so # May cauce problems on some systems
   - --env=PS1=[ AMULET_FLATPAK > \w ] >
-  - --env=PYTHONPATH=/app/lib/python3.12
 # Beta-testing options - Uncomment the following options to increase debug output verbosity in the terminal
-#  - --env=PYTHONDEBUG=3
-#  - --env=PYTHONVERBOSE=3
-#  - --env=PYTHONTRACEMALLOC=10
-#  - --env=G_MESSAGES_DEBUG=all
+#  - --env=PYTHONPATH=/app/lib/python3.13
+  - --env=PYTHONDEBUG=3
+  - --env=PYTHONVERBOSE=3
+  - --env=PYTHONTRACEMALLOC=10
+  - --env=G_MESSAGES_DEBUG=all
 
 modules:
-  - shared-modules/libjpeg8/libjpeg8.json
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
-  - psutil.yaml
+  - shared-modules/libjpeg8/libjpeg8.json
+  - cmake.yaml
   - pip-gen.yaml
-  - flatpak-debug-build.yaml
-  - name: metainfo-xml
+  - name: metainfo
     buildsystem: simple
     build-commands:
-      - install -Dm644 $AFP_XML -t ${FLATPAK_DEST}/share/metainfo/
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.metainfo.xml \${FLATPAK_DEST}/share/metainfo/io.github.evilsupahfly.amulet_flatpak.metainfo.xml
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png \${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/io.github.evilsupahfly.amulet_flatpak.png
+      - desktop-file-install --dir=\${FLATPAK_DEST}/share/applications --set-key=Exec --set-value=io.github.evilsupahfly.amulet_flatpak
+        --set-key=Icon --set-value=io.github.evilsupahfly.amulet_flatpak io.github.evilsupahfly.amulet_flatpak.desktop
     sources:
       - type: file
-        path: $AFP_XML
-  - name: metainfo-desktop
-    buildsystem: simple
-    build-commands:
-      - install -Dm755 ${AFPBASE}.desktop -t ${FLATPAK_DEST}/share/applications/
-    sources:
+        path: io.github.evilsupahfly.amulet_flatpak.metainfo.xml
       - type: file
-        path: ${AFPBASE}.desktop
-  - name: metainfo-desktop-debug
-    buildsystem: simple
-    build-commands:
-      - install -Dm755 ${AFPBASE}-debug.desktop -t ${FLATPAK_DEST}/share/applications/
-    sources:
+        path: io.github.evilsupahfly.amulet_flatpak.png
       - type: file
-        path: ${AFPBASE}-debug.desktop
-  - name: metainfo-ico
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 ${AFPBASE}.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
-    sources:
-      - type: file
-        path: ${AFPBASE}.png
+        path: io.github.evilsupahfly.amulet_flatpak.desktop
   - name: amulet-wrapper
     buildsystem: simple
     build-commands:
-      - install -Dm555 wrapper.sh -t ${FLATPAK_DEST}/bin/
+      - install -Dm555 wrapper.sh -t \${FLATPAK_DEST}/bin/
     sources:
       - type: file
         path: wrapper.sh
 #### <<< Generated by do_this.sh
 EOL
 report P "flatpak-pip-generator succeeded!"
-DONE_PIP=TRUE
+DONE_PIP=TRUE #SC2034, ref line 29?
+}
+
+check_runtime() {
+    local version="$1"
+
+    report N "${WHT}Checking runtime-version..."
+
+    # If empty or invalid input, try fallback
+    if [[ -z "$version" || ! "$version" =~ ^[0-9]{2}\.[0-9]{2}$ ]]; then
+
+        if [[ -n "$version" ]]; then
+            report F "'${RED}$version${WHT}' is not a valid runtime-version."
+        else
+            report N "${YLW}No runtime-version provided or detected."
+        fi
+
+        # Interactive fallback
+        while true; do
+            read -rp "Enter Flatpak runtime-version (YY.MM, e.g. 25.08): " version
+
+            if [[ "$version" =~ ^[0-9]{2}\.[0-9]{2}$ ]]; then
+                break
+            else
+                report F "Invalid format. Expected YY.MM (e.g. 25.08)."
+            fi
+        done
+    fi
+
+    SDK_VER="$version"
+    report P "Using runtime-version ${GRN}$SDK_VER${WHT}."
 }
 
 check_version() {
     local version="$1"
-    report N "${WHT}Checking for version number..." #; sleep 2
-    if [[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-        report P "Using version ${GRN}$version${WHT}."
-        AFP_VER=$version
-    else
-        report F "'${RED}$version${WHT}' must be a dotted decimal number."
-        bye $LINENO
+
+    report N "${WHT}Checking for version number..."
+
+    # If empty or invalid input, try fallback
+    if [[ -z "$version" || !  "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+
+        if [[ -n "$version" ]]; then
+            report F "'${RED}$version${WHT}' is not a valid version number."
+        else
+            report N "${YLW}No version number provided or detected."
+        fi
+
+        # Interactive fallback
+        while true; do
+            read -rp "Enter Amulet dotted-decimal version number (AA.BB.CC, e.g. 0.10.54): " version
+
+            if [[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+                break
+            else
+                report F "Invalid format. Expected dotted-decimal version number (AA.BB.CC, e.g. 0.10.54)."
+            fi
+        done
     fi
+
+    AFP_VER=$version
+    report P "Using version ${GRN}$AFP_VER${WHT}."
 }
 
 clear
@@ -264,6 +311,15 @@ fi
 
 while [[ "$1" != "" ]]; do
     case $1 in
+        --sdk)
+            shift
+            check_runtime "$1"
+            shift
+            ;;
+        --sdk=*)
+            check_runtime "${1#*=}"
+            shift
+            ;;
         --version)
             shift
             check_version "$1"
@@ -279,6 +335,7 @@ while [[ "$1" != "" ]]; do
         --debug)
             DEBUG=TRUE
             report N "${WHT}DEBUG=TRUE"
+            BUILD_TYPE="debug"
             shift
             ;;
         --auto)
@@ -314,7 +371,7 @@ while [[ "$1" != "" ]]; do
             ;;
         *)
             report F "Invalid option: $1"
-            bye $LINENO
+            bye $((LINENO-1))
             ;;
     esac
 done
@@ -324,6 +381,15 @@ if [[ -z "$AFP_VER" ]]; then
     check_version "$(grep -oP '#version: \K[0-9]+(\.[0-9]+)*' "$AFP_YML")"
 fi
 
+# If "--SDK" was not provided, then read from $AFP_YML
+if [[ -z "$SDK_VER" ]]; then
+    check_runtime "$(grep -oP "runtime-version:\s*['\"]?\K[^'\"]+" "$AFP_YML")"
+fi
+
+if [[ -z "$BUILD_TYPE" ]]; then
+    BUILD_TYPE="stable"
+fi
+
 # Check if Flatpak is installed at the user level
 report N "${WHT}Checking for Flatpak..."
 if ! command -v flatpak &> /dev/null; then
@@ -331,63 +397,73 @@ if ! command -v flatpak &> /dev/null; then
     doInstall flatpak
     # Verify if the installation was successful
     if ! command -v flatpak &> /dev/null; then
-        report F "${RED}Installation of Flatpak failed with error $?. ${YLW}Please check your package manager logs for more details."
-        bye $LINENO
+        report F "${RED}Installation of Flatpak ${WHT}failed with error $?. ${YLW}Please check your package manager logs for more details."
+        bye $((LINENO-2))
     fi
-    report N "${WHT}Adding 'flathub' repository..." #; sleep 2
+    report N "${WHT}Adding 'flathub' repository..."
     if ! flatpak -v remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
         report F "${RED}Flathub repository couldn't be added."
-        bye $LINENO
+        bye $((LINENO-2))
     else
         report P "${GRN}Flathub repository added successfully."
     fi
 else
-    report P "${WHT}Install verified. Checking for updates..." #; sleep 2
+    report P "${WHT}Install verified. Checking for updates..."
     flatpak update -y -u
 fi
 
 # Check if Flatpak Builder is installed at the user level
-report N "${WHT}Checking for Flatpak Builder... " #; sleep 2
-if ! command -v flatpak-builder &> /dev/null; then
-    # sleep 2
+report N "${WHT}Checking for Flatpak Builder... "
+if ! command -v /usr/local/bin/flatpak-builder &> /dev/null; then
+    report N "${RED}flatpak-builder not found. ${WHT}Installing system package."
     doInstall flatpak-builder
     # Verify if the installation was successful
-    if ! command -v flatpak-builder &> /dev/null; then
-        report F "${RED}Installation of flatpak-builder failed with error $?. ${YLW}Please check your package manager logs for more details."
-        bye $LINENO
+    if ! command -v /usr/local/bin/flatpak-builder &> /dev/null; then
+        report F "${RED}Installation of flatpak-builder ${WHT}failed with error $?. ${YLW}Please check your package manager logs for more details."
+        bye $((LINENO-2))
+    fi
+fi
+#ARCH="$(flatpak --default-arch)"
+#AFP_BRANCH="${SDK_VER}-${ARCH}-${BUILD_TYPE}"
+AFP_BRANCH="${SDK_VER}-${BUILD_TYPE}"
+
+if ! flatpak list | grep -q "org.freedesktop.Sdk.*$SDK_VER"; then
+    report N "SDK ${SDK_VER} not found. Installing..."
+    if ! flatpak install --user -y org.freedesktop.Sdk//"$SDK_VER"; then
+        report F "${RED}flatpak install --user -y org.freedesktop.Sdk//$SDK_VER ${WHT}failed with error $?."
+        bye $((LINENO-2))
     fi
 fi
 
 if ! flatpak list | grep -q "org.flatpak.Builder"; then
-    # sleep 2
+    report N "${RED}flatpak-builder not found. ${WHT}Installing flatpak package."
     if ! flatpak -v install --user -y org.flatpak.Builder; then
         report F "${RED}Fatal Error $?. ${WHT}org.flatpak.Builder couldn't be installed."
-        bye $LINENO
+        bye $((LINENO-2))
+    fi
+    if ! flatpak -v install --user -y org.freedesktop.Platform.{GL,GL32}.Debug.default//25.08; then
+        report F "${RED}Fatal Error $?. ${WHT}org.freedesktop.Platform.{GL,GL32}.Debug.default couldn't be installed."
+        bye $((LINENO-2))
     fi
 fi
 
-report P "${WHT}Install verified." #; sleep 2
-
 # Check for AppStream (appstreamcli), install if it's missing
-report N "${WHT}Checking for AppStream..." #; sleep 2
+report N "${WHT}Checking for AppStream..."
 
 if ! command -v appstreamcli &> /dev/null; then
-    # sleep 2
+    report N "${RED}appstreamcli not found. ${WHT}Installing system package."
     doInstall appstream
     # Check if installation was successful
     if ! command -v appstreamcli &> /dev/null; then
-        report F "${RED}Installation via package manager failed with error ${RED}$?${WHT}. \n${WHT}Try installing manually."
-        bye $LINENO
+        report F "${RED}Installation via package manager ${WHT}failed with error ${RED}$?${WHT}. \n${WHT}Try installing manually."
+        bye $((LINENO-2))
     fi
-else
-    report P "${WHT}Install verified." #; sleep 2
 fi
 
 report N "\n${WHT}--------------------------------\n| PRELIMINARY CHECKS COMPLETED |\n--------------------------------"
+report P "${WHT}Verification stage complete. Proceeding to clean-up stage."
+report N "${WHT}Checking for previous builds..."
 sleep 2
-
-report N "${WHT}Checking for previous builds..." #; sleep 2
-
 # Array of directories to check and remove
 directories=("$BLD_DIR" ".flatpak-builder" $AFPREPO $APP_DIR)
 
@@ -415,47 +491,50 @@ if [[ "$CLEAN" == "FALSE" ]]; then
 elif [[ "$CLEAN" == "TRUE" ]]; then
     report N "${WHT}Clean-up completed."
 fi
+report P "${WHT}Clean-up stage complete. Proceeding to build stage."; sleep 2
 
 if [[ "$PIP_GEN" == "FALSE" ]]; then
     report N "${WHT}Manifest already exists: skipping ${YLW}flatpak-pip-generator${WHT}, launching ${YLW}flatpak-builder${WHT}."
     # sleep 2
 elif [[ "$PIP_GEN" == "TRUE" ]]; then
+    report F "${RED}Manifest not found: ${WHT}Starting ${YLW}flatpak-pip-generator${WHT}, launching ${YLW}flatpak-builder${WHT}."
     doFlatpakPIP
 fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
-report N "${WHT}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML --force-clean 2>&1 | tee build.log\n${GRN}"
-if ! flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v$AFP_VER --bundle-sources --repo=$AFPREPO $BLD_DIR $AFP_YML --force-clean 2>&1 | tee build.log; then
-    report F "flatpak-builder failed with error ${RED}$?${WHT}."
-    bye $LINENO
+report N "${WHT}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v${AFP_VER} --bundle-sources --repo=$AFPREPO --default-branch=$AFP_BRANCH $BLD_DIR $AFP_YML --force-clean\n${GRN}"
+if ! /usr/local/bin/flatpak-builder -vvv \
+  --user \
+  --rebuild-on-sdk-change \
+  --install-deps-from=flathub \
+  --add-tag="v$AFP_VER" \
+  --bundle-sources \
+  --repo="$AFPREPO" \
+  --default-branch="$AFP_BRANCH" \
+  "$BLD_DIR" \
+  "$AFP_YML" \
+  --force-clean; then
+    report F "${RED}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v${AFP_VER} --bundle-sources --repo=$AFPREPO --default-branch=$AFP_BRANCH $BLD_DIR $AFP_YML --force-clean ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-2))
 fi
 
 if [ -d "$AFPREPO" ]; then
     report P "\"$AFPREPO\" located."
 else
-    report F "\"$AFPREPO\" not found."
-    bye $LINENO
+    report F "\"$AFPREPO\" not found."; bye $((LINENO-1))
 fi
 
 # Bundle the contents of the local repository into "amulet-x86_64.flatpak"
-report N "${WHT}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE"
-if ! flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE; then
-    report F "flatpak build-bundle failed."
-    bye $LINENO
+report N "${WHT}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE $AFP_BRANCH"
+if ! flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE $AFP_BRANCH; then
+    report F "${RED}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFPBASE $AFP_BRANCH ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
 fi
-if [[ "$DEBUG" == "TRUE" ]]; then
-    report N "${WHT}flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFP_DBG\n${GRN}"
-    if ! flatpak --gpg-homedir=$HOME/.gnupg build-bundle -vvv $AFPREPO amulet-x86_64.flatpak $AFP_DBG; then
-        report F "debug build-bundle build failed."
-    fi
-fi
-report P "standard build-bundle succeeded"
+report P "${WHT}Initial build stage complete. Proceeding to bundle stage."
+
 # Install bundle
 report N "${YLW}Installing bundle..."
 
 if [ ! -f "amulet-x86_64.flatpak" ]; then
-    report F "${RED}FATAL ERROR: ${WHT}Installation file '${YLW}amulet-x86_64.flatpak${WHT}' has disappeared. Terminating script."
-    bye $LINENO
+    report F "${RED}FATAL ERROR: ${WHT}Installation file '${YLW}amulet-x86_64.flatpak${WHT}' has disappeared. Terminating script."; bye $((LINENO-1))
 fi
 
 if [ "$AUTO" = "TRUE" ]; then
@@ -477,50 +556,32 @@ if [ "$DEBUG" = "TRUE" ]; then
     LAUNCHER="/app/bin/wrapper.sh"
     report N "${WHT}Running DEBUG install...\nflatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak\n"
     if ! flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak; then
-        report F "Amulet Flatpak install failed."
-        bye $LINENO
-    else
-        report P "Amulet Flatpak install succeeded."
-        report N "${WHT}Configuring Debug extension ($AFP_DBG)"; sleep 2
-        if ! flatpak install --user -y $AFPREPO $AFP_DBG; then
-            report F "$AFP_DBG failed."
-            if [ "$AUTO" = "FALSE" ]; then
-                read -p "Try to continue without $AFP_DBG (y/n)? " tryCont
-                case $tryCont in
-                    n) bye $LINENO
-                    ;;
-                esac
-            fi
-            report N "Continuing without debug build."
-        fi
+        report F "${RED}flatpak install --include-sdk --include-debug -vvv -y --user amulet-x86_64.flatpak ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
     fi
     clear
-    report N "${WHT}Auto-Mode active. DEBUG mode active." #; sleep 2
+    report N "${WHT}Auto-Mode active. DEBUG mode active."
     echo -e "\n${WHT}To run amulet, you can do one of two things once you're in the flatpak shell:"
     echo -e "1: Run amulet with the built-in Python Debugger like so: python -m pdb -m amulet_map_editor"
     echo -e "2. Run amulet as-is like so: python -m amulet_map_editor"
     echo -e "Amulet also has a ${YLW}--debug${WHT} switch you can pass for greater output in either of the above cases.\n"
     echo -e "${GRN}flatpak run --command=${LAUNCHER} --file-forwarding --devel --filesystem=$(pwd) $AFPBASE --debug\n${NRM}"
-    if ! flatpak run --command=${LAUNCHER} --file-forwarding --devel --filesystem=$(pwd) $AFPBASE --debug ; then
-        report F "Amulet Flatpak launch failed with error ${RED}$?${WHT}."
-        bye $LINENO
+    if ! flatpak run --command=${LAUNCHER} --file-forwarding --devel --filesystem=$(pwd) $AFPBASE --debug; then
+        report F "${RED}flatpak run --command=${LAUNCHER} --file-forwarding --devel --filesystem=$(pwd) $AFPBASE --debug ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
     fi
 else
-    report N "${WHT}Auto-Mode active. Starting flatpak install.\n" #; sleep 2
-    echo -e "${WHT}flatpak install -y --user amulet-x86_64.flatpak\n"
+    report N "${WHT}Auto-Mode active. Starting flatpak install.\n"
+    echo -e "${WHT}flatpak install -vvv -y --user amulet-x86_64.flatpak\n"
     if ! flatpak install -vvv -y --user amulet-x86_64.flatpak; then
-        report F "${RED}flatpak install failed with error ${RED}$?${WHT}."
-        bye $LINENO
+        report F "${RED}flatpak install -vvv -y --user amulet-x86_64.flatpak ${WHT}failed with error ${RED}$?${WHT}."; bye $((LINENO-1))
     else
         report P "flatpak install succeeded."
     fi
     clear
-    report N "${WHT}Auto-Mode active. Running flatpak." #; sleep 2
+    report N "${WHT}Auto-Mode active. Running flatpak."
     if ! flatpak run --ostree-verbose $AFPBASE; then
-        report F "${RED}Amulet launch  failed with error ${RED}$?${WHT}. Please review terminal output."
-        bye $LINENO
+        report F "${RED}flatpak run --ostree-verbose $AFPBASE ${WHT}failed with error ${RED}$?${WHT}. Please review terminal output."; bye $((LINENO-1))
     fi
 fi
 
-report P "Looks like it probably worked. If it didn't, then something is really messed up."
+report P "${WHT}Looks like it ${YLW}*probably*${WHT} worked - at least, we didn't encounter any non-zero exit codes."
 lastWord

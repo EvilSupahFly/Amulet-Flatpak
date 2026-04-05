@@ -451,7 +451,8 @@ for package in packages:
         '--find-links="file://${PWD}"',
         '--prefix=${FLATPAK_DEST}',
         '"{}"'.format(name_for_pip),
-        '--report=pip_report.json'
+        '--report=pip_report.json',
+        '--use-pep517'
     ]
     if package.name in opts.ignore_installed:
         pip_command.append('--ignore-installed')

@@ -1,89 +1,117 @@
-# Generated with flatpak-pip-generator --requirements-file=requirements.txt --yaml --output=pip-gen
+# Generated with flatpak-pip-generator -o pip-gen --yaml --requirements-file=requirements.txt
 build-commands: []
 buildsystem: simple
+build-options:
+  pkg-config-path: ${FLATPAK_DEST}/lib/pkgconfig
 modules:
-  - name: python3-cython
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "cython" --report=pip_report.json --no-build-isolation --no-cache-dir
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/18/40/7b17cd866158238db704965da1b5849af261dbad393ea3ac966f934b2d39/cython-3.1.2.tar.gz
-        sha256: 6bbf7a953fa6762dfecdec015e3b054ba51c0121a45ad851fa130f63f5331381
   - name: python3-versioneer
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "versioneer" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "versioneer" --report=pip_report.json --no-build-isolation
     sources:
       - type: file
         url: https://files.pythonhosted.org/packages/b0/79/f0f1ca286b78f6f33c521a36b5cbd5bd697c0d66217d8856f443aeb9dd77/versioneer-0.29-py3-none-any.whl
         sha256: 0f1a137bb5d6811e96a79bb0486798aeae9b9c6efc24b389659cebb0ee396cb9
+  - name: python3-pybind11
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "pybind11" --report=pip_report.json --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/ab/87/99f21e9b20899d6dc1bf7544cfe53e5fa17acc21bb267971a540425357d3/pybind11-3.0.3-py3-none-any.whl
+        sha256: fb5f8e4a64946b4dcc0451c83a8c384f803bc0a62dd1ba02f199e97dbc9aad4c
+  - name: python3-amulet-pybind11-extensions
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "amulet-pybind11-extensions" --report=pip_report.json --no-build-isolation
+    sources:
+      - &id016
+        type: file
+        url: https://files.pythonhosted.org/packages/aa/66/0d8a4b2fc9973b0e3e5407a56519c7cfd1e3f89dc6b7a13855461eaf3fed/amulet_pybind11_extensions-1.0.0.1.tar.gz
+        sha256: a99d8bdaaded87b114af19ea987a7f3dda52fd9308aef0b6ef3d3ba265e877ee
   - name: python3-meson-python
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "meson-python" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "meson-python" --report=pip_report.json --no-build-isolation
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/28/58/66db620a8a7ccb32633de9f403fe49f1b63c68ca94e5c340ec5cceeb9821/meson_python-0.18.0-py3-none-any.whl
-        sha256: 3b0fe051551cc238f5febb873247c0949cd60ded556efa130aa57021804868e2
+        url: https://files.pythonhosted.org/packages/16/7f/d1b0c65b267a1463d752b324f11d3470e30889daefc4b9ec83029bfa30b5/meson_python-0.19.0-py3-none-any.whl
+        sha256: 67b5906c37404396d23c195e12c8825506074460d4a2e7083266b845d14f0298
       - &id008
         type: file
-        url: https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl
-        sha256: 29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484
+        url: https://files.pythonhosted.org/packages/b7/b9/c538f279a4e237a006a2c98387d081e9eb060d203d8ed34467cc0f0b9b53/packaging-26.0-py3-none-any.whl
+        sha256: b36f1fef9334a5588b4166f8bcd26a14e521f2b55e6b9de3aaa80d3ff7a37529
       - type: file
-        url: https://files.pythonhosted.org/packages/7e/b1/8e63033b259e0a4e40dd1ec4a9fee17718016845048b43a36ec67d62e6fe/pyproject_metadata-0.9.1-py3-none-any.whl
-        sha256: ee5efde548c3ed9b75a354fc319d5afd25e9585fa918a34f62f904cc731973ad
-  - name: python3-numpy
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "numpy" --report=pip_report.json --no-build-isolation --no-cache-dir
-    sources:
-      - &id002
-        type: file
-        url: https://files.pythonhosted.org/packages/0f/50/de23fde84e45f5c4fda2488c759b69990fd4512387a8632860f3ac9cd225/numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: 675d61ffbfa78604709862923189bad94014bef562cc35cf61d3a07bba02a7ed
+        url: https://files.pythonhosted.org/packages/1d/0b/da4851b1e2d9c40c9bd74c0abd94510a7d797da9ccde0a90e8953751ed4a/pyproject_metadata-0.11.0-py3-none-any.whl
+        sha256: 85bbecca8694e2c00f63b492c96921d6c228454057c88e7c352b2077fcaa4096
   - name: python3-pyopengl
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "pyopengl" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "pyopengl" --report=pip_report.json --no-build-isolation
     sources:
-      - &id003
+      - &id012
         type: file
-        url: https://files.pythonhosted.org/packages/92/44/8634af40b0db528b5b37e901c0dc67321354880d251bf8965901d57693a5/PyOpenGL-3.1.9-py3-none-any.whl
-        sha256: 15995fd3b0deb991376805da36137a4ae5aba6ddbb5e29ac1f35462d130a3f77
-  - name: python3-lz4
+        url: https://files.pythonhosted.org/packages/de/e4/1ba6f44e491c4eece978685230dde56b14d51a0365bc1b774ddaa94d14cd/pyopengl-3.1.10-py3-none-any.whl
+        sha256: 794a943daced39300879e4e47bd94525280685f42dbb5a998d336cfff151d74f
+  - name: python3-numpy
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "lz4" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "numpy" --report=pip_report.json --no-build-isolation
+    sources:
+      - &id002
+        type: file
+        url: https://files.pythonhosted.org/packages/65/6e/09db70a523a96d25e115e71cc56a6f9031e7b8cd166c1ac8438307c14058/numpy-1.26.4.tar.gz
+        sha256: 2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010
+  - name: python3-lz4
+    buildsystem: simple
+    build-commands:
+      #- export VERSIONEER_OVERRIDE=4.4.5
+      - export SETUPTOOLS_SCM_PRETEND_VERSION=4.4.5
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "lz4" --report=pip_report.json --no-build-isolation --use-pep517
     sources:
       - &id001
         type: file
-        url: https://files.pythonhosted.org/packages/e9/26/05840fbd4233e8d23e88411a066ab19f1e9de332edddb8df2b6a95c7fddc/lz4-4.4.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        sha256: 8ccab8f7f7b82f9fa9fc3b0ba584d353bd5aa818d5821d77d5b9447faad2aaad
+        path: lz4-4.4.5-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+        sha256: 451039b609b9a88a934800b5fc6ee401c89ad9c175abf2f4d9f8b2e4ef1afc64
+  - name: python3-wxpython
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "wxpython" --report=pip_report.json --no-build-isolation
+    sources:
+      - &id013
+        type: file
+        url: https://files.pythonhosted.org/packages/22/43/81657a6b126ffc19163500a8184d683cec08eb4e1d06905cd0c371c702d0/wxpython-4.2.5.tar.gz
+        sha256: 44e836d1bccd99c38790bb034b6ecf70d9060f6734320560f7c4b0d006144793
   - name: python3-amulet-core
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "amulet-core" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "amulet-core" --report=pip_report.json --no-build-isolation
     sources:
+      - &id003
+        type: file
+        url: https://files.pythonhosted.org/packages/5a/3b/47b82c31c9e7ae8fec41fdfe67baa4d0ecb1a5f64f4ecff2c3eff5790ea8/amulet_core-1.9.39-py3-none-any.whl
+        sha256: 519a45a48fdf349fb35bea2ac900a794018eff9aa5ed8de4b1f258492261bc48
       - &id004
         type: file
-        path: amulet_core-1.9.30.1.tar.gz
-        sha256: 518aa22d9dae1507e950a397cb240f20c64b43ba34d50b570dd7568a3f2db974
+        url: https://files.pythonhosted.org/packages/5b/7f/5839469fedc0f119b7d6054a5c94a008fc57abf14c4e1a0a4478beb0d80e/amulet_leveldb-1.0.3.tar.gz
+        sha256: 2f7eba3da395246fed3f42651c54a9fc1d999cc237d1a31a10227c3c50e9b8ee
       - &id005
         type: file
-        url: https://files.pythonhosted.org/packages/8a/69/03882a4a7ed933d1f0c622d93a5b2eef2fa51c4bf8ca1ec84d43b88eb113/amulet_leveldb-1.0.2.tar.gz
-        sha256: b3aa511ef71bf6bc6b21e96395bded0f392b1dc093ef58d5535067d80ab41541
+        url: https://files.pythonhosted.org/packages/7e/7d/1543cfdff09d7f74292f089d11393aa09da288346792a3ed2b005000b6e6/amulet_nbt-2.1.6.tar.gz
+        sha256: 67fe529744f120513e5ef9c0d47f2d475bb04d60ebb1f43faa72e00de0fa3bb6
       - &id006
         type: file
-        path: amulet_nbt-2.1.5.tar.gz
-        sha256: 3b51232fef732f1975fb626a7925da47c1b62c75516c750f6be8501eb3a55533
+        path: amulet_rocksdb-1.0.2-cp313-cp313-linux_x86_64.whl
+        sha256: 3dc17718a28d477e19c266e5120b3d8c35c6605d90520f28f44ddccba8618013
       - *id001
       - &id007
         type: file
@@ -100,66 +128,85 @@ modules:
         sha256: 53a5984ebc86a025552264b459b46a2086e269b21823cb572f8f28ee759e45bf
       - &id011
         type: file
-        path: pymctranslate-1.2.35.tar.gz
-        sha256: 17a14f521803ce2d47b1764a860da07c83c4bed2b87c56f51fadff4af66b2cb0
+        url: https://files.pythonhosted.org/packages/04/dc/04ed214ca610bba7ee9f1c9f5cef54a4a2204b6b7695be4f6fce60925053/pymctranslate-1.2.43-py3-none-any.whl
+        sha256: 1cceaa9c8ed89f10fb5f0bf9bf4bddc9db0e39eb9719a6a5d35671ce7114342a
   - name: python3-amulet-map-editor
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "amulet-map-editor" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "amulet-map-editor" --report=pip_report.json --no-build-isolation
     sources:
       - *id003
-      - *id004
-      - *id005
       - type: file
-        path: amulet_map_editor-0.10.44.1.tar.gz
-        sha256: 564afdf80f4418d73f389e1782e0a759adb7a4a6feb5a9454b43a9b1f6607494
+        url: https://files.pythonhosted.org/packages/10/27/be8cf21479d13633ea77df25f1662876e2081637c53dd85418ac3f6bcbf4/amulet_faulthandler-1.0.4.tar.gz
+        sha256: da792e4f5dbb036d33574a4a66eef430afc570d0997b84e908afe4147e4543cc
+      - *id004
+      - type: file
+        url: https://files.pythonhosted.org/packages/a4/67/a49fd25d4405fc367a6471f09be6c7645aa8751741f9a8155c5f19b63a80/amulet_map_editor-0.10.54.tar.gz
+        sha256: cf623ecc53deecf14a0c107fbb722d96b6c625882a645f095a60fa47129af9f5
+      - *id005
       - *id006
       - *id001
-      - &id012
+      - &id014
         type: file
-        path: minecraft_resource_pack-1.4.6.1.tar.gz
-        sha256: 4b11f53c2bf988f07fd252f184a6a79236fe7e26483229bb34bc82b99121527d
+        url: https://files.pythonhosted.org/packages/d8/bb/4cb2d5b79b563d8bf54c8838fd526bb719a41056fb2ff3621942c0abd88b/minecraft_resource_pack-1.4.11.tar.gz
+        sha256: 85b3c3e2ef6e9cde20f99574c675080224fcdc95c079038b1f2c3292bb6907b9
       - *id007
       - *id002
       - *id008
-      - &id013
+      - &id015
         type: file
-        url: https://files.pythonhosted.org/packages/f3/0d/d0d6dea55cd152ce3d6767bb38a8fc10e33796ba4ba210cbab9354b6d238/pillow-11.3.0.tar.gz
-        sha256: 3828ee7586cd0b2091b6209e5ad53e20d0649bbe87164a459d0676e035e8f523
+        url: https://files.pythonhosted.org/packages/8c/21/c2bcdd5906101a30244eaffc1b6e6ce71a31bd0742a01eb89e660ebfac2d/pillow-12.2.0.tar.gz
+        sha256: a830b1a40919539d07806aa58e1b114df53ddd43213d9c8b75847eee6c0182b5
       - *id009
       - *id010
       - *id011
       - *id012
-      - type: file
-        url: https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-24.04/wxpython-4.2.3-cp312-cp312-linux_x86_64.whl
-        sha256: 8d914b0f833300341aa627a147b20caad1eee415567585da718892ea1ec3630c
+      - *id013
   - name: python3-amulet-leveldb
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "amulet-leveldb" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "amulet-leveldb" --report=pip_report.json --no-build-isolation
     sources:
-      - *id005
+      - *id004
   - name: python3-amulet-nbt
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "amulet-nbt" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "amulet-nbt" --report=pip_report.json --no-build-isolation
     sources:
-      - *id006
+      - *id005
       - *id007
       - *id002
   - name: python3-minecraft-resource-pack
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-        "minecraft-resource-pack" --report=pip_report.json --no-build-isolation --no-cache-dir
+        "minecraft-resource-pack" --report=pip_report.json --no-build-isolation
     sources:
-      - *id006
-      - *id012
+      - *id005
+      - *id014
       - *id007
       - *id002
-      - *id013
+      - *id015
       - *id009
+  - name: python3-amulet-rocksdb
+    buildsystem: simple
+    build-commands:
+      - export VERSIONEER_OVERRIDE=1.0.2
+      - export SETUPTOOLS_SCM_PRETEND_VERSION=1.0.2
+      - export PYTHONPATH="${PYTHONPATH}:${FLATPAK_DEST}/lib/python3.13/site-packages"
+      - export PYTHONNOUSERSITE=1
+      - export SETUPTOOLS_USE_DISTUTILS=stdlib
+      - pip3 install --verbose --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+        "amulet-rocksdb" --report=pip_report.json --no-build-isolation --no-clean
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/89/c9/f96c6b89e318e607903bae0fcfefefaa76008914c18bd990baec9e39eca0/backend-0.2.4.1.zip
+        sha256: e161f8ea74c731752f5b5362e92c6f253add55fb9a80c6ea6f607315b906e79e
+      - type: file
+        url: https://files.pythonhosted.org/packages/40/72/c295e190193af5f41d583517db1ca1cf43eaa2af8140856dca114fa6486d/cmake-4.3.1.tar.gz
+        sha256: 6fe523413cdd2568a19a6ec297b8f869a95a3f8edaf0dd73731b81412216e00e
+      - *id006
 name: pip-gen

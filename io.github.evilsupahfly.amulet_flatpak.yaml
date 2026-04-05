@@ -1,9 +1,15 @@
 id: io.github.evilsupahfly.amulet_flatpak
+#version: 0.10.54
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
+runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
+build-options:
+  strip: false
+  append-path: /usr/bin
+  prepend-path: ${FLATPAK_DEST}/bin
+  build-args:
+    - --share=network
 command: wrapper.sh
-
 finish-args:
   - --device=all
   - --device=dri
@@ -11,57 +17,45 @@ finish-args:
   - --allow=per-app-dev-shm
   - --share=network
   - --share=ipc
-  - --socket=fallback-x11
+  - --socket=x11 # Not fallback-x11, because Wayland isn't yet universally adopted
   - --socket=wayland
   - --filesystem=home
   - --filesystem=/tmp
+  - --filesystem=/mnt
+  - --filesystem=/media
+  - --filesystem=/run/media
   - --talk-name=org.freedesktop.Notifications
   - --env=LIBGL_ALWAYS_SOFTWARE="0"
-  - --env=OPENGL_VERSION=3.3
-  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so
+  - --env=OPENGL_VERSION=2.1
+#  - --env=OPENGL_LIB=/usr/lib/x86_64-linux-gnu/libGL.so # May cauce problems on some systems
   - --env=PS1=[ AMULET_FLATPAK > \w ] >
-  - --env=PYTHONPATH=/app/lib/python3.12
 # Beta-testing options - Uncomment the following options to increase debug output verbosity in the terminal
-#  - --env=PYTHONDEBUG=3
-#  - --env=PYTHONVERBOSE=3
-#  - --env=PYTHONTRACEMALLOC=10
-#  - --env=G_MESSAGES_DEBUG=all
+#  - --env=PYTHONPATH=/app/lib/python3.13
+  - --env=PYTHONDEBUG=3
+  - --env=PYTHONVERBOSE=3
+  - --env=PYTHONTRACEMALLOC=10
+  - --env=G_MESSAGES_DEBUG=all
 
 modules:
-  - shared-modules/libjpeg8/libjpeg8.json
   - shared-modules/glew/glew.json
   - shared-modules/glu/glu-9.json
-  - psutil.yaml
+  - shared-modules/libjpeg8/libjpeg8.json
+  - cmake.yaml
   - pip-gen.yaml
-  - flatpak-debug-build.yaml
-  - name: metainfo-xml
+  - name: metainfo
     buildsystem: simple
     build-commands:
-      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.metainfo.xml ${FLATPAK_DEST}/share/metainfo/io.github.evilsupahfly.amulet_flatpak.metainfo.xml
+      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/io.github.evilsupahfly.amulet_flatpak.png
+      - desktop-file-install --dir=${FLATPAK_DEST}/share/applications --set-key=Exec --set-value=io.github.evilsupahfly.amulet_flatpak
+        --set-key=Icon --set-value=io.github.evilsupahfly.amulet_flatpak io.github.evilsupahfly.amulet_flatpak.desktop
     sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.metainfo.xml
-  - name: metainfo-desktop
-    buildsystem: simple
-    build-commands:
-      - install -Dm755 io.github.evilsupahfly.amulet_flatpak.desktop -t ${FLATPAK_DEST}/share/applications/
-    sources:
-      - type: file
-        path: io.github.evilsupahfly.amulet_flatpak.desktop
-  - name: metainfo-desktop-debug
-    buildsystem: simple
-    build-commands:
-      - install -Dm755 io.github.evilsupahfly.amulet_flatpak-debug.desktop -t ${FLATPAK_DEST}/share/applications/
-    sources:
-      - type: file
-        path: io.github.evilsupahfly.amulet_flatpak-debug.desktop
-  - name: metainfo-ico
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 io.github.evilsupahfly.amulet_flatpak.png -t ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/
-    sources:
       - type: file
         path: io.github.evilsupahfly.amulet_flatpak.png
+      - type: file
+        path: io.github.evilsupahfly.amulet_flatpak.desktop
   - name: amulet-wrapper
     buildsystem: simple
     build-commands:
