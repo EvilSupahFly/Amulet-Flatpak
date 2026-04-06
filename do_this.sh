@@ -502,7 +502,7 @@ fi
 
 # Attempt to build Frankenstein's Monster - change "tag" when updating to newer Amulet versions
 report N "${BLU}flatpak-builder -vvv --user --rebuild-on-sdk-change --install-deps-from=flathub --add-tag=v${AFP_VER} --bundle-sources --repo=$AFPREPO --default-branch=$AFP_BRANCH $BLD_DIR $AFP_YML --force-clean\n${GRN}"
-if ! /usr/local/bin/flatpak-builder -vvv \
+if ! flatpak-builder -vvv \
   --user \
   --rebuild-on-sdk-change \
   --install-deps-from=flathub \
