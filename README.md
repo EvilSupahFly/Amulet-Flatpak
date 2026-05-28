@@ -1,3 +1,7 @@
+# 
+# Now that the Amulet Team has an official Flatpak version of Amulet, this is no longer required, and has been archived as of 27 May, 2026
+#
+
 # Amulet Minecraft Map Editor - Flatpak Edition
 My hope, with this project, is to make Amulet easier to install and use for people who aren't used to tinkering with source repositories, or don't have experience with programming, and might not be comfortable attempting to install dependencies and run things from source, or through the terminal.
 
